@@ -1,0 +1,44 @@
+---
+layout: default
+title: Home
+---
+
+<div class="hero panel">
+  <div class="hero__kicker">Personal blog</div>
+  <h1 class="hero__title">Politics, life, and notes.</h1>
+  <p class="hero__lede">
+    Writing in public: opinions, reflections, and occasional links worth keeping.
+  </p>
+</div>
+
+<div class="section">
+  <div class="section__header">
+    <h2 class="section__title">Latest</h2>
+    <div class="section__meta">{{ site.posts | size }} posts</div>
+  </div>
+
+  <div class="cards">
+    {% for post in site.posts %}
+      <article class="card">
+        <div class="card__meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+          {% if post.tags and post.tags.size > 0 %}
+            <span class="sep">·</span>
+            <span class="tags">
+              {% for tag in post.tags limit: 3 %}
+                <span class="tag">{{ tag }}</span>
+              {% endfor %}
+            </span>
+          {% endif %}
+        </div>
+        <h3 class="card__title">
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        </h3>
+        {% if post.excerpt %}
+          <p class="card__excerpt">{{ post.excerpt | strip_html | truncate: 220 }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+</div>
+

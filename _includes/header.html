@@ -1,0 +1,13 @@
+<header class="top">
+  <div class="container">
+    <nav class="nav">
+      <a class="nav__brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <div class="nav__links">
+        <a class="nav__link {% if page.url == '/' %}is-active{% endif %}" href="{{ '/' | relative_url }}">Home</a>
+        <a class="nav__link {% if page.url == '/about/' %}is-active{% endif %}" href="{{ '/about/' | relative_url }}">About</a>
+        <a class="nav__link" href="{{ '/feed.xml' | relative_url }}">RSS</a>
+      </div>
+    </nav>
+  </div>
+</header>
+

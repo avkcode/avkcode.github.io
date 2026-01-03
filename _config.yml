@@ -1,0 +1,32 @@
+title: "avkcode"
+description: "Politics, life, and notes."
+lang: en-US
+timezone: America/Los_Angeles
+
+url: "https://avkcode.github.io"
+baseurl: ""
+
+permalink: /:categories/:year/:month/:day/:title/
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.md
+

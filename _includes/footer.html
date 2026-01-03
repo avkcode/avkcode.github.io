@@ -1,0 +1,13 @@
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__left">
+      <span class="footer__muted">© {{ "now" | date: "%Y" }} {{ site.title }}</span>
+      <span class="sep">·</span>
+      <a class="footer__link" href="https://github.com/{{ site.github.owner_name | default: 'avkcode' }}/{{ site.github.repository_name | default: 'avkcode.github.io' }}">Source</a>
+    </div>
+    <div class="footer__right footer__muted">
+      Built with Jekyll + GitHub Pages.
+    </div>
+  </div>
+</footer>
+
