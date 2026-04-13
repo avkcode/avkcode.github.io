@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="cornerGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8ddb0" stop-opacity="0.92" />
+      <stop offset="55%" stop-color="#d4a95a" stop-opacity="0.84" />
+      <stop offset="100%" stop-color="#8b5d21" stop-opacity="0.72" />
+    </linearGradient>
+    <linearGradient id="cornerPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7a5393" stop-opacity="0.42" />
+      <stop offset="100%" stop-color="#2e1b3a" stop-opacity="0.18" />
+    </linearGradient>
+  </defs>
+  <path d="M6 114V6h108" fill="none" stroke="url(#cornerGold)" stroke-width="4" stroke-linecap="round" />
+  <path d="M18 102V18h84" fill="none" stroke="url(#cornerGold)" stroke-opacity="0.42" stroke-width="1.6" stroke-linecap="round" />
+  <path d="M6 78C24 78 38 64 38 46S24 14 6 14" fill="none" stroke="url(#cornerGold)" stroke-width="4" stroke-linecap="round" />
+  <path d="M42 6C42 26 58 42 78 42s36-16 36-36" fill="none" stroke="url(#cornerGold)" stroke-width="4" stroke-linecap="round" />
+  <path d="M22 78c12 0 22-10 22-22S34 34 22 34" fill="none" stroke="url(#cornerPurple)" stroke-width="8" stroke-linecap="round" />
+  <path d="M42 22c0 12 10 22 22 22s22-10 22-22" fill="none" stroke="url(#cornerPurple)" stroke-width="8" stroke-linecap="round" />
+  <circle cx="42" cy="42" r="8" fill="url(#cornerGold)" />
+  <path d="M42 26v32M26 42h32" stroke="#f8ddb0" stroke-opacity="0.72" stroke-width="2.2" stroke-linecap="round" />
+</svg>

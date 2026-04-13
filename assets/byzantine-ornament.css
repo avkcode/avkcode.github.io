@@ -5,6 +5,7 @@
   --text: #e8dcc4;
   --muted: #bba47b;
   --accent: #d4a95a;
+  --rubric: #b84d39;
   --line: rgba(233, 205, 137, 0.28);
   --line-strong: rgba(233, 205, 137, 0.48);
 }
@@ -233,6 +234,20 @@ li {
   padding-top: 68px !important;
 }
 
+.article-page .content {
+  margin: 28px 28px 34px;
+  padding: 78px 52px 58px !important;
+  border-radius: 28px;
+  border: 1px solid rgba(233, 205, 137, 0.28);
+  background:
+    linear-gradient(180deg, rgba(107, 81, 42, 0.14), rgba(243, 224, 184, 0.08)),
+    radial-gradient(circle at top center, rgba(253, 240, 211, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(43, 29, 37, 0.88), rgba(28, 19, 25, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 239, 206, 0.06),
+    0 18px 38px rgba(0, 0, 0, 0.22);
+}
+
 .content::before {
   content: "";
   position: absolute;
@@ -244,6 +259,45 @@ li {
   background: url("/assets/byzantine-mosaic.svg") center/160px 16px repeat-x;
   opacity: 0.5;
   pointer-events: none;
+}
+
+.article-page .content::before {
+  top: 18px;
+  left: 18px;
+  transform: none;
+  width: 72px;
+  height: 72px;
+  background: url("/assets/byzantine-corner.svg") center/contain no-repeat;
+  opacity: 0.72;
+}
+
+.article-page .content::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 72px;
+  height: 72px;
+  background: url("/assets/byzantine-corner.svg") center/contain no-repeat;
+  transform: rotate(180deg);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.article-page .content > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  font-family: "Cinzel", "Iowan Old Style", serif;
+  font-size: 3.65em;
+  line-height: 0.8;
+  color: var(--rubric);
+  text-shadow:
+    0 1px 0 rgba(255, 244, 221, 0.08),
+    0 0 14px rgba(184, 77, 57, 0.18);
+}
+
+.article-page .meta {
+  color: #d0b37a !important;
 }
 
 h2 {
@@ -271,6 +325,21 @@ h2::after {
   height: 1px;
   margin-top: 10px;
   background: linear-gradient(90deg, rgba(233, 205, 137, 0.88), rgba(233, 205, 137, 0));
+}
+
+.article-page h2 {
+  color: #f4dfb1 !important;
+}
+
+.article-page h2::before {
+  width: 220px;
+}
+
+.article-page p a,
+.article-page li a {
+  text-decoration: underline;
+  text-decoration-color: rgba(212, 169, 90, 0.42);
+  text-underline-offset: 0.12em;
 }
 
 .post-list {
@@ -319,6 +388,25 @@ h2::after {
   color: #c6b187 !important;
 }
 
+.article-page ul {
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.article-page li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.article-page li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: 0.03em;
+  color: var(--accent);
+  font-size: 0.7em;
+}
+
 .compare,
 pre,
 .note,
@@ -351,6 +439,10 @@ pre::before,
     linear-gradient(180deg, rgba(29, 20, 38, 0.98), rgba(16, 12, 21, 0.98));
 }
 
+.article-page .media-shot {
+  padding: 12px !important;
+}
+
 .media-shot img {
   border-radius: 12px !important;
   border-color: rgba(233, 205, 137, 0.46) !important;
@@ -365,6 +457,11 @@ pre::before,
 .note {
   background:
     linear-gradient(180deg, rgba(90, 52, 113, 0.2), rgba(212, 169, 90, 0.08)) !important;
+}
+
+.article-page .note {
+  background:
+    linear-gradient(180deg, rgba(96, 52, 52, 0.22), rgba(212, 169, 90, 0.09), rgba(86, 52, 110, 0.16)) !important;
 }
 
 pre {
@@ -395,6 +492,20 @@ th {
   background:
     radial-gradient(circle at 50% 0%, rgba(250, 225, 165, 0.06), transparent 28%),
     linear-gradient(180deg, rgba(29, 20, 37, 0.98), rgba(17, 12, 22, 0.98)) !important;
+}
+
+.article-page .hero-pill {
+  border-radius: 18px !important;
+}
+
+.home-page .hero,
+.listing-page .hero {
+  padding-top: 118px !important;
+}
+
+.home-page h1,
+.listing-page h1 {
+  max-width: 14ch !important;
 }
 
 a:hover {
@@ -428,6 +539,17 @@ a:hover {
   .content::before {
     width: 180px;
     background-size: 120px 14px;
+  }
+
+  .article-page .content {
+    margin: 18px 14px 24px;
+    padding: 62px 24px 36px !important;
+  }
+
+  .article-page .content::before,
+  .article-page .content::after {
+    width: 54px;
+    height: 54px;
   }
 
   h1 {
