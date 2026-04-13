@@ -19,13 +19,13 @@
     <meta property="og:site_name" content="Anton Krylov" />
     <style>
       :root {
-        --ink: #f2ede3;
-        --text: #d8d2c7;
-        --muted: #a49c90;
-        --paper: #070709;
-        --line: rgba(200, 179, 138, 0.2);
-        --line-strong: rgba(200, 179, 138, 0.38);
-        --accent: #c8b38a;
+        --ink: #f7ecd3;
+        --text: #e0d2b8;
+        --muted: #ae9c7a;
+        --paper: #16101d;
+        --line: rgba(212, 169, 90, 0.22);
+        --line-strong: rgba(212, 169, 90, 0.42);
+        --accent: #d4a95a;
       }
 
       * {
@@ -37,9 +37,9 @@
         margin: 0;
         padding: 0;
         background:
-          radial-gradient(circle at 0% 0%, rgba(200, 179, 138, 0.12), transparent 34%),
-          radial-gradient(circle at 100% 100%, rgba(200, 179, 138, 0.06), transparent 42%),
-          linear-gradient(180deg, #050507 0%, var(--paper) 48%, #050507 100%);
+          radial-gradient(circle at 0% 0%, rgba(106, 63, 130, 0.28), transparent 34%),
+          radial-gradient(circle at 100% 100%, rgba(212, 169, 90, 0.12), transparent 42%),
+          linear-gradient(180deg, #0c0810 0%, var(--paper) 48%, #08060c 100%);
         color: var(--text);
       }
 
@@ -56,7 +56,7 @@
       }
 
       .article {
-        background: linear-gradient(180deg, rgba(20, 21, 24, 0.96), rgba(13, 14, 17, 0.96));
+        background: linear-gradient(180deg, rgba(41, 28, 52, 0.97), rgba(22, 16, 29, 0.98));
         border: 1px solid var(--line);
         border-radius: 26px;
         box-shadow:
@@ -70,8 +70,9 @@
         padding: 42px 48px 34px;
         border-bottom: 1px solid var(--line);
         background:
-          radial-gradient(circle at 18% 0%, rgba(200, 179, 138, 0.14), transparent 46%),
-          linear-gradient(165deg, rgba(29, 30, 34, 0.96) 0%, rgba(20, 21, 25, 0.92) 62%, rgba(13, 14, 17, 0.92) 100%);
+          radial-gradient(circle at 18% 0%, rgba(106, 63, 130, 0.34), transparent 46%),
+          radial-gradient(circle at 82% 18%, rgba(212, 169, 90, 0.14), transparent 30%),
+          linear-gradient(165deg, rgba(58, 40, 74, 0.97) 0%, rgba(37, 26, 49, 0.95) 62%, rgba(23, 17, 31, 0.95) 100%);
       }
 
       .back {
@@ -102,8 +103,8 @@
 
       h1 code {
         color: var(--accent);
-        background: rgba(200, 179, 138, 0.1);
-        border: 1px solid rgba(200, 179, 138, 0.22);
+        background: rgba(106, 63, 130, 0.16);
+        border: 1px solid rgba(212, 169, 90, 0.28);
         border-radius: 6px;
         padding: 1px 6px;
       }
@@ -111,7 +112,7 @@
       .deck {
         margin: 14px 0 0;
         max-width: 60ch;
-        color: #b7ae9f;
+        color: #cab894;
         font-size: 1rem;
       }
 
@@ -124,14 +125,14 @@
 
       .hero-pill {
         display: inline-block;
-        border: 1px solid rgba(200, 179, 138, 0.28);
+        border: 1px solid rgba(212, 169, 90, 0.36);
         border-radius: 999px;
         padding: 4px 10px;
         font-size: 0.78rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #c6bdae;
-        background: rgba(200, 179, 138, 0.06);
+        color: #ddc8a0;
+        background: rgba(106, 63, 130, 0.14);
       }
 
       .meta {
@@ -176,9 +177,9 @@
       code {
         font-family: "SF Mono", "Menlo", "Consolas", monospace;
         font-size: 0.93em;
-        background: rgba(200, 179, 138, 0.1);
-        color: #f0e8da;
-        border: 1px solid rgba(200, 179, 138, 0.2);
+        background: rgba(106, 63, 130, 0.16);
+        color: #f6e8c8;
+        border: 1px solid rgba(212, 169, 90, 0.28);
         border-radius: 6px;
         padding: 2px 6px;
       }
@@ -188,7 +189,7 @@
         padding: 16px 18px;
         border-radius: 12px;
         border: 1px solid var(--line-strong);
-        background: #0b0c0f;
+        background: #17101f;
         overflow-x: auto;
         max-width: 84ch;
       }
@@ -197,7 +198,7 @@
         border: 0;
         padding: 0;
         background: transparent;
-        color: #efe7d8;
+        color: #f4e5c7;
       }
 
       a {
@@ -205,7 +206,7 @@
       }
 
       a:hover {
-        color: #f1e6d2;
+        color: #f6ddb0;
       }
 
       .compare {
@@ -231,7 +232,7 @@
       }
 
       th {
-        background: rgba(200, 179, 138, 0.08);
+        background: rgba(106, 63, 130, 0.16);
         color: var(--ink);
       }
 
@@ -242,11 +243,11 @@
       .media-slot {
         margin: 18px 0 24px;
         padding: 18px 20px;
-        border: 1px dashed rgba(200, 179, 138, 0.42);
+        border: 1px dashed rgba(212, 169, 90, 0.5);
         border-radius: 16px;
         background:
-          linear-gradient(180deg, rgba(200, 179, 138, 0.06), rgba(200, 179, 138, 0.03)),
-          rgba(11, 12, 15, 0.9);
+          linear-gradient(180deg, rgba(106, 63, 130, 0.16), rgba(212, 169, 90, 0.06)),
+          rgba(18, 13, 24, 0.92);
         max-width: 84ch;
       }
 
@@ -290,8 +291,8 @@
         padding: 12px 14px;
         border: 1px solid var(--line-strong);
         border-radius: 12px;
-        background: rgba(200, 179, 138, 0.08);
-        color: #e7dfcf;
+        background: linear-gradient(180deg, rgba(106, 63, 130, 0.14), rgba(212, 169, 90, 0.08));
+        color: #ecdfc4;
         max-width: 84ch;
       }
 
