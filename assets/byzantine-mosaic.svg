@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8ddb0" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#d4a95a" stop-opacity="0.68" />
+      <stop offset="100%" stop-color="#8f6021" stop-opacity="0.56" />
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#76508f" stop-opacity="0.38" />
+      <stop offset="100%" stop-color="#341f42" stop-opacity="0.22" />
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" fill="none" />
+  <path d="M40 0v160M80 0v160M120 0v160M0 40h160M0 80h160M0 120h160" stroke="url(#gold)" stroke-opacity="0.34" stroke-width="1.2" />
+  <path d="M20 20 40 0 60 20 40 40Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <path d="M100 20 120 0 140 20 120 40Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <path d="M20 100 40 80 60 100 40 120Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <path d="M100 100 120 80 140 100 120 120Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <path d="M60 60 80 40 100 60 80 80Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <path d="M60 140 80 120 100 140 80 160Z" fill="url(#purple)" stroke="url(#gold)" stroke-width="1.1" />
+  <circle cx="40" cy="40" r="4" fill="url(#gold)" />
+  <circle cx="120" cy="40" r="4" fill="url(#gold)" />
+  <circle cx="80" cy="80" r="4" fill="url(#gold)" />
+  <circle cx="40" cy="120" r="4" fill="url(#gold)" />
+  <circle cx="120" cy="120" r="4" fill="url(#gold)" />
+</svg>
