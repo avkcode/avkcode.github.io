@@ -258,7 +258,7 @@
         }
       }
     </style>
-    <link rel="stylesheet" href="/assets/byzantine-ornament.css" />
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
   </head>
   <body class="article-page">
     <main class="frame">
@@ -301,15 +301,15 @@
     S[scientist]
     D[devops]
   end
-  Profiles --> L[(local profile DB)]
-  L --> X[(S3-mounted share)]
-  X --> L
-  X --> H[SSH host]
-  X --> K[Kubernetes worker]
-  X --> B[Browser session]
+  Profiles --&gt; L[(local profile DB)]
+  L --&gt; X[(S3-mounted share)]
+  X --&gt; L
+  X --&gt; H[SSH host]
+  X --&gt; K[Kubernetes worker]
+  X --&gt; B[Browser session]
               </div>
-              <figcaption>Portal stores active profile state locally for speed and mirrors it through S3 for cross-host continuity.</figcaption>
             </div>
+            <figcaption>Portal stores active profile state locally for speed and mirrors it through S3 for cross-host continuity.</figcaption>
           </figure>
 
           <h2>Why local database first</h2>
@@ -336,16 +336,16 @@
   participant S3 as S3 share
   participant R as SSH or K8s runtime
 
-  U->>P: activate devops profile
-  P->>DB: load local profile state
-  DB-->>P: keys, settings, targets
-  P->>S3: pull latest shared revision
-  S3-->>P: synced profile bundle
-  P->>R: mount secrets and runtime config
-  R-->>U: session starts with full profile context
+  U-&gt;&gt;P: activate devops profile
+  P-&gt;&gt;DB: load local profile state
+  DB--&gt;&gt;P: keys, settings, targets
+  P-&gt;&gt;S3: pull latest shared revision
+  S3--&gt;&gt;P: synced profile bundle
+  P-&gt;&gt;R: mount secrets and runtime config
+  R--&gt;&gt;U: session starts with full profile context
               </div>
-              <figcaption>Profile activation resolves local state first, then converges with the shared S3-backed profile bundle.</figcaption>
             </div>
+            <figcaption>Profile activation resolves local state first, then converges with the shared S3-backed profile bundle.</figcaption>
           </figure>
 
           <h2>Secrets become part of continuity</h2>
@@ -366,15 +366,15 @@
           <figure class="diagram-card">
             <div class="diagram-card-inner">
               <div class="mermaid">flowchart TD
-  A[Profile update on host A] --> B[(local DB write)]
-  B --> C[(S3 sync)]
-  C --> D[host B reconcile]
-  C --> E[Kubernetes runner reconcile]
-  D --> F[researcher profile available]
-  E --> G[devops profile available]
+  A[Profile update on host A] --&gt; B[(local DB write)]
+  B --&gt; C[(S3 sync)]
+  C --&gt; D[host B reconcile]
+  C --&gt; E[Kubernetes runner reconcile]
+  D --&gt; F[researcher profile available]
+  E --&gt; G[devops profile available]
               </div>
-              <figcaption>One profile update can propagate across different execution surfaces without rebuilding context from scratch.</figcaption>
             </div>
+            <figcaption>One profile update can propagate across different execution surfaces without rebuilding context from scratch.</figcaption>
           </figure>
 
           <h2>Notes cells turn memory into a working notebook</h2>
@@ -498,13 +498,33 @@
             by hand.
           </p>
 
+          <p>Resume / CV: <a href="../resume.html">https://avkcode.github.io/resume.html</a>.</p>
+
           <p>I'm open to job opportunities. If you'd like to talk, email me at <a href="mailto:antonvkrylov@gmail.com">antonvkrylov@gmail.com</a>.</p>
         </section>
       </article>
     </main>
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({ startOnLoad: true, theme: "dark", securityLevel: "loose" });
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        securityLevel: "loose",
+        themeVariables: {
+          background: "#f7fbfe",
+          fontFamily: "Manrope, Avenir Next, Helvetica Neue, Arial, sans-serif",
+          primaryColor: "#f7fbfe",
+          primaryTextColor: "#17212b",
+          primaryBorderColor: "#b8c8d6",
+          lineColor: "#7796b4",
+          secondaryColor: "#edf3f8",
+          tertiaryColor: "#ffffff",
+          clusterBkg: "#eef4f8",
+          clusterBorder: "#c7d3de",
+          nodeBorder: "#b8c8d6",
+          edgeLabelBackground: "#ffffff",
+        },
+      });
     </script>
   </body>
 </html>

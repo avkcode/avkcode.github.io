@@ -102,6 +102,30 @@
         font-size: 1rem;
       }
 
+      .hero-actions {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .hero-link {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: linear-gradient(180deg, rgba(106, 63, 130, 0.14), rgba(212, 169, 90, 0.08));
+        color: var(--ink);
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hero-link:hover {
+        color: #fff1cf;
+      }
+
       .content {
         padding: 30px 48px 44px;
       }
@@ -152,6 +176,10 @@
         <header class="hero">
           <h1>Anton Krylov</h1>
           <p class="deck">Personal writing on AI, infrastructure, product design, and security tooling.</p>
+          <div class="hero-actions">
+            <a class="hero-link" href="./blog/index.html">Blog</a>
+            <a class="hero-link" href="./resume.html">Resume / CV</a>
+          </div>
         </header>
 
         <section class="content">
