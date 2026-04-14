@@ -312,6 +312,13 @@
           </p>
 
           <p>
+            Under the hood, this is achieved with <code>xterm.js</code> as the terminal surface in each pane. Portal
+            renders terminals in the browser, attaches them to remote PTY streams over the network, and lets the app
+            manage layout, reconnection, scrollback, and multiplexing separately from the host. That split is what
+            makes the workspace feel durable.
+          </p>
+
+          <p>
             It also matches where the real work already lives: remote SSH nodes, Kubernetes clusters, browser-accessible
             dashboards, and distributed runtimes. Portal is stronger in the browser because the browser is already the
             natural front end for remote infrastructure. I can open the same workspace on another laptop, reconnect to
