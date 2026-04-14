@@ -226,9 +226,9 @@
             <span class="hero-pill">Updated April 14, 2026</span>
           </div>
           <p class="deck">
-            Tmux-like behavior matters more once terminal work stops fitting in one native app. In Portal, the workspace
-            lives in the browser, so panes, tabs, logs, file views, and agent surfaces scale far better than the usual
-            desktop terminal stack.
+            The future of AI work is in the browser, not in another heavy native shell. Portal takes tmux-like
+            behavior into a browser workspace so panes, tabs, logs, file views, SSH sessions, Kubernetes targets, and
+            agent surfaces scale past the usual desktop terminal stack.
           </p>
           <p class="meta">Published April 14, 2026</p>
         </header>
@@ -293,6 +293,30 @@
             So the claim is not that HTML prints characters faster than a native renderer. The claim is that browser
             tmux scales better. When the job turns into fifty or a hundred concurrent surfaces, Portal stays operable in
             a way the usual terminal stack does not.
+          </p>
+
+          <h2>The future of AI is in the browser</h2>
+          <p>
+            I think the winning AI interface is not a heavy native app. It is a browser control plane. Native tools
+            like Ghostty, Warp, iTerm, and the new crop of AI-wrapped terminals still inherit the same old shape: one
+            machine, one window stack, one local app state model. They can feel polished, but they still make the
+            operator pay a management tax in tabs, windows, installs, updates, and machine-specific setup.
+          </p>
+
+          <p>
+            A browser flips that model. Tabs are cheaper than native windows. Session restore is built in. Sharing is
+            natural. Identity, auth, links, navigation, and incremental rollout already exist. That matters for AI
+            systems because AI is rarely just "a better terminal." It is usually a mix of shells, logs, file views,
+            tables, agent status, approvals, and history. The browser is better at composing those surfaces into one
+            durable workspace than any native terminal app.
+          </p>
+
+          <p>
+            It also matches where the real work already lives: remote SSH nodes, Kubernetes clusters, browser-accessible
+            dashboards, and distributed runtimes. Portal is stronger in the browser because the browser is already the
+            natural front end for remote infrastructure. I can open the same workspace on another laptop, reconnect to
+            the same SSH and Kubernetes targets, and keep operating without rebuilding local state from scratch. That is
+            why this feels like the future to me. AI should be a networked workspace, not another beautiful local app.
           </p>
 
           <figure class="media-shot">
