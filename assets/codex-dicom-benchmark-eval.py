@@ -35,6 +35,7 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
 import urllib.parse
 import urllib.request
@@ -277,10 +278,39 @@ def fetch_text(url: str) -> str:
 
 
 def extract_studydata(page_html: str) -> dict[str, Any]:
-    match = re.search(r"var studydata = (\{.*?\});", page_html, re.S)
-    if not match:
-        raise ValueError("Could not find studydata JSON in page")
-    return json.loads(match.group(1))
+    marker = "var studydata = "
+    start = page_html.find(marker)
+    if start == -1:
+        raise ValueError("Could not find studydata marker in page")
+
+    brace_start = page_html.find("{", start)
+    if brace_start == -1:
+        raise ValueError("Could not find studydata object start in page")
+
+    depth = 0
+    in_string = False
+    escaped = False
+    for index in range(brace_start, len(page_html)):
+        char = page_html[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+
+        if char == '"':
+            in_string = True
+        elif char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return json.loads(page_html[brace_start : index + 1])
+
+    raise ValueError("Could not find end of studydata object in page")
 
 
 def extract_auto_scroll_links(notes_html: str) -> list[dict[str, str]]:
@@ -360,7 +390,6 @@ def render_dicom_png(dicom_bytes: bytes, png_path: Path, wc: float | None, ww: f
 
 def metadata_summary(case: dict[str, Any], studydata: dict[str, Any], series: dict[str, Any], ds: Any) -> str:
     rows = [
-        f"Case title: {studydata.get('name', case['title'])}",
         f"Published modality bucket: {case['modality']}",
         f"Series label: {series.get('label', '')}",
         f"Series modality: {series.get('modality', '')}",
@@ -515,8 +544,16 @@ def run_openai_responses(
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=180) as response:
-        body = json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=180) as response:
+            body = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        error_text = exc.read().decode("utf-8", errors="replace")
+        error_path = output_path.with_suffix(output_path.suffix + ".error.json")
+        error_path.write_text(error_text + "\n")
+        raise RuntimeError(
+            f"OpenAI Responses API request failed with HTTP {exc.code} {exc.reason}\n{error_text}"
+        ) from exc
 
     output_path.write_text(json.dumps(body, indent=2) + "\n")
     parsed = json.loads(openai_extract_output_text(body))
@@ -539,6 +576,18 @@ def mode_uses_metadata(mode: str) -> bool:
 
 def mode_uses_roi(mode: str) -> bool:
     return mode == "image+metadata+roi"
+
+
+def openai_schema_name(case_id: str, mode: str, stage: str) -> str:
+    mode_code = {
+        "image-only": "io",
+        "image+metadata": "im",
+        "image+metadata+roi": "imr",
+    }.get(mode, "x")
+    stage_code = {"seeing": "see", "explaining": "exp"}.get(stage, stage[:3])
+    sanitized_case = re.sub(r"[^a-z0-9]+", "_", case_id.lower()).strip("_")
+    sanitized_case = sanitized_case[:40]
+    return f"{sanitized_case}_{mode_code}_{stage_code}"
 
 
 def build_seeing_messages(
@@ -736,7 +785,7 @@ def evaluate_case_openai(
             api_key=api_key,
             api_base=api_base,
             model=seeing_model,
-            schema_name=f"{case['id']}_{mode.replace('+', '_')}_seeing",
+            schema_name=openai_schema_name(case["id"], mode, "seeing"),
             schema=SEEING_SCHEMA,
             messages=seeing_messages,
             output_path=case_dir / f"{mode}-seeing-raw.json",
@@ -754,7 +803,7 @@ def evaluate_case_openai(
             api_key=api_key,
             api_base=api_base,
             model=explaining_model,
-            schema_name=f"{case['id']}_{mode.replace('+', '_')}_explaining",
+            schema_name=openai_schema_name(case["id"], mode, "explaining"),
             schema=EXPLAINING_SCHEMA,
             messages=explaining_messages,
             output_path=case_dir / f"{mode}-explaining-raw.json",
@@ -855,6 +904,22 @@ def build_openai_final(
     return final
 
 
+def load_completed_openai_case(output_dir: Path, case_id: str, benchmark_modes: tuple[str, ...]) -> dict[str, Any] | None:
+    path = output_dir / f"{case_id}.json"
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return None
+    modes = payload.get("modes")
+    if not isinstance(modes, dict):
+        return None
+    if not all(mode in modes for mode in benchmark_modes):
+        return None
+    return payload
+
+
 def build_codex_final(output_dir: Path, model: str, results: list[dict[str, Any]]) -> dict[str, Any]:
     summary = {"total_cases": 0, "match": 0, "partial": 0, "miss": 0}
     for result in results:
@@ -927,19 +992,30 @@ def main() -> None:
     if not api_key:
         raise SystemExit("OPENAI_API_KEY is required for provider=openai")
 
-    case_results = [
-        evaluate_case_openai(
-            case=case,
-            output_dir=output_dir,
-            api_key=api_key,
-            api_base=args.openai_api_base,
-            seeing_model=args.seeing_model,
-            explaining_model=args.explaining_model,
-            benchmark_modes=args.benchmark_modes,
-            detail=args.detail,
+    case_results = []
+    for case in CASES:
+        cached = load_completed_openai_case(output_dir, case["id"], args.benchmark_modes)
+        if cached is not None:
+            case_results.append(cached)
+            continue
+
+        case_dir = output_dir / case["id"]
+        if case_dir.exists():
+            shutil.rmtree(case_dir)
+
+        case_results.append(
+            evaluate_case_openai(
+                case=case,
+                output_dir=output_dir,
+                api_key=api_key,
+                api_base=args.openai_api_base,
+                seeing_model=args.seeing_model,
+                explaining_model=args.explaining_model,
+                benchmark_modes=args.benchmark_modes,
+                detail=args.detail,
+            )
         )
-        for case in CASES
-    ]
+    
     final = build_openai_final(
         output_dir=output_dir,
         case_results=case_results,
