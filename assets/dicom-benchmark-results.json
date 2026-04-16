@@ -1,0 +1,265 @@
+{
+  "benchmark_name": "codex-dicom-single-slice-public-benchmark",
+  "run_date": "2026-04-15",
+  "model": "gpt-5.4",
+  "provider": "openai via codex exec",
+  "summary": {
+    "total_cases": 10,
+    "match": 3,
+    "partial": 2,
+    "miss": 5,
+    "strict_top1_accuracy": 0.3,
+    "directionally_useful_accuracy": 0.5
+  },
+  "case_mix": {
+    "CT_or_CTA": 7,
+    "MRI": 3
+  },
+  "notes": [
+    "Each case used one published pathology-bearing key-image link from the public teaching page.",
+    "The selected auto-scroll link index was pre-recorded per case because not every page used the first link for the target pathology.",
+    "This corrected aggregate fixes an earlier ad-hoc scoring bug in the pulmonary embolism case. The final regex requires pulmonary-embolism terms and no longer overcounts unrelated diagnoses containing the letters pe."
+  ],
+  "scoring_rules": {
+    "match": "Diagnosis text contains the target concept.",
+    "partial": "Diagnosis captures a clinically related but incomplete target, such as appendicitis instead of perforated appendicitis.",
+    "miss": "Diagnosis points to a different pathology."
+  },
+  "prompt_template": "You are evaluating a single de-identified DICOM teaching-case slice for research only, not clinical care. Return only the structured schema. Use the attached image as primary evidence and the metadata only as supporting context. Be specific about the single most likely diagnosis visible on this slice.",
+  "cases": [
+    {
+      "id": "appendicitis",
+      "title": "CASE 1: Acute appendicitis",
+      "case_url": "https://www.pacsbin.com/c/ZyenvVwTS4",
+      "modality": "CT",
+      "expected_diagnosis": "acute appendicitis",
+      "selected_link_index": 0,
+      "selected_key_text": "dilated, fluid filled appendix",
+      "diagnosis": "Bilateral osteitis condensans ilii",
+      "confidence": 0.89,
+      "visible_findings": [
+        "Symmetric triangular areas of dense sclerosis along the iliac side of both sacroiliac joints, greatest inferiorly",
+        "Sacroiliac joint spaces are preserved",
+        "No clear erosions, joint-space widening, or ankylosis are visible on this slice",
+        "The sclerosis is predominantly iliac-sided rather than involving both sides of the joints equally"
+      ],
+      "reasoning": "The dominant abnormality on this slice is bilateral, sharply marginated triangular iliac-sided subchondral sclerosis adjacent to the sacroiliac joints with preserved joint spaces and no obvious erosive change. That pattern is most characteristic of osteitis condensans ilii and is less typical of inflammatory sacroiliitis.",
+      "uncertainties": [
+        "This is a single axial slice, so full extent and chronicity cannot be assessed",
+        "Subtle erosive or inflammatory changes elsewhere in the sacroiliac joints could be missed on this image alone, but the appearance here strongly favors osteitis condensans ilii"
+      ],
+      "verdict": "miss"
+    },
+    {
+      "id": "pulmonary_embolism",
+      "title": "Case 14: Acute pulmonary embolism",
+      "case_url": "https://www.pacsbin.com/c/ZywILUuaFq",
+      "modality": "CT angiography",
+      "expected_diagnosis": "acute pulmonary embolism",
+      "selected_link_index": 1,
+      "selected_key_text": "segmental left upper lobe pulmonary artery embolus",
+      "diagnosis": "Thoracic aortic dissection, most likely involving the ascending aorta/aortic arch (likely Stanford type A)",
+      "confidence": 0.45,
+      "visible_findings": [
+        "Abnormal contrast-filled thoracic aorta with apparent enlargement of the ascending/arch segment",
+        "Curvilinear low-attenuation line within the aortic lumen, suggesting an intimal flap",
+        "Appearance of separated luminal compartments within the aortic contour, favoring true and false lumina rather than a single normal lumen"
+      ],
+      "reasoning": "The dominant abnormality on this slice is centered in the thoracic aorta rather than the lungs or pleural spaces. The combination of an enlarged aortic contour and a suspected intraluminal flap/double-lumen appearance is most consistent with aortic dissection on this image.",
+      "uncertainties": [
+        "This is a single slice, so the full extent of disease and exact classification cannot be confirmed from this image alone.",
+        "Ascending aortic motion or contrast-mixing artifact can mimic a flap on CT and lowers confidence.",
+        "Review of adjacent CTA slices would be needed to confirm the diagnosis and distinguish it from aneurysmal dilatation without definite dissection."
+      ],
+      "verdict": "miss"
+    },
+    {
+      "id": "perforated_sigmoid_diverticulitis",
+      "title": "Perforated sigmoid diverticulitis",
+      "case_url": "https://www.pacsbin.com/c/bkbnW8-OEV",
+      "modality": "CT",
+      "expected_diagnosis": "perforated sigmoid diverticulitis",
+      "selected_link_index": 1,
+      "selected_key_text": "locules of free air adjacent to sigmoid colon",
+      "diagnosis": "Gas-containing pelvic abscess, most likely secondary to perforated sigmoid diverticulitis",
+      "confidence": 0.67,
+      "visible_findings": [
+        "Irregular rim-enhancing fluid collection in the central pelvis posterior to the urinary bladder",
+        "Multiple internal gas locules within the collection",
+        "Adjacent thickened inflamed bowel wall in the rectosigmoid region",
+        "Surrounding pelvic fat stranding/inflammatory change"
+      ],
+      "reasoning": "The dominant abnormality on this slice is a thick-walled gas-containing fluid collection in the pelvis with adjacent inflamed rectosigmoid bowel and surrounding stranding, which most strongly favors a pelvic abscess from complicated/perforated sigmoid diverticulitis.",
+      "uncertainties": [
+        "A single axial slice is insufficient to confirm the exact organ of origin of the collection.",
+        "Less likely alternatives on this slice include a tubo-ovarian abscess or infected fluid-filled uterus if the central pelvic structure is gynecologic rather than colonic."
+      ],
+      "verdict": "match"
+    },
+    {
+      "id": "cecal_diverticulitis",
+      "title": "CT Abdomen and Pelvis - Cecal diverticulitis",
+      "case_url": "https://www.pacsbin.com/c/WJShjjiUBu",
+      "modality": "CT",
+      "expected_diagnosis": "cecal diverticulitis",
+      "selected_link_index": 0,
+      "selected_key_text": "inflammatory stranding adjacent to cecal diverticulum",
+      "diagnosis": "Bilateral osteitis condensans ilii",
+      "confidence": 0.74,
+      "visible_findings": [
+        "Symmetric triangular subchondral sclerosis is present along the iliac side of both sacroiliac joints",
+        "The sacroiliac joint spaces appear preserved on this slice",
+        "There is no clear erosive change or ankylosis visible at the sacroiliac joints on this image"
+      ],
+      "reasoning": "The dominant visible abnormality is bilateral, symmetric iliac-sided sacroiliac sclerosis with preserved joint spaces, which is most characteristic of osteitis condensans ilii rather than inflammatory sacroiliitis.",
+      "uncertainties": [
+        "Assessment is limited by having only a single axial slice",
+        "Subtle erosions or additional abnormalities elsewhere in the sacroiliac joints cannot be excluded without the full study",
+        "If clinically relevant bowel or pelvic soft-tissue pathology exists elsewhere in the exam, it may not be represented on this image"
+      ],
+      "verdict": "miss"
+    },
+    {
+      "id": "sigmoid_diverticulitis",
+      "title": "Sigmoid diverticulitis",
+      "case_url": "https://www.pacsbin.com/c/WJ_W6lt3KN",
+      "modality": "CT",
+      "expected_diagnosis": "sigmoid diverticulitis",
+      "selected_link_index": 0,
+      "selected_key_text": "inflamed sigmoid diverticulum",
+      "diagnosis": "Small-bowel neuroendocrine tumor (carcinoid) with calcified mesenteric metastasis and desmoplastic reaction",
+      "confidence": 0.66,
+      "visible_findings": [
+        "Stellate/spiculated soft-tissue abnormality in the central mesentery",
+        "Dense central calcific focus within that mesenteric lesion",
+        "Radiating fibrotic-appearing strands and mesenteric tethering around the lesion",
+        "Crowding/retraction of adjacent small-bowel loops in the involved mesentery"
+      ],
+      "reasoning": "The combination of a calcified mesenteric mass and surrounding desmoplastic-appearing mesenteric reaction is most characteristic of metastatic small-bowel carcinoid/neuroendocrine tumor on CT.",
+      "uncertainties": [
+        "This is a single coronal slice, so the primary bowel lesion is not confidently identified on this image alone.",
+        "The mesenteric abnormality could overlap in appearance with less likely entities such as sclerosing mesenteritis or other calcified mesenteric masses."
+      ],
+      "verdict": "miss"
+    },
+    {
+      "id": "strangulated_hernia_small_bowel_ischemia",
+      "title": "Strangulated hernia with small bowel ischemia",
+      "case_url": "https://www.pacsbin.com/c/Zy71Y8Y99c",
+      "modality": "CT",
+      "expected_diagnosis": "hernia complicated by small bowel ischemia (strangulation)",
+      "selected_link_index": 2,
+      "selected_key_text": "hypoenhancing small bowel loops in the hernia sac",
+      "diagnosis": "Strangulated ventral abdominal wall hernia causing closed-loop small-bowel obstruction, with probable ischemic change",
+      "confidence": 0.87,
+      "visible_findings": [
+        "Large anterior ventral abdominal wall hernia containing multiple bowel loops",
+        "Clustered, dilated fluid/gas-filled small-bowel loops within the hernia sac",
+        "Crowding/twisting of mesenteric vessels and marked mesenteric fat stranding at the hernia neck",
+        "Abnormal bowel wall appearance in the herniated loops with edema/thickening, raising concern for compromised perfusion"
+      ],
+      "reasoning": "The dominant abnormality on this axial venous-phase CT slice is a bowel-containing ventral hernia with obstructed-appearing clustered small-bowel loops and congested twisted mesentery at the neck. That combination is most consistent with incarceration/strangulation rather than a simple reducible hernia, and the edematous bowel/mesentery makes ischemic compromise the best single-slice diagnosis.",
+      "uncertainties": [
+        "This is a single slice, so the full transition point and extent of obstruction cannot be confirmed.",
+        "Definite bowel ischemia is difficult to prove on one image alone because mural enhancement, pneumatosis, and associated free fluid require review of adjacent slices."
+      ],
+      "verdict": "match"
+    },
+    {
+      "id": "perforated_appendicitis",
+      "title": "Perforated appendicitis",
+      "case_url": "https://www.pacsbin.com/c/-kmjPQmoDr",
+      "modality": "CT",
+      "expected_diagnosis": "perforated appendicitis",
+      "selected_link_index": 2,
+      "selected_key_text": "mucosal discontinuity with extraluminal air and fluid",
+      "diagnosis": "Acute appendicitis, likely retrocecal in the right lower quadrant",
+      "confidence": 0.72,
+      "visible_findings": [
+        "Focal inflammatory change in the right lower quadrant centered near the cecal base",
+        "Enlarged thick-walled tubular/oval soft-tissue structure just anterior to the right psoas muscle, in the expected appendiceal region",
+        "Adjacent periappendiceal/pericecal fat stranding",
+        "Mild reactive thickening of nearby cecal/ileocecal bowel wall"
+      ],
+      "reasoning": "On this axial contrast-enhanced CT slice, the main abnormality is a focal inflamed tubular structure adjacent to the cecum in the right lower quadrant with surrounding fat stranding. That distribution and morphology are most typical of acute appendicitis, particularly a retrocecal appendix.",
+      "uncertainties": [
+        "This is a single slice, so the full blind-ending course of the appendix cannot be confirmed with certainty.",
+        "A focal cecal diverticulitis or terminal ileal inflammation is less likely but cannot be fully excluded from this slice alone.",
+        "The slice is insufficient to determine whether there is perforation, abscess, or an appendicolith elsewhere in the series."
+      ],
+      "verdict": "partial"
+    },
+    {
+      "id": "appendicitis_in_pregnancy",
+      "title": "Appendicitis in pregnancy",
+      "case_url": "https://www.pacsbin.com/c/WyWoKcFKUU",
+      "modality": "MRI",
+      "expected_diagnosis": "acute uncomplicated appendicitis in pregnancy",
+      "selected_link_index": 0,
+      "selected_key_text": "appendiceal lumen distended to >6 mm with T2-hyperintense contents",
+      "diagnosis": "Acute appendicitis in pregnancy, likely involving a superiorly displaced right-sided appendix",
+      "confidence": 0.62,
+      "visible_findings": [
+        "Gravid uterus is present, with bright amniotic fluid and visible fetal parts occupying much of the abdomen/pelvis on this axial T2 image",
+        "Along the maternal right lateral abdomen there is a probable enlarged tubular structure with T2-bright luminal fluid and a thickened wall, in the expected region of a pregnancy-displaced appendix",
+        "Mild surrounding T2-bright periappendiceal inflammatory change/fluid is visible adjacent to that structure",
+        "The enlarged uterus displaces adjacent bowel/cecal structures superiorly and laterally, which fits the expected altered appendiceal position in pregnancy"
+      ],
+      "reasoning": "The dominant abnormality on this slice is a probable inflamed fluid-filled tubular structure along the maternal right side with adjacent edema, while the uterus is clearly gravid. In pregnancy the appendix is often displaced cephalad and laterally by the enlarged uterus, and this single-slice appearance most strongly favors acute appendicitis in pregnancy over other right-sided bowel or adnexal structures.",
+      "uncertainties": [
+        "This is only one axial slice, so the appendix cannot be followed as a definite blind-ending structure with certainty",
+        "Alternative mimics such as a small inflamed bowel loop or adnexal structure cannot be completely excluded on this image alone",
+        "This slice is insufficient to determine whether there is perforation, abscess, or the full extent of surrounding inflammation"
+      ],
+      "verdict": "match"
+    },
+    {
+      "id": "left_mca_infarction",
+      "title": "Acute left MCA infarction",
+      "case_url": "https://www.pacsbin.com/c/WkUP_QRFD8",
+      "modality": "MRI",
+      "expected_diagnosis": "acute left multifocal MCA distribution ischemia/infarction",
+      "selected_link_index": 0,
+      "selected_key_text": "patchy left multifocal MCA distribution diffusion restriction",
+      "diagnosis": "Sporadic Creutzfeldt-Jakob disease (CJD) with cortical ribboning",
+      "confidence": 0.64,
+      "visible_findings": [
+        "Patchy bilateral gyriform hyperintensity along the cortical ribbon at the high frontoparietal convexities on this axial diffusion-weighted image",
+        "Predominantly cortical involvement with relative sparing of the underlying deep white matter",
+        "Multifocal bilateral distribution that does not fit a single vascular territory",
+        "No obvious mass effect or hemorrhagic focus visible on this slice"
+      ],
+      "reasoning": "The dominant abnormality is bilateral cortical diffusion hyperintensity producing a cortical-ribboning pattern near the vertex. On diffusion-weighted brain MRI, this appearance is most suggestive of sporadic CJD and is less typical for a focal infarct.",
+      "uncertainties": [
+        "This is only one superior slice; ADC correlation and review of the full exam are needed to confirm true restricted diffusion and assess additional characteristic involvement.",
+        "Similar cortical diffusion hyperintensity can be seen with postictal change, hypoxic-ischemic injury, or encephalitis.",
+        "If the signal on the full series is centered more at the corticomedullary junction than in the cortex itself, neuronal intranuclear inclusion disease would be an important alternative."
+      ],
+      "verdict": "miss"
+    },
+    {
+      "id": "cauda_equina_compression",
+      "title": "Cauda equina compression from severe stenosis",
+      "case_url": "https://www.pacsbin.com/c/WySaY7RFDU",
+      "modality": "MRI",
+      "expected_diagnosis": "severe central stenosis with compression of the cauda equina at multiple levels",
+      "selected_link_index": 0,
+      "selected_key_text": "severe L3-4 and L4-5 central stenosis with compression of the cauda equina",
+      "diagnosis": "Bilateral lumbar juxtafacet (synovial) cysts causing severe central spinal canal stenosis",
+      "confidence": 0.72,
+      "visible_findings": [
+        "Two symmetric T2-hyperintense rounded cystic lesions are present in the posterolateral spinal canal adjacent to the facet joints.",
+        "Marked compression and near-effacement of the thecal sac/CSF space is seen, indicating severe central canal narrowing.",
+        "Associated degenerative posterior element/facet hypertrophy is visible around the cystic lesions.",
+        "There may be mild accompanying broad-based posterior disc bulging, but the dominant canal compromise on this slice is posterior and juxtafacet."
+      ],
+      "reasoning": "On this axial T2 lumbar MR slice, the dominant abnormality is a pair of bright cystic-appearing masses centered at the facet joints and projecting medially into the canal. Their juxtafacet location, fluid signal, and mass effect on the thecal sac are most consistent with bilateral synovial cysts, producing severe degenerative lumbar spinal stenosis.",
+      "uncertainties": [
+        "This is a single axial slice, so exact level, full extent, and continuity with the facet joints cannot be definitively confirmed.",
+        "A close differential on one slice is marked facet joint effusions or another cystic degenerative posterior epidural lesion, but bilateral juxtafacet synovial cysts are the best fit here.",
+        "Assessment of additional contributors such as spondylolisthesis or multilevel stenosis requires the rest of the exam."
+      ],
+      "verdict": "partial"
+    }
+  ]
+}

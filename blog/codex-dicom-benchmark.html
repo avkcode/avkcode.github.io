@@ -3,338 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Can Codex Diagnose a DICOM Slice? A 10-Case Public Benchmark</title>
+    <title>Can a General LLM Diagnose a DICOM Slice? A 10-Case Public Benchmark</title>
     <meta
       name="description"
-      content="A simple but explicit 10-case benchmark of Codex on public diagnosed DICOM teaching cases, now updated with ROI-guided review-pipeline follow-up results and the raw comparison JSON."
+      content="A simple but explicit 10-case benchmark of a general multimodal LLM on public diagnosed DICOM teaching cases, now updated with ROI-guided review-pipeline follow-up results and the raw comparison JSON."
     />
     <link rel="canonical" href="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Can Codex Diagnose a DICOM Slice? A 10-Case Public Benchmark" />
+    <meta property="og:title" content="Can a General LLM Diagnose a DICOM Slice? A 10-Case Public Benchmark" />
     <meta
       property="og:description"
-      content="I ran Codex on 10 public diagnosed DICOM teaching cases, then added ROI-guided and review-pipeline follow-up experiments to see what actually improved."
+      content="I ran a general multimodal model on 10 public diagnosed DICOM teaching cases, then added ROI-guided and review-pipeline follow-up experiments to see what actually improved."
     />
     <meta property="og:url" content="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:site_name" content="Anton Krylov" />
-    <style>
-      :root {
-        --ink: #f7ecd3;
-        --text: #e0d2b8;
-        --muted: #ae9c7a;
-        --paper: #16101d;
-        --line: rgba(212, 169, 90, 0.22);
-        --line-strong: rgba(212, 169, 90, 0.42);
-        --accent: #d4a95a;
-        --panel: rgba(106, 63, 130, 0.1);
-        --panel-strong: rgba(106, 63, 130, 0.18);
-        --good: #89d5a2;
-        --bad: #f19696;
-        --warn: #f1c36e;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        background:
-          radial-gradient(circle at 0% 0%, rgba(106, 63, 130, 0.28), transparent 34%),
-          radial-gradient(circle at 100% 100%, rgba(212, 169, 90, 0.12), transparent 42%),
-          linear-gradient(180deg, #0c0810 0%, var(--paper) 48%, #08060c 100%);
-        color: var(--text);
-      }
-
-      body {
-        font-family: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        line-height: 1.72;
-        letter-spacing: 0.005em;
-      }
-
-      .frame {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 46px 24px 90px;
-      }
-
-      .article {
-        background: linear-gradient(180deg, rgba(41, 28, 52, 0.97), rgba(22, 16, 29, 0.98));
-        border: 1px solid var(--line);
-        border-radius: 26px;
-        box-shadow:
-          0 30px 70px rgba(0, 0, 0, 0.48),
-          inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        overflow: hidden;
-      }
-
-      .hero {
-        position: relative;
-        padding: 42px 48px 34px;
-        border-bottom: 1px solid var(--line);
-        background:
-          radial-gradient(circle at 18% 0%, rgba(106, 63, 130, 0.34), transparent 46%),
-          radial-gradient(circle at 82% 18%, rgba(212, 169, 90, 0.14), transparent 30%),
-          linear-gradient(165deg, rgba(58, 40, 74, 0.97) 0%, rgba(37, 26, 49, 0.95) 62%, rgba(23, 17, 31, 0.95) 100%);
-      }
-
-      .back {
-        display: inline-block;
-        margin-bottom: 18px;
-        text-decoration: none;
-        color: var(--muted);
-        font-size: 0.86rem;
-        letter-spacing: 0.11em;
-        text-transform: uppercase;
-      }
-
-      .back:hover {
-        color: var(--accent);
-      }
-
-      h1 {
-        margin: 0;
-        color: var(--ink);
-        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-        font-weight: 500;
-        font-size: clamp(2.3rem, 6vw, 3.7rem);
-        line-height: 1.1;
-        letter-spacing: 0.01em;
-        max-width: 15ch;
-        text-wrap: balance;
-      }
-
-      .deck {
-        margin: 14px 0 0;
-        max-width: 69ch;
-        color: #cab894;
-        font-size: 1rem;
-      }
-
-      .hero-quick {
-        margin-top: 12px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .hero-pill {
-        display: inline-block;
-        border: 1px solid rgba(212, 169, 90, 0.36);
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.78rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: #ddc8a0;
-        background: rgba(106, 63, 130, 0.14);
-      }
-
-      .meta {
-        margin-top: 16px;
-        font-size: 0.84rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .content {
-        padding: 38px 48px 52px;
-      }
-
-      h2 {
-        margin: 52px 0 12px;
-        padding-top: 14px;
-        border-top: 1px solid var(--line);
-        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-        font-weight: 500;
-        font-size: 1.62rem;
-        line-height: 1.25;
-        color: var(--ink);
-      }
-
-      h3 {
-        margin: 28px 0 10px;
-        color: var(--ink);
-        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-        font-weight: 500;
-        font-size: 1.24rem;
-      }
-
-      p,
-      li {
-        font-size: 1.02rem;
-      }
-
-      p {
-        margin: 0 0 16px;
-        max-width: 74ch;
-      }
-
-      ul,
-      ol {
-        margin: 0 0 18px 22px;
-        max-width: 74ch;
-      }
-
-      li {
-        margin-bottom: 8px;
-      }
-
-      a {
-        color: var(--accent);
-      }
-
-      a:hover {
-        color: #f6ddb0;
-      }
-
-      code {
-        font-family: "SF Mono", "Menlo", "Consolas", monospace;
-        font-size: 0.93em;
-        background: rgba(106, 63, 130, 0.16);
-        color: #f6e8c8;
-        border: 1px solid rgba(212, 169, 90, 0.28);
-        border-radius: 6px;
-        padding: 2px 6px;
-      }
-
-      pre {
-        margin: 18px 0 24px;
-        padding: 16px 18px;
-        max-width: 86ch;
-        overflow-x: auto;
-        border: 1px solid var(--line-strong);
-        border-radius: 14px;
-        background: linear-gradient(180deg, rgba(106, 63, 130, 0.16), rgba(212, 169, 90, 0.06));
-      }
-
-      pre code {
-        border: 0;
-        padding: 0;
-        background: transparent;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0 26px;
-        max-width: 94ch;
-        background: linear-gradient(180deg, rgba(106, 63, 130, 0.1), rgba(212, 169, 90, 0.05));
-        border: 1px solid var(--line-strong);
-        border-radius: 14px;
-        overflow: hidden;
-      }
-
-      th,
-      td {
-        text-align: left;
-        vertical-align: top;
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      th {
-        color: var(--ink);
-        font-size: 0.88rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      tr:last-child td {
-        border-bottom: 0;
-      }
-
-      .lead {
-        color: #ecdfc4;
-        font-size: 1.08rem;
-      }
-
-      .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-        max-width: 86ch;
-        margin: 24px 0 28px;
-      }
-
-      .kpi {
-        border: 1px solid var(--line-strong);
-        border-radius: 16px;
-        padding: 16px;
-        background: linear-gradient(180deg, var(--panel-strong), rgba(212, 169, 90, 0.06));
-      }
-
-      .kpi-label {
-        display: block;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 0.78rem;
-      }
-
-      .kpi-value {
-        display: block;
-        margin-top: 8px;
-        color: var(--ink);
-        font-size: 2rem;
-        line-height: 1;
-        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-      }
-
-      .callout {
-        margin: 20px 0 24px;
-        padding: 14px 16px;
-        border: 1px solid var(--line-strong);
-        border-radius: 14px;
-        background: linear-gradient(180deg, rgba(106, 63, 130, 0.14), rgba(212, 169, 90, 0.08));
-        max-width: 86ch;
-      }
-
-      .callout strong {
-        color: var(--ink);
-      }
-
-      .result-match {
-        color: var(--good);
-      }
-
-      .result-miss {
-        color: var(--bad);
-      }
-
-      .result-partial {
-        color: var(--warn);
-      }
-
-      .refs li {
-        word-break: break-word;
-      }
-
-      @media (max-width: 920px) {
-        .kpi-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 760px) {
-        .hero,
-        .content {
-          padding: 24px 20px;
-        }
-
-        .kpi-grid {
-          grid-template-columns: 1fr;
-        }
-
-        table {
-          display: block;
-          overflow-x: auto;
-        }
-      }
-    </style>
     <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
   </head>
   <body class="article-page">
@@ -342,7 +24,7 @@
       <article class="article">
         <header class="hero">
           <a class="back" href="./index.html">Back to Blog</a>
-          <h1>Can Codex Diagnose a DICOM Slice?</h1>
+          <h1>Can a General LLM Diagnose a DICOM Slice?</h1>
           <div class="hero-quick">
             <span class="hero-pill">17 min read</span>
             <span class="hero-pill">Updated April 16, 2026</span>
@@ -350,7 +32,7 @@
             <span class="hero-pill">7 CT + 3 MRI</span>
           </div>
           <p class="deck">
-            I wanted a real answer, not a vibe-check demo: if I give Codex a real public diagnosed DICOM teaching case
+            I wanted a real answer, not a vibe-check demo: if I give a general multimodal model a real public diagnosed DICOM teaching case
             and ask for the most likely diagnosis from one key slice, does it get the case right often enough to be
             impressive? I expanded the pilot to 10 cases, published the exact script and raw JSON, and the short
             answer is still no. Since then I also added ROI-guided and review-pipeline follow-up experiments to the
@@ -363,21 +45,21 @@
         <section class="content">
           <p class="lead">
             This is a real benchmark, but still a simple blog post. It is not a clinical validation study, not a
-            regulatory claim, and not evidence that Codex is suitable for diagnosis. It is evidence about one narrower
+            regulatory claim, and not evidence that a general multimodal model is suitable for diagnosis. It is evidence about one narrower
             thing only: what happened when I ran a general-purpose multimodal model on 10 public diagnosed DICOM
             teaching cases under a single-slice, structured-output setup that loosely resembles a DICOM chat rail.
           </p>
 
           <h2>Abstract</h2>
           <p>
-            I evaluated Codex on 10 public diagnosed Pacsbin teaching cases: 7 CT or CTA cases and 3 MRI cases. For
+            I evaluated a general multimodal model on 10 public diagnosed Pacsbin teaching cases: 7 CT or CTA cases and 3 MRI cases. For
             each case I extracted one published pathology-bearing key image from the case page, downloaded the linked
-            DICOM instance, rendered it with the case page's own window settings, and asked Codex for the single most
+            DICOM instance, rendered it with the case page's own window settings, and asked the model for the single most
             likely diagnosis visible on that slice.
           </p>
           <p>
             Strict top-1 matches were <strong>3/10</strong>. Two more cases were directionally useful but incomplete,
-            giving <strong>5/10</strong> if partials are counted. The misses were not random. Codex often locked onto a
+            giving <strong>5/10</strong> if partials are counted. The misses were not random. The model often locked onto a
             visually salient but clinically secondary structure, then produced a coherent explanation for the wrong
             pathology. Confidence did not separate right from wrong very well either: the average miss confidence was
             still about <strong>0.68</strong>, and one of the clearest misses came in at <strong>0.89</strong>.
@@ -424,7 +106,7 @@
             The question here is intentionally narrow:
           </p>
           <p>
-            <strong>If I feed Codex a real diagnosed DICOM key slice plus lightweight metadata, can it name the right
+            <strong>If I feed a general multimodal model a real diagnosed DICOM key slice plus lightweight metadata, can it name the right
             diagnosis often enough to justify a serious “ask this DICOM” diagnostic feature?</strong>
           </p>
           <p>
@@ -471,7 +153,7 @@
 
           <h3>Prompt and scoring</h3>
           <p>
-            The prompt forced Codex to return a compact schema with <code>diagnosis</code>, <code>confidence</code>,
+            The prompt forced the model to return a compact schema with <code>diagnosis</code>, <code>confidence</code>,
             <code>visible_findings</code>, <code>reasoning</code>, and <code>uncertainties</code>. The key instruction
             was simple: <em>“Be specific about the single most likely diagnosis visible on this slice.”</em>
           </p>
@@ -501,7 +183,7 @@
                 <th>Case</th>
                 <th>Modality</th>
                 <th>Ground truth</th>
-                <th>Codex output</th>
+                <th>Model output</th>
                 <th>Conf.</th>
                 <th>Result</th>
               </tr>
@@ -607,20 +289,20 @@
           <h3>2. Wrong object, coherent explanation</h3>
           <p>
             The really dangerous misses are not sloppy. They are internally tidy. In the pulmonary embolism case,
-            Codex gave aortic-dissection logic. In the infarction case, it gave CJD logic. In the sigmoid
+            The model gave aortic-dissection logic. In the infarction case, it gave CJD logic. In the sigmoid
             diverticulitis case, it gave carcinoid-with-desmoplasia logic. The model often sounds medically literate
             while being clinically off-target.
           </p>
 
           <h3>3. Some partials are useful, but not enough</h3>
           <p>
-            The partials are informative. Codex often recognized the broader pattern while missing the sharper claim:
+            The partials are informative. The model often recognized the broader pattern while missing the sharper claim:
             appendicitis without perforation, or severe canal stenosis without correctly naming the exact cause. That
             suggests a future system could become useful with better localization and structured evidence, but it is not
             already there.
           </p>
 
-          <h2>How I Would Make Codex or an LLM More Accurate</h2>
+          <h2>How I Would Make a General LLM More Accurate</h2>
           <p>
             The main lesson is that this is not primarily a prompt-writing problem. It is a perception and workflow
             problem.
@@ -682,6 +364,17 @@
             better answer object, a better audit trail, and a cleaner “why I think this / why I might be wrong”
             structure.
           </p>
+          <figure class="media-shot">
+            <img
+              src="/assets/dicom-review-pipeline-demo.gif"
+              alt="Animated DICOM workbench showing region selection, the built-in review panel, and the structured proof-style result flow."
+              loading="lazy"
+            />
+            <figcaption>
+              The product follow-up that informed the second benchmark pass: ROI-first selection, a built-in side panel,
+              and a structured review object instead of a plain chat reply.
+            </figcaption>
+          </figure>
 
           <h3>What happened when I benchmarked the shipped flow</h3>
           <p>
@@ -773,13 +466,13 @@
           </p>
           <ul>
             <li>
-              <a href="/assets/codex-dicom-benchmark-eval.py">Exact evaluation script</a>
+              <a href="/assets/dicom-benchmark-eval.py">Exact evaluation script</a>
             </li>
             <li>
-              <a href="/assets/codex-dicom-benchmark-results.json">Corrected aggregate raw results JSON</a>
+              <a href="/assets/dicom-benchmark-results.json">Corrected aggregate raw results JSON</a>
             </li>
             <li>
-              <a href="/assets/dicom-review-pipeline-compare-v4-results.json">Review-pipeline comparison JSON</a>
+              <a href="/assets/dicom-benchmark-review-pipeline-results.json">Review-pipeline comparison JSON</a>
             </li>
           </ul>
           <p>
@@ -791,6 +484,10 @@
             comparison so the updated claims in this post are inspectable too.
           </p>
           <p>
+            The later API-side follow-up used OpenAI multimodal vision models through the same harness, but the product
+            lesson stayed the same: ROI guidance helped more than extra rhetoric.
+          </p>
+          <p>
             One transparency note: a draft summary during the benchmarking session accidentally overcounted the
             pulmonary embolism case because of a sloppy regex. The appendix JSON and script use the corrected scoring
             rule.
@@ -798,13 +495,13 @@
           <pre><code>python3 -m venv .venv
 . .venv/bin/activate
 pip install numpy pillow pydicom
-python3 codex-dicom-benchmark-eval.py --output-dir ./out --model gpt-5.4</code></pre>
+python3 dicom-benchmark-eval.py --output-dir ./out --model gpt-5.4</code></pre>
 
           <h2>Conclusion</h2>
           <p>
             The result here is not that multimodal LLMs are useless for medical imaging. The result is that a generic
-            multimodal LLM plus a sleek DICOM chat surface is still not enough. On this 10-case public benchmark,
-            Codex was articulate, sometimes directionally helpful, and still wrong too often to earn diagnostic trust.
+            multimodal LLM plus a sleek DICOM chat surface is still not enough. On this 10-case public benchmark, the
+            model was articulate, sometimes directionally helpful, and still wrong too often to earn diagnostic trust.
           </p>
           <p>
             The follow-up pipeline work does not overturn that. It makes the system feel more serious, more inspectable,
