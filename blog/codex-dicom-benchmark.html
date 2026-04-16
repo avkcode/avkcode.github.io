@@ -32,12 +32,10 @@
             <span class="hero-pill">7 CT + 3 MRI</span>
           </div>
           <p class="deck">
-            A general multimodal LLM is not a replacement for a radiologist, and even a domain-trained model is not a
-            drop-in substitute for clinical responsibility. The useful role is narrower: helping with review, evidence
-            gathering, drafting, and workflow support. That shifts the real question. Not “can AI replace the
-            reader,” but “can the system deliver useful assistance at acceptable operational cost?” In medical
-            imaging, that cost is often the hardest part: large DICOM studies, expensive inference, strict reliability
-            requirements, and regulated data handling.
+            The industry is optimizing the wrong layer. A general multimodal LLM is not replacing a radiologist any
+            time soon, and even a domain-trained model is not a substitute for clinical responsibility. The useful role
+            is narrower: review, evidence gathering, drafting, and workflow support. The real question is operational
+            cost: large DICOM studies, expensive inference, strict reliability, and regulated data handling.
           </p>
           <p class="meta">Published April 15, 2026 · Updated April 16, 2026</p>
         </header>
@@ -62,8 +60,9 @@
             The result was weak. Strict top-1 accuracy was <strong>3/10</strong>. Two more answers were directionally
             useful but incomplete, which brought the softer score to <strong>5/10</strong>. The misses were not random.
             The model often locked onto a structure that was visually obvious but clinically secondary, then built a
-            confident story around the wrong disease. Confidence was unreliable too. One of the clearest misses came in
-            at <strong>0.89</strong>.
+            confident story around the wrong disease. The ugliest example was acute appendicitis misread as bilateral
+            osteitis condensans ilii at <strong>0.89</strong> confidence. It sounded convincing. It was obviously
+            wrong.
           </p>
           <h2>What Changed In The Follow-up</h2>
           <p>
@@ -116,10 +115,10 @@
           <h2>Conclusion</h2>
           <p>
             The conclusion is simple. The real bottleneck is not the radiologist, and replacing radiologists with LLMs
-            is not a credible near-term goal. In this benchmark the model was sometimes useful, often articulate, and
-            still wrong too often to earn diagnostic trust. The more realistic opportunity is different: using LLMs to
-            replace the legacy software stack around the reader. The path forward is better localization, better
-            study-level context, stronger abstention, and better systems for review, evidence, drafting, and workflow.
+            is not a credible near-term goal. The model is not the product. The operational surface is. In this
+            benchmark the model was sometimes useful, often articulate, and still wrong too often to earn diagnostic
+            trust. The realistic opportunity is replacing the brittle legacy software stack around the reader with
+            better systems for review, evidence, drafting, and workflow.
           </p>
           <p>
             If you want to inspect the work, the <a href="/assets/dicom-benchmark-eval.py">evaluation script</a>, the
