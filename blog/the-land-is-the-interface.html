@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Land Is the Interface</title>
+    <meta
+      name="description"
+      content="A static HTML and JavaScript prototype for an online book about Jesus, God, and Israel built from real places, Google Maps links, and D3 infographics."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/the-land-is-the-interface.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Land Is the Interface" />
+    <meta
+      property="og:description"
+      content="A static HTML atlas that turns Jesus, God, and Israel into something you travel through: real coordinates, scene shifts, thematic echoes, and feast-time diagrams."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/the-land-is-the-interface.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+    <link rel="stylesheet" href="/assets/jesus-israel-atlas.css" />
+  </head>
+  <body class="article-page land-atlas-page">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <p class="eyebrow">Interactive prototype</p>
+          <h1>The Land Is the Interface</h1>
+          <div class="hero-quick">
+            <span class="hero-pill">8 min read</span>
+            <span class="hero-pill">Static HTML + JS</span>
+            <span class="hero-pill">14 real places</span>
+            <span class="hero-pill">D3 atlas + infographics</span>
+          </div>
+          <p class="deck">
+            If an online book about Jesus, God, and Israel feels like a PDF with prettier fonts, it is not unique. The
+            unique move is to bind the story to real coordinates, contested sites, pilgrimage rhythms, and recurring
+            patterns so readers discover the thesis by traveling through it.
+          </p>
+          <p class="meta">Published April 16, 2026</p>
+        </header>
+
+        <section class="content">
+          <p class="lead">
+            This page is the argument and the prototype at the same time. It is not trying to flatten Jewish,
+            Christian, and historical readings into one voice. It is trying to make the reader see where those readings
+            meet the land, where they diverge, and why the geography matters.
+          </p>
+
+          <div class="manifesto">
+            <p class="manifesto-line">Normal religious websites explain.</p>
+            <p class="manifesto-line">This kind of book should reveal.</p>
+            <p class="manifesto-line">The land should carry part of the proof.</p>
+          </div>
+
+          <h2>The Thesis</h2>
+          <p>
+            The sharpest version of this project is not "Jesus is important" or "Israel matters." Those are broad
+            claims and readers have heard them before. The stronger thesis is that many Christian readings of Jesus make
+            the most sense when the life of Jesus is read against Israel's own geography: promise, wilderness, kingdom,
+            exile, return, and presence.
+          </p>
+          <p>
+            That means the interface should not be chapter after chapter of abstract ideas. It should behave like an
+            atlas. Each chapter should open a real place, show what is historically stable or debated, link to maps, and
+            then connect that place to larger patterns. The reader does not just read about the story. The reader moves
+            through it.
+          </p>
+
+          <div class="note note--quiet">
+            Real places are labeled <strong>historical</strong>, <strong>traditional</strong>, or
+            <strong>debated</strong>. That matters. A serious project should be honest about what can be located with
+            confidence and what survives mostly by tradition.
+          </div>
+
+          <h2>Travel the Book</h2>
+          <p>
+            The first layer is the atlas itself. The scene tabs below move through promise, wilderness, Galilee,
+            Jerusalem, and exile-return. Every marker has a real coordinate and a Google Maps link. The thesis is not
+            stated once and then repeated. It emerges as the scenes line up.
+          </p>
+
+          <section class="atlas-shell" aria-labelledby="atlas-title">
+            <div class="atlas-head">
+              <div>
+                <p class="section-kicker">Atlas</p>
+                <h3 id="atlas-title">A book you travel through</h3>
+              </div>
+              <p class="atlas-caption" id="scene-caption">
+                Promise begins with wells, altars, burial caves, and a future king-town.
+              </p>
+            </div>
+
+            <div class="scene-tabs" id="scene-tabs" aria-label="Atlas scenes"></div>
+
+            <div class="atlas-layout">
+              <div class="atlas-stage">
+                <svg
+                  id="atlas-map"
+                  role="img"
+                  aria-label="Interactive map of real places tied to the story of Israel and the life of Jesus"
+                ></svg>
+                <div class="map-legend">
+                  <span><i class="legend-dot legend-dot--historical"></i>Historical</span>
+                  <span><i class="legend-dot legend-dot--traditional"></i>Traditional</span>
+                  <span><i class="legend-dot legend-dot--debated"></i>Debated</span>
+                </div>
+              </div>
+
+              <aside class="detail-card detail-card--atlas" aria-live="polite">
+                <p class="detail-kicker">Selected Place</p>
+                <h3 class="detail-title" id="place-title">Hebron</h3>
+                <div class="detail-meta">
+                  <span class="status-badge" id="place-status">Historical</span>
+                  <span id="place-region">Judean hills</span>
+                </div>
+                <p class="detail-copy" id="place-copy">
+                  Promise starts somewhere you can point to. The Abraham story is not just a theme. It is attached to a
+                  burial cave, a ridge city, and inherited land.
+                </p>
+                <dl class="detail-points">
+                  <div class="detail-point">
+                    <dt>Jewish context</dt>
+                    <dd id="place-jewish">
+                      Hebron is tied to the patriarchs and the ancestral burial cave remembered in Jewish tradition.
+                    </dd>
+                  </div>
+                  <div class="detail-point">
+                    <dt>Christian reading</dt>
+                    <dd id="place-christian">
+                      Promise here becomes part of a larger line that Christians trace forward toward David and Jesus.
+                    </dd>
+                  </div>
+                  <div class="detail-point">
+                    <dt>Historical note</dt>
+                    <dd id="place-historical">
+                      The city is ancient and continuously inhabited, though every sacred claim inside it carries layers
+                      of later memory.
+                    </dd>
+                  </div>
+                </dl>
+                <div class="detail-actions">
+                  <a class="detail-link" id="place-maps" href="https://www.google.com/maps/search/?api=1&amp;query=31.5326,35.0998" target="_blank" rel="noreferrer">Open in Google Maps</a>
+                  <a class="detail-link detail-link--ghost" id="place-street" href="https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=31.5326,35.0998" target="_blank" rel="noreferrer">Street View</a>
+                  <a class="detail-link detail-link--ghost" id="place-scene" href="#atlas-title">Current scene</a>
+                </div>
+
+                <div class="ledger">
+                  <p class="detail-kicker">Pilgrim Ledger</p>
+                  <div class="ledger-grid">
+                    <div class="ledger-box">
+                      <span class="ledger-value" id="ledger-places">1</span>
+                      <span class="ledger-label">places opened</span>
+                    </div>
+                    <div class="ledger-box">
+                      <span class="ledger-value" id="ledger-scenes">1</span>
+                      <span class="ledger-label">scenes unlocked</span>
+                    </div>
+                    <div class="ledger-box">
+                      <span class="ledger-value" id="ledger-themes">0</span>
+                      <span class="ledger-label">themes traced</span>
+                    </div>
+                    <div class="ledger-box">
+                      <span class="ledger-value" id="ledger-feasts">0</span>
+                      <span class="ledger-label">feasts opened</span>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <div class="place-grid" id="place-grid" aria-label="Place cards"></div>
+          </section>
+
+          <h2>Jerusalem as a Layered City</h2>
+          <p>
+            Jerusalem should not appear only as a final destination pin. It should behave like a layered city with a
+            time slider: memory of temple, exile, Second Temple expectation, Gospel-era procession, and the modern city
+            readers can still open in Maps right now.
+          </p>
+
+          <section class="jerusalem-shell" aria-labelledby="jerusalem-title">
+            <div class="jerusalem-stage" id="jerusalem-stage">
+              <div class="jerusalem-stage-inner">
+                <p class="section-kicker">Layered city</p>
+                <h3 id="jerusalem-title">One place, many Jerusalems</h3>
+                <p class="jerusalem-period" id="jerusalem-period">Temple memory</p>
+                <p class="jerusalem-copy" id="jerusalem-copy">
+                  Jerusalem begins as the city of David and the remembered site of temple presence, pilgrimage, and
+                  kingship.
+                </p>
+                <div class="jerusalem-rings" aria-hidden="true">
+                  <span class="jerusalem-ring jerusalem-ring--outer"></span>
+                  <span class="jerusalem-ring jerusalem-ring--mid"></span>
+                  <span class="jerusalem-ring jerusalem-ring--inner"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="jerusalem-controls">
+              <input
+                id="jerusalem-slider"
+                class="jerusalem-slider"
+                type="range"
+                min="0"
+                max="4"
+                step="1"
+                value="0"
+                aria-label="Jerusalem time layers"
+              />
+              <div class="jerusalem-tabs" id="jerusalem-tabs" aria-label="Jerusalem layers"></div>
+            </div>
+
+            <aside class="detail-card" aria-live="polite">
+              <p class="detail-kicker">Selected Layer</p>
+              <h3 class="detail-title" id="jerusalem-layer-title">Temple memory</h3>
+              <p class="detail-copy" id="jerusalem-layer-copy">
+                The city is read first as a place of divine presence, pilgrimage, sacrifice, and covenant identity.
+              </p>
+              <p class="detail-note" id="jerusalem-layer-note">
+                This is why Jerusalem works so well in an interactive book. The same coordinate can hold different
+                historical and theological densities without collapsing them into one flat explanation.
+              </p>
+              <a class="detail-link" id="jerusalem-maps" href="https://www.google.com/maps/search/?api=1&amp;query=31.7780,35.2354" target="_blank" rel="noreferrer">Open Jerusalem in Google Maps</a>
+            </aside>
+          </section>
+
+          <h2>See the Echoes</h2>
+          <p>
+            Geography is the first layer. Pattern is the second. A reader should be able to click a theme like
+            <em>promise</em>, <em>wilderness</em>, or <em>presence</em> and watch the corresponding places light up.
+            That is when the interface stops feeling like a sermon and starts feeling like discovery.
+          </p>
+
+          <section class="viz-shell" aria-labelledby="echo-title">
+            <div class="viz-head">
+              <div>
+                <p class="section-kicker">Thematic D3 graph</p>
+                <h3 id="echo-title">Israel's story-patterns under Jesus' geography</h3>
+              </div>
+              <div class="theme-pills" id="theme-pills" aria-label="Themes"></div>
+            </div>
+
+            <div class="viz-grid">
+              <div class="viz-stage">
+                <svg
+                  id="echo-network"
+                  role="img"
+                  aria-label="Network graph connecting major biblical themes to real places in Israel and surrounding regions"
+                ></svg>
+              </div>
+
+              <aside class="detail-card" aria-live="polite">
+                <p class="detail-kicker">Selected Theme</p>
+                <h3 class="detail-title" id="theme-title">Promise</h3>
+                <p class="detail-copy" id="theme-copy">
+                  Promise is not treated as an abstraction here. It is anchored to Hebron, Beersheba, Bethel, and
+                  Bethlehem so the reader sees covenant language attached to terrain.
+                </p>
+                <p class="detail-note" id="theme-note">
+                  The point is not that every reader will interpret the connections the same way. The point is that the
+                  connections can be seen, tested, and argued about.
+                </p>
+              </aside>
+            </div>
+          </section>
+
+          <h2>Read the Year as a Clock</h2>
+          <p>
+            A book like this also needs time, not just space. The pilgrimage feasts give you a ready-made cosmic rhythm:
+            Passover, Firstfruits, Shavuot, Trumpets, Atonement, Tabernacles. Instead of hiding them in footnotes, put
+            them on a radial clock and let the reader open each one as a layer of meaning.
+          </p>
+
+          <section class="viz-shell viz-shell--clock" aria-labelledby="clock-title">
+            <div class="viz-head">
+              <div>
+                <p class="section-kicker">Festival clock</p>
+                <h3 id="clock-title">The year turns and the story repeats</h3>
+              </div>
+            </div>
+
+            <div class="viz-grid viz-grid--clock">
+              <div class="viz-stage">
+                <svg
+                  id="feast-clock"
+                  role="img"
+                  aria-label="Radial feast calendar showing major biblical festivals and Christian thematic echoes"
+                ></svg>
+              </div>
+
+              <aside class="detail-card" aria-live="polite">
+                <p class="detail-kicker">Selected Feast</p>
+                <h3 class="detail-title" id="feast-title">Passover</h3>
+                <p class="detail-copy" id="feast-copy">
+                  Passover remembers liberation through a meal, a threshold, and a departure. In Christian reading it
+                  becomes a major lens for the last week in Jerusalem.
+                </p>
+                <p class="detail-note" id="feast-note">
+                  A clock like this gives the book a recurring structure. Readers stop feeling like they are consuming
+                  disconnected essays and start feeling the calendar drive the narrative.
+                </p>
+                <a class="detail-link" id="feast-maps" href="https://www.google.com/maps/search/?api=1&amp;query=31.7780,35.2354" target="_blank" rel="noreferrer">Open place anchor</a>
+              </aside>
+            </div>
+
+            <div class="festival-list" id="festival-list" aria-label="Festival list"></div>
+          </section>
+
+          <h2>Why This Feels Different</h2>
+          <div class="difference-grid">
+            <article class="difference-card">
+              <p class="difference-number">01</p>
+              <h3>It uses the land as evidence</h3>
+              <p>
+                Coordinates, routes, and map layers make the reader feel the argument in terrain instead of only in
+                prose.
+              </p>
+            </article>
+            <article class="difference-card">
+              <p class="difference-number">02</p>
+              <h3>It respects uncertainty</h3>
+              <p>
+                Traditional and debated sites stay labeled as such, which makes the experience more credible rather
+                than less.
+              </p>
+            </article>
+            <article class="difference-card">
+              <p class="difference-number">03</p>
+              <h3>It turns theology into navigation</h3>
+              <p>
+                Scenes, themes, and feast cycles let readers uncover patterns instead of passively receiving summaries.
+              </p>
+            </article>
+            <article class="difference-card">
+              <p class="difference-number">04</p>
+              <h3>It is simple to ship</h3>
+              <p>
+                One HTML file plus a scoped stylesheet and script is enough to publish a serious interactive prototype.
+              </p>
+            </article>
+          </div>
+
+          <h2>If I Were Shipping the Full Book</h2>
+          <p>
+            I would keep the production architecture as plain as possible. Static HTML for the article shell, JSON-like
+            data in JavaScript for places and thematic links, D3 for infographics, and Google Maps deep links for real
+            world grounding. If later you want notes, saved threads, or alternate reading modes, those can ride on
+            <code>localStorage</code> without turning the whole project into a framework problem.
+          </p>
+
+          <pre><code>blog/
+  the-land-is-the-interface.html
+assets/
+  jesus-israel-atlas.css
+  jesus-israel-atlas.js</code></pre>
+
+          <p>
+            That is the real "out of this world" move here. Not visual excess. Not mystical copy. A reader who can move
+            between Hebron, Sinai, Nazareth, Jerusalem, Babylon, and the feast calendar in one living surface will feel
+            that the book has an architecture, not just opinions.
+          </p>
+
+          <noscript>
+            <div class="note">
+              This page uses JavaScript for the atlas and diagrams. The essay still reads without it, but the map,
+              network, and feast clock will stay static.
+            </div>
+          </noscript>
+        </section>
+      </article>
+    </main>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+    <script defer src="/assets/jesus-israel-atlas.js"></script>
+  </body>
+</html>
