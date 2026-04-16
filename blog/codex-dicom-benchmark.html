@@ -111,6 +111,15 @@
             and custom interfaces. That is why localhost is the wrong center of gravity. The safest path is to keep
             files, models, and workers inside the controlled runtime and use the browser only as the control surface.
           </p>
+          <p>
+            For users, that changes daily work. They stop moving data through their laptop just to inspect or patch
+            something inside a pod. The browser becomes the control surface and the runtime stays where the files and
+            workers already live. That means fewer broken local environments, fewer kube-context mistakes, fewer copied
+            secrets, and less context switching between terminal, editor, and file browser. It also makes failure
+            handling much safer: atomic saves, snapshots, rollbacks, live watch streams, and controlled transfers
+            replace a lot of “scp and hope.” A related version of the same argument shows up in the previous post on
+            <a href="./portal-long-term-memory.html">Portal Long-Term Memory</a>.
+          </p>
 
           <h2>Conclusion</h2>
           <p>
