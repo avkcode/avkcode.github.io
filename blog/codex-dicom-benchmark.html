@@ -104,6 +104,12 @@
             machine. That is the real value. Not that failures disappear, but that storage faults, restarts, and load
             spikes stop breaking the whole pipeline.
           </p>
+          <p>
+            This matters even more because medical environments are highly regulated, often tied to legacy PACS and
+            hospital software, and usually built on a fragmented stack of old viewers, file shares, vendor gateways,
+            and custom interfaces. That is why localhost is the wrong center of gravity. The safest path is to keep
+            files, models, and workers inside the controlled runtime and use the browser only as the control surface.
+          </p>
 
           <h2>Conclusion</h2>
           <p>
