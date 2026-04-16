@@ -6,14 +6,14 @@
     <title>Can a General LLM Diagnose a DICOM Slice? A 10-Case Public Benchmark</title>
     <meta
       name="description"
-      content="A simple but explicit 10-case benchmark of a general multimodal LLM on public diagnosed DICOM teaching cases, now updated with ROI-guided review-pipeline follow-up results and the raw comparison JSON."
+      content="A short 10-case benchmark of a general multimodal LLM on public DICOM teaching cases, with follow-up ROI and review-pipeline results."
     />
     <link rel="canonical" href="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Can a General LLM Diagnose a DICOM Slice? A 10-Case Public Benchmark" />
     <meta
       property="og:description"
-      content="I ran a general multimodal model on 10 public diagnosed DICOM teaching cases, then added ROI-guided and review-pipeline follow-up experiments to see what actually improved."
+      content="I ran a general multimodal model on 10 public diagnosed DICOM teaching cases, then checked what ROI guidance and a review pipeline actually changed."
     />
     <meta property="og:url" content="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:site_name" content="Anton Krylov" />
@@ -26,343 +26,48 @@
           <a class="back" href="./index.html">Back to Blog</a>
           <h1>Can a General LLM Diagnose a DICOM Slice?</h1>
           <div class="hero-quick">
-            <span class="hero-pill">17 min read</span>
+            <span class="hero-pill">4 min read</span>
             <span class="hero-pill">Updated April 16, 2026</span>
             <span class="hero-pill">10-case benchmark</span>
             <span class="hero-pill">7 CT + 3 MRI</span>
           </div>
           <p class="deck">
-            I wanted a real answer, not a vibe-check demo: if I give a general multimodal model a real public diagnosed DICOM teaching case
-            and ask for the most likely diagnosis from one key slice, does it get the case right often enough to be
-            impressive? I expanded the pilot to 10 cases, published the exact script and raw JSON, and the short
-            answer is still no. Since then I also added ROI-guided and review-pipeline follow-up experiments to the
-            same general setup. Those updates made the product design more serious, but they still did not turn a
-            general multimodal model into a trustworthy diagnostic reader.
+            I wanted a hard answer, not a demo answer. I gave a general multimodal model 10 real public DICOM teaching
+            cases and asked for the most likely diagnosis from one key slice. Then I reran the benchmark with ROI
+            guidance and a review pipeline. The interface improved faster than the diagnosis.
           </p>
           <p class="meta">Published April 15, 2026 · Updated April 16, 2026</p>
         </header>
 
         <section class="content">
           <p class="lead">
-            This is a real benchmark, but still a simple blog post. It is not a clinical validation study, not a
-            regulatory claim, and not evidence that a general multimodal model is suitable for diagnosis. It is evidence about one narrower
-            thing only: what happened when I ran a general-purpose multimodal model on 10 public diagnosed DICOM
-            teaching cases under a single-slice, structured-output setup that loosely resembles a DICOM chat rail.
+            This is a real benchmark, but it is still small. It is not a clinical validation study and it does not
+            support diagnostic claims. It answers one narrow question: how far can a general multimodal model go on a
+            public single-slice DICOM task before confidence stops matching reality?
           </p>
 
-          <h2>Abstract</h2>
+          <h2>What I Tested</h2>
           <p>
-            I evaluated a general multimodal model on 10 public diagnosed Pacsbin teaching cases: 7 CT or CTA cases and 3 MRI cases. For
-            each case I extracted one published pathology-bearing key image from the case page, downloaded the linked
-            DICOM instance, rendered it with the case page's own window settings, and asked the model for the single most
-            likely diagnosis visible on that slice.
-          </p>
-          <p>
-            Strict top-1 matches were <strong>3/10</strong>. Two more cases were directionally useful but incomplete,
-            giving <strong>5/10</strong> if partials are counted. The misses were not random. The model often locked onto a
-            visually salient but clinically secondary structure, then produced a coherent explanation for the wrong
-            pathology. Confidence did not separate right from wrong very well either: the average miss confidence was
-            still about <strong>0.68</strong>, and one of the clearest misses came in at <strong>0.89</strong>.
-          </p>
-          <p>
-            After the initial post I built a more realistic DICOM rail pipeline around the same idea:
-            <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>. That follow-up improved
-            provenance, disagreement handling, and the answer format, but it did not solve the main problem. The
-            system got better at reviewing a claim than at seeing the right object in the first place.
+            I used 10 public Pacsbin teaching cases: 7 CT or CTA studies and 3 MRI studies. For each case I selected
+            one pathology-bearing key image, downloaded the linked DICOM instance, rendered it with the case page's own
+            window settings, and asked the model for the single most likely diagnosis visible on that slice. The score
+            was simple. A response was a match, a partial, or a miss.
           </p>
 
-          <div class="kpi-grid">
-            <div class="kpi">
-              <span class="kpi-label">Cases</span>
-              <span class="kpi-value">10</span>
-            </div>
-            <div class="kpi">
-              <span class="kpi-label">Strict Matches</span>
-              <span class="kpi-value">3</span>
-            </div>
-            <div class="kpi">
-              <span class="kpi-label">Partials</span>
-              <span class="kpi-value">2</span>
-            </div>
-            <div class="kpi">
-              <span class="kpi-label">Directionally Useful</span>
-              <span class="kpi-value">50%</span>
-            </div>
-          </div>
-
-          <div class="callout">
-            <strong>Main conclusion:</strong> a polished multimodal answer on a DICOM slice can still be clinically
-            wrong because the model chose the wrong object to explain. Better JSON does not fix weak localization.
-          </div>
-
-          <div class="callout">
-            <strong>Update after building the DICOM rail:</strong> the newer review pipeline made the system more
-            inspectable and more disciplined, but it still did not beat a plain finder baseline on the fairest
-            same-run comparison. The bottleneck is still perception, not rhetoric.
-          </div>
-
-          <h2>Question</h2>
+          <h2>What Happened</h2>
           <p>
-            The question here is intentionally narrow:
+            The result was weak. Strict top-1 accuracy was <strong>3/10</strong>. Two more answers were directionally
+            useful but incomplete, which brought the softer score to <strong>5/10</strong>. The misses were not random.
+            The model often locked onto a structure that was visually obvious but clinically secondary, then built a
+            confident story around the wrong disease. Confidence was unreliable too. One of the clearest misses came in
+            at <strong>0.89</strong>.
           </p>
+          <h2>What Changed In The Follow-up</h2>
           <p>
-            <strong>If I feed a general multimodal model a real diagnosed DICOM key slice plus lightweight metadata, can it name the right
-            diagnosis often enough to justify a serious “ask this DICOM” diagnostic feature?</strong>
-          </p>
-          <p>
-            This is still not the full product problem. Real imaging work is study-level, multi-slice, often
-            multi-series, and rarely done from a single screenshot-like moment. But the narrow test matters because it
-            mirrors the most tempting product shortcut: open a DICOM, toggle chat, ask what this is.
-          </p>
-
-          <h2>Benchmark Setup</h2>
-          <h3>Case mix</h3>
-          <p>
-            I used 10 public Pacsbin teaching cases covering abdominal CT, chest CTA, pregnancy MRI, brain MRI, and
-            lumbar spine MRI. The final set was intentionally mixed enough to stress both anatomy selection and
-            diagnosis, not just one visual trope.
-          </p>
-          <ul>
-            <li>Acute appendicitis</li>
-            <li>Acute pulmonary embolism</li>
-            <li>Perforated sigmoid diverticulitis</li>
-            <li>Cecal diverticulitis</li>
-            <li>Sigmoid diverticulitis</li>
-            <li>Strangulated hernia with small-bowel ischemia</li>
-            <li>Perforated appendicitis</li>
-            <li>Appendicitis in pregnancy</li>
-            <li>Acute left MCA distribution infarction</li>
-            <li>Cauda equina compression from severe central stenosis</li>
-          </ul>
-
-          <h3>Key-image selection</h3>
-          <p>
-            I tightened the methodology compared with the earlier five-case pilot. I did <em>not</em> blindly use the
-            first link on each case page, because some pages contain generic or less-relevant auto-scroll links. For
-            each case I fixed one pathology-bearing key-finding link in advance and recorded its link index in the
-            appendix JSON. That gives a reproducible target without pretending the page structure is cleaner than it is.
-          </p>
-
-          <h3>Rendering and metadata</h3>
-          <p>
-            Each referenced DICOM instance was downloaded from the public instance URL, decompressed if needed, and
-            rendered as PNG using the case page's own window center and width. I also passed a lightweight metadata
-            summary to the model: case title, modality bucket, series label, study or series description when present,
-            body part if present, and image dimensions.
-          </p>
-
-          <h3>Prompt and scoring</h3>
-          <p>
-            The prompt forced the model to return a compact schema with <code>diagnosis</code>, <code>confidence</code>,
-            <code>visible_findings</code>, <code>reasoning</code>, and <code>uncertainties</code>. The key instruction
-            was simple: <em>“Be specific about the single most likely diagnosis visible on this slice.”</em>
-          </p>
-          <p>
-            Scoring was deliberately plain:
-          </p>
-          <ul>
-            <li><strong>Match</strong>: the diagnosis text names the target concept.</li>
-            <li><strong>Partial</strong>: the answer is clinically related but incomplete, like appendicitis instead of perforated appendicitis.</li>
-            <li><strong>Miss</strong>: the answer points to a different pathology.</li>
-          </ul>
-          <p>
-            This is still not publication-grade adjudication, but it is good enough to separate “basically right” from
-            “confidently about the wrong thing.”
-          </p>
-
-          <h2>Results</h2>
-          <p>
-            The strict result was <strong>3 matches, 2 partials, 5 misses</strong>. If I count partials as
-            directionally useful, the benchmark lands at <strong>50%</strong>. If I use strict top-1 only, it lands at
-            <strong>30%</strong>.
-          </p>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Case</th>
-                <th>Modality</th>
-                <th>Ground truth</th>
-                <th>Model output</th>
-                <th>Conf.</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Appendicitis</td>
-                <td>CT</td>
-                <td>Acute appendicitis</td>
-                <td>Bilateral osteitis condensans ilii</td>
-                <td>0.89</td>
-                <td class="result-miss">Miss</td>
-              </tr>
-              <tr>
-                <td>Pulmonary embolism</td>
-                <td>CTA</td>
-                <td>Acute pulmonary embolism</td>
-                <td>Thoracic aortic dissection</td>
-                <td>0.45</td>
-                <td class="result-miss">Miss</td>
-              </tr>
-              <tr>
-                <td>Perforated sigmoid diverticulitis</td>
-                <td>CT</td>
-                <td>Perforated sigmoid diverticulitis</td>
-                <td>Gas-containing pelvic abscess secondary to perforated sigmoid diverticulitis</td>
-                <td>0.67</td>
-                <td class="result-match">Match</td>
-              </tr>
-              <tr>
-                <td>Cecal diverticulitis</td>
-                <td>CT</td>
-                <td>Cecal diverticulitis</td>
-                <td>Bilateral osteitis condensans ilii</td>
-                <td>0.74</td>
-                <td class="result-miss">Miss</td>
-              </tr>
-              <tr>
-                <td>Sigmoid diverticulitis</td>
-                <td>CT</td>
-                <td>Sigmoid diverticulitis</td>
-                <td>Small-bowel neuroendocrine tumor with calcified mesenteric metastasis</td>
-                <td>0.66</td>
-                <td class="result-miss">Miss</td>
-              </tr>
-              <tr>
-                <td>Strangulated hernia with ischemia</td>
-                <td>CT</td>
-                <td>Strangulated hernia with small-bowel ischemia</td>
-                <td>Strangulated ventral hernia with closed-loop obstruction and probable ischemia</td>
-                <td>0.87</td>
-                <td class="result-match">Match</td>
-              </tr>
-              <tr>
-                <td>Perforated appendicitis</td>
-                <td>CT</td>
-                <td>Perforated appendicitis</td>
-                <td>Acute appendicitis, likely retrocecal</td>
-                <td>0.72</td>
-                <td class="result-partial">Partial</td>
-              </tr>
-              <tr>
-                <td>Appendicitis in pregnancy</td>
-                <td>MRI</td>
-                <td>Acute uncomplicated appendicitis in pregnancy</td>
-                <td>Acute appendicitis in pregnancy</td>
-                <td>0.62</td>
-                <td class="result-match">Match</td>
-              </tr>
-              <tr>
-                <td>Left MCA infarction</td>
-                <td>MRI</td>
-                <td>Acute left MCA distribution infarction</td>
-                <td>Sporadic Creutzfeldt-Jakob disease with cortical ribboning</td>
-                <td>0.64</td>
-                <td class="result-miss">Miss</td>
-              </tr>
-              <tr>
-                <td>Cauda equina compression</td>
-                <td>MRI</td>
-                <td>Severe central stenosis with cauda equina compression</td>
-                <td>Bilateral juxtafacet synovial cysts causing severe central canal stenosis</td>
-                <td>0.72</td>
-                <td class="result-partial">Partial</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p>
-            The confidence column is worth a second look. It does not rescue the model. The highest-confidence answer
-            in the whole table is a miss, and the average confidence of misses stays too close to the average
-            confidence of matches and partials to be useful as a trust shortcut.
-          </p>
-
-          <h2>What Actually Went Wrong</h2>
-          <h3>1. Salience hijacking</h3>
-          <p>
-            Two abdominal inflammatory cases were misread as <em>osteitis condensans ilii</em>. That is a very specific
-            failure mode. The model did not see “nothing.” It saw a high-contrast, recognizable osseous pattern and
-            spent its diagnosis budget there, even though that pattern was not the teaching-point abnormality.
-          </p>
-
-          <h3>2. Wrong object, coherent explanation</h3>
-          <p>
-            The really dangerous misses are not sloppy. They are internally tidy. In the pulmonary embolism case,
-            The model gave aortic-dissection logic. In the infarction case, it gave CJD logic. In the sigmoid
-            diverticulitis case, it gave carcinoid-with-desmoplasia logic. The model often sounds medically literate
-            while being clinically off-target.
-          </p>
-
-          <h3>3. Some partials are useful, but not enough</h3>
-          <p>
-            The partials are informative. The model often recognized the broader pattern while missing the sharper claim:
-            appendicitis without perforation, or severe canal stenosis without correctly naming the exact cause. That
-            suggests a future system could become useful with better localization and structured evidence, but it is not
-            already there.
-          </p>
-
-          <h2>How I Would Make a General LLM More Accurate</h2>
-          <p>
-            The main lesson is that this is not primarily a prompt-writing problem. It is a perception and workflow
+            After the first run I rebuilt the product around an ROI-first workflow and a review stack:
+            <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>. That made the answer object much
+            better. It gave grounded evidence, counter-evidence, and a cleaner audit trail. It did not fix the core
             problem.
-          </p>
-          <ol>
-            <li>
-              <strong>Make the interaction ROI-first.</strong> A boxed region or clicked target is not just nicer UX. It
-              is a correctness intervention because it narrows the search space and makes salience hijacking harder.
-            </li>
-            <li>
-              <strong>Move from single-slice to study-aware retrieval.</strong> Most real findings live across adjacent
-              slices, alternate windows, and multiple series. A single slice is structurally weak.
-            </li>
-            <li>
-              <strong>Split seeing from explaining.</strong> I would use a domain-specific medical vision model for
-              candidate findings and localization, then use the LLM for explanation, questioning, and draft report
-              language.
-            </li>
-            <li>
-              <strong>Force counter-evidence and abstention.</strong> The model should have to say what weakens its own
-              claim, what additional slices would change confidence, and when it should refuse to commit.
-            </li>
-            <li>
-              <strong>Retrieve similar labeled cases.</strong> Similar-case retrieval helps more than generic
-              chain-of-thought in domains where anatomy and appearance matter more than wordsmithing.
-            </li>
-            <li>
-              <strong>Benchmark the exact shipped workflow.</strong> Single-slice chat, ROI-guided chat, whole-series
-              reasoning, finding review, and report drafting are different tasks and need separate scores.
-            </li>
-          </ol>
-
-          <div class="callout">
-            <strong>Short product version:</strong> the next serious system is not “LLM with a prettier chat box.” It
-            is ROI-grounded, study-aware, evidence-backed, and willing to abstain.
-          </div>
-
-          <h2>Follow-up: ROI and Review Pipeline Experiments</h2>
-          <p>
-            After the original 10-case post I changed the product and the benchmark in two ways. First, I built a more
-            realistic DICOM review flow around region selection, deterministic checks, and a second-pass challenge
-            layer. Second, I reran the exact shipped logic instead of scoring a vague “medical AI” capability in the
-            abstract.
-          </p>
-
-          <h3>What changed in the product</h3>
-          <p>
-            The follow-up pipeline now looks like this:
-          </p>
-          <ul>
-            <li><strong>Finder</strong>: produce the primary claim and grounded evidence.</li>
-            <li><strong>Blind alternative</strong>: propose a competing interpretation without seeing the first claim.</li>
-            <li><strong>Deterministic verifier</strong>: check frame coverage, ROI overlap, grounding quality, and attached measurements.</li>
-            <li><strong>Critic</strong>: attack the primary claim and summarize what is weak.</li>
-            <li><strong>Arbiter</strong>: decide <code>keep</code>, <code>revise</code>, or <code>abstain</code>.</li>
-          </ul>
-          <p>
-            This is much closer to the product I would actually want to ship in a DICOM workbench. It gives users a
-            better answer object, a better audit trail, and a cleaner “why I think this / why I might be wrong”
-            structure.
           </p>
           <figure class="media-shot">
             <img
@@ -371,185 +76,28 @@
               loading="lazy"
             />
             <figcaption>
-              The product follow-up that informed the second benchmark pass: ROI-first selection, a built-in side panel,
-              and a structured review object instead of a plain chat reply.
+              The follow-up product pass: ROI-first selection, a built-in side panel, and a structured review object.
             </figcaption>
           </figure>
-
-          <h3>What happened when I benchmarked the shipped flow</h3>
           <p>
-            The result was useful and a little sobering. The review pipeline made the system smarter about
-            disagreement, but it did not make the model reliably more correct.
+            The second benchmark made the lesson sharper. ROI guidance helped. Extra review logic helped the system
+            explain itself. But the review pipeline still did not beat the same-run finder baseline on the fairest
+            comparison. Reasoning improved faster than perception.
           </p>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Mode</th>
-                <th>Baseline</th>
-                <th>Earlier reviewed v3</th>
-                <th>Shipped reviewed v4</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Image + metadata</td>
-                <td>5 match / 1 partial / 4 miss<br />Brier 0.3093</td>
-                <td>6 / 2 / 2<br />Brier 0.1903<br /><small>different run</small></td>
-                <td>5 / 1 / 4<br />Brier 0.3280</td>
-              </tr>
-              <tr>
-                <td>Image + metadata + ROI</td>
-                <td>9 / 1 / 0<br />Brier 0.0173</td>
-                <td>9 / 0 / 1<br />Brier 0.1905<br /><small>different run</small></td>
-                <td>9 / 1 / 0<br />Brier 0.0245</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p>
-            The fairest comparison is the same-run baseline versus shipped v4. On <strong>image + metadata</strong>,
-            the review stack did not improve accuracy and slightly worsened calibration. On
-            <strong>image + metadata + ROI</strong>, it matched the baseline on matches and misses, but still trailed it
-            slightly on Brier score. In other words: the pipeline got better at structuring doubt, not better at
-            discovering the truth.
-          </p>
-
-          <h3>Why this still matters</h3>
-          <p>
-            I do not think this makes the work a dead end. It sharpens the product lesson. ROI guidance matters more
-            than extra reasoning layers. Deterministic checks matter more than another eloquent paragraph. And a good
-            review pipeline is still worth having, because it changes the quality of the answer object even when it
-            does not raise raw top-1 accuracy.
-          </p>
-          <p>
-            The short version is: <strong>reasoning got better than seeing</strong>. That is real progress, but it is
-            not the same thing as a diagnostic win.
-          </p>
-
-          <h2>Limitations</h2>
-          <p>
-            This is still a small benchmark, and the limitations matter:
-          </p>
-          <ul>
-            <li>Only 10 cases.</li>
-            <li>Only one key slice per case.</li>
-            <li>No blinded radiologist adjudication.</li>
-            <li>No localization scoring.</li>
-            <li>No comparison against a medical-specialized baseline.</li>
-            <li>Manual but fixed key-link selection.</li>
-            <li>Follow-up review-pipeline runs were still based on a general multimodal model, not a medical-specialized detector.</li>
-            <li>Run-to-run model variance means same-run comparisons matter more than cherry-picked best runs.</li>
-          </ul>
-          <p>
-            At the same time, those limitations do not erase the core result. Even this favorable demo-like setup is
-            nowhere near enough to justify strong diagnostic claims for a general multimodal LLM.
-          </p>
-
-          <h2>Future Work</h2>
-          <p>
-            The next benchmark should be bigger and closer to the product I would actually want to ship:
-          </p>
-          <ul>
-            <li>100-500 cases plus normals and harder negatives.</li>
-            <li>Separate tracks for image-only, ROI-guided, and study-level tasks.</li>
-            <li>Localization metrics, not diagnosis text alone.</li>
-            <li>Comparison against at least one medical-specialized multimodal baseline.</li>
-            <li>Confidence calibration and abstention scoring.</li>
-            <li>Report quality and reviewer-time outcomes, not just top-1 labels.</li>
-            <li>Harder gating rules for <code>revise</code> and much easier triggering for <code>abstain</code>.</li>
-          </ul>
-
-          <h2>Appendix</h2>
-          <p>
-            I wanted this post to be inspectable, not hand-wavy, so the reproducibility assets are public:
-          </p>
-          <ul>
-            <li>
-              <a href="/assets/dicom-benchmark-eval.py">Exact evaluation script</a>
-            </li>
-            <li>
-              <a href="/assets/dicom-benchmark-results.json">Corrected aggregate raw results JSON</a>
-            </li>
-            <li>
-              <a href="/assets/dicom-benchmark-review-pipeline-results.json">Review-pipeline comparison JSON</a>
-            </li>
-          </ul>
-          <p>
-            The JSON includes the selected key-link index and key-link text for every case, plus the raw model fields:
-            diagnosis, confidence, visible findings, reasoning, uncertainties, and final verdict.
-          </p>
-          <p>
-            The review-pipeline JSON adds the later <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>
-            comparison so the updated claims in this post are inspectable too.
-          </p>
-          <p>
-            The later API-side follow-up used OpenAI multimodal vision models through the same harness, but the product
-            lesson stayed the same: ROI guidance helped more than extra rhetoric.
-          </p>
-          <p>
-            One transparency note: a draft summary during the benchmarking session accidentally overcounted the
-            pulmonary embolism case because of a sloppy regex. The appendix JSON and script use the corrected scoring
-            rule.
-          </p>
-          <pre><code>python3 -m venv .venv
-. .venv/bin/activate
-pip install numpy pillow pydicom
-python3 dicom-benchmark-eval.py --output-dir ./out --model gpt-5.4</code></pre>
 
           <h2>Conclusion</h2>
           <p>
-            The result here is not that multimodal LLMs are useless for medical imaging. The result is that a generic
-            multimodal LLM plus a sleek DICOM chat surface is still not enough. On this 10-case public benchmark, the
-            model was articulate, sometimes directionally helpful, and still wrong too often to earn diagnostic trust.
+            The conclusion is simple. A polished DICOM chat surface does not make a general multimodal model a
+            diagnostic system. In this benchmark the model was sometimes useful, often articulate, and still wrong too
+            often to earn trust. The path forward is not better rhetoric. It is better localization, better
+            study-level context, stronger abstention, and benchmarking that matches the product.
           </p>
           <p>
-            The follow-up pipeline work does not overturn that. It makes the system feel more serious, more inspectable,
-            and more honest about disagreement, but it still does not solve the underlying seeing problem. That is
-            useful news, not bad news. It tells us where the real engineering work is: better target selection, better
-            retrieval, better evidence, better calibration, and much better benchmarking.
+            If you want to inspect the work, the <a href="/assets/dicom-benchmark-eval.py">evaluation script</a>, the
+            <a href="/assets/dicom-benchmark-results.json">raw benchmark JSON</a>, and the
+            <a href="/assets/dicom-benchmark-review-pipeline-results.json">review-pipeline comparison JSON</a> are all
+            public.
           </p>
-
-          <h2>References</h2>
-          <ul class="refs">
-            <li>
-              U.S. FDA, Clinical Decision Support Software Guidance:
-              <a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/clinical-decision-support-software">fda.gov/.../clinical-decision-support-software</a>
-            </li>
-            <li>
-              U.S. FDA, CDS Step 6:
-              <a href="https://www.fda.gov/medical-devices/digital-health-center-excellence/step-6-software-function-intended-provide-clinical-decision-support">fda.gov/.../step-6-software-function-intended-provide-clinical-decision-support</a>
-            </li>
-            <li>
-              IMDRF, Software as a Medical Device Clinical Evaluation:
-              <a href="https://www.imdrf.org/documents/software-medical-device-samd-clinical-evaluation">imdrf.org/.../software-medical-device-samd-clinical-evaluation</a>
-            </li>
-            <li>
-              MedPLIB:
-              <a href="https://arxiv.org/abs/2412.09278">arXiv:2412.09278</a>
-            </li>
-            <li>
-              MedSG-Bench:
-              <a href="https://arxiv.org/abs/2505.11852">arXiv:2505.11852</a>
-            </li>
-            <li>
-              Argus: Benchmarking and Enhancing Vision-Language Models for 3D Radiology Report Generation:
-              <a href="https://aclanthology.org/2025.findings-acl.845/">aclanthology.org/2025.findings-acl.845</a>
-            </li>
-            <li>
-              Public teaching cases used in this benchmark:
-              <a href="https://www.pacsbin.com/c/ZyenvVwTS4">appendicitis</a>,
-              <a href="https://www.pacsbin.com/c/ZywILUuaFq">pulmonary embolism</a>,
-              <a href="https://www.pacsbin.com/c/bkbnW8-OEV">perforated sigmoid diverticulitis</a>,
-              <a href="https://www.pacsbin.com/c/WJShjjiUBu">cecal diverticulitis</a>,
-              <a href="https://www.pacsbin.com/c/WJ_W6lt3KN">sigmoid diverticulitis</a>,
-              <a href="https://www.pacsbin.com/c/Zy71Y8Y99c">strangulated hernia with ischemia</a>,
-              <a href="https://www.pacsbin.com/c/-kmjPQmoDr">perforated appendicitis</a>,
-              <a href="https://www.pacsbin.com/c/WyWoKcFKUU">appendicitis in pregnancy</a>,
-              <a href="https://www.pacsbin.com/c/WkUP_QRFD8">left MCA infarction</a>,
-              <a href="https://www.pacsbin.com/c/WySaY7RFDU">cauda equina compression</a>
-            </li>
-          </ul>
         </section>
       </article>
     </main>
