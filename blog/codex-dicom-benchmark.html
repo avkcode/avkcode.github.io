@@ -6,14 +6,14 @@
     <title>Can Codex Diagnose a DICOM Slice? A 10-Case Public Benchmark</title>
     <meta
       name="description"
-      content="A simple but explicit 10-case benchmark of Codex on public diagnosed DICOM teaching cases, with exact script, raw JSON, and a concrete roadmap for making medical multimodal systems more accurate."
+      content="A simple but explicit 10-case benchmark of Codex on public diagnosed DICOM teaching cases, now updated with ROI-guided review-pipeline follow-up results and the raw comparison JSON."
     />
     <link rel="canonical" href="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Can Codex Diagnose a DICOM Slice? A 10-Case Public Benchmark" />
     <meta
       property="og:description"
-      content="I ran Codex on 10 public diagnosed DICOM teaching cases, published the exact script and raw JSON, and wrote down what actually happened."
+      content="I ran Codex on 10 public diagnosed DICOM teaching cases, then added ROI-guided and review-pipeline follow-up experiments to see what actually improved."
     />
     <meta property="og:url" content="https://avkcode.github.io/blog/codex-dicom-benchmark.html" />
     <meta property="og:site_name" content="Anton Krylov" />
@@ -345,7 +345,7 @@
           <h1>Can Codex Diagnose a DICOM Slice?</h1>
           <div class="hero-quick">
             <span class="hero-pill">17 min read</span>
-            <span class="hero-pill">Updated April 15, 2026</span>
+            <span class="hero-pill">Updated April 16, 2026</span>
             <span class="hero-pill">10-case benchmark</span>
             <span class="hero-pill">7 CT + 3 MRI</span>
           </div>
@@ -353,10 +353,11 @@
             I wanted a real answer, not a vibe-check demo: if I give Codex a real public diagnosed DICOM teaching case
             and ask for the most likely diagnosis from one key slice, does it get the case right often enough to be
             impressive? I expanded the pilot to 10 cases, published the exact script and raw JSON, and the short
-            answer is still no. The more useful answer is why it fails and what would actually make this kind of system
-            better.
+            answer is still no. Since then I also added ROI-guided and review-pipeline follow-up experiments to the
+            same general setup. Those updates made the product design more serious, but they still did not turn a
+            general multimodal model into a trustworthy diagnostic reader.
           </p>
-          <p class="meta">Published April 15, 2026</p>
+          <p class="meta">Published April 15, 2026 · Updated April 16, 2026</p>
         </header>
 
         <section class="content">
@@ -381,6 +382,12 @@
             pathology. Confidence did not separate right from wrong very well either: the average miss confidence was
             still about <strong>0.68</strong>, and one of the clearest misses came in at <strong>0.89</strong>.
           </p>
+          <p>
+            After the initial post I built a more realistic DICOM rail pipeline around the same idea:
+            <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>. That follow-up improved
+            provenance, disagreement handling, and the answer format, but it did not solve the main problem. The
+            system got better at reviewing a claim than at seeing the right object in the first place.
+          </p>
 
           <div class="kpi-grid">
             <div class="kpi">
@@ -404,6 +411,12 @@
           <div class="callout">
             <strong>Main conclusion:</strong> a polished multimodal answer on a DICOM slice can still be clinically
             wrong because the model chose the wrong object to explain. Better JSON does not fix weak localization.
+          </div>
+
+          <div class="callout">
+            <strong>Update after building the DICOM rail:</strong> the newer review pipeline made the system more
+            inspectable and more disciplined, but it still did not beat a plain finder baseline on the fairest
+            same-run comparison. The bottleneck is still perception, not rhetoric.
           </div>
 
           <h2>Question</h2>
@@ -645,6 +658,82 @@
             is ROI-grounded, study-aware, evidence-backed, and willing to abstain.
           </div>
 
+          <h2>Follow-up: ROI and Review Pipeline Experiments</h2>
+          <p>
+            After the original 10-case post I changed the product and the benchmark in two ways. First, I built a more
+            realistic DICOM review flow around region selection, deterministic checks, and a second-pass challenge
+            layer. Second, I reran the exact shipped logic instead of scoring a vague “medical AI” capability in the
+            abstract.
+          </p>
+
+          <h3>What changed in the product</h3>
+          <p>
+            The follow-up pipeline now looks like this:
+          </p>
+          <ul>
+            <li><strong>Finder</strong>: produce the primary claim and grounded evidence.</li>
+            <li><strong>Blind alternative</strong>: propose a competing interpretation without seeing the first claim.</li>
+            <li><strong>Deterministic verifier</strong>: check frame coverage, ROI overlap, grounding quality, and attached measurements.</li>
+            <li><strong>Critic</strong>: attack the primary claim and summarize what is weak.</li>
+            <li><strong>Arbiter</strong>: decide <code>keep</code>, <code>revise</code>, or <code>abstain</code>.</li>
+          </ul>
+          <p>
+            This is much closer to the product I would actually want to ship in a DICOM workbench. It gives users a
+            better answer object, a better audit trail, and a cleaner “why I think this / why I might be wrong”
+            structure.
+          </p>
+
+          <h3>What happened when I benchmarked the shipped flow</h3>
+          <p>
+            The result was useful and a little sobering. The review pipeline made the system smarter about
+            disagreement, but it did not make the model reliably more correct.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Baseline</th>
+                <th>Earlier reviewed v3</th>
+                <th>Shipped reviewed v4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Image + metadata</td>
+                <td>5 match / 1 partial / 4 miss<br />Brier 0.3093</td>
+                <td>6 / 2 / 2<br />Brier 0.1903<br /><small>different run</small></td>
+                <td>5 / 1 / 4<br />Brier 0.3280</td>
+              </tr>
+              <tr>
+                <td>Image + metadata + ROI</td>
+                <td>9 / 1 / 0<br />Brier 0.0173</td>
+                <td>9 / 0 / 1<br />Brier 0.1905<br /><small>different run</small></td>
+                <td>9 / 1 / 0<br />Brier 0.0245</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The fairest comparison is the same-run baseline versus shipped v4. On <strong>image + metadata</strong>,
+            the review stack did not improve accuracy and slightly worsened calibration. On
+            <strong>image + metadata + ROI</strong>, it matched the baseline on matches and misses, but still trailed it
+            slightly on Brier score. In other words: the pipeline got better at structuring doubt, not better at
+            discovering the truth.
+          </p>
+
+          <h3>Why this still matters</h3>
+          <p>
+            I do not think this makes the work a dead end. It sharpens the product lesson. ROI guidance matters more
+            than extra reasoning layers. Deterministic checks matter more than another eloquent paragraph. And a good
+            review pipeline is still worth having, because it changes the quality of the answer object even when it
+            does not raise raw top-1 accuracy.
+          </p>
+          <p>
+            The short version is: <strong>reasoning got better than seeing</strong>. That is real progress, but it is
+            not the same thing as a diagnostic win.
+          </p>
+
           <h2>Limitations</h2>
           <p>
             This is still a small benchmark, and the limitations matter:
@@ -656,6 +745,8 @@
             <li>No localization scoring.</li>
             <li>No comparison against a medical-specialized baseline.</li>
             <li>Manual but fixed key-link selection.</li>
+            <li>Follow-up review-pipeline runs were still based on a general multimodal model, not a medical-specialized detector.</li>
+            <li>Run-to-run model variance means same-run comparisons matter more than cherry-picked best runs.</li>
           </ul>
           <p>
             At the same time, those limitations do not erase the core result. Even this favorable demo-like setup is
@@ -673,6 +764,7 @@
             <li>Comparison against at least one medical-specialized multimodal baseline.</li>
             <li>Confidence calibration and abstention scoring.</li>
             <li>Report quality and reviewer-time outcomes, not just top-1 labels.</li>
+            <li>Harder gating rules for <code>revise</code> and much easier triggering for <code>abstain</code>.</li>
           </ul>
 
           <h2>Appendix</h2>
@@ -686,10 +778,17 @@
             <li>
               <a href="/assets/codex-dicom-benchmark-results.json">Corrected aggregate raw results JSON</a>
             </li>
+            <li>
+              <a href="/assets/dicom-review-pipeline-compare-v4-results.json">Review-pipeline comparison JSON</a>
+            </li>
           </ul>
           <p>
             The JSON includes the selected key-link index and key-link text for every case, plus the raw model fields:
             diagnosis, confidence, visible findings, reasoning, uncertainties, and final verdict.
+          </p>
+          <p>
+            The review-pipeline JSON adds the later <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>
+            comparison so the updated claims in this post are inspectable too.
           </p>
           <p>
             One transparency note: a draft summary during the benchmarking session accidentally overcounted the
@@ -708,8 +807,10 @@ python3 codex-dicom-benchmark-eval.py --output-dir ./out --model gpt-5.4</code><
             Codex was articulate, sometimes directionally helpful, and still wrong too often to earn diagnostic trust.
           </p>
           <p>
-            That is useful news, not bad news. It tells us where the real engineering work is: better target
-            selection, better retrieval, better evidence, better calibration, and much better benchmarking.
+            The follow-up pipeline work does not overturn that. It makes the system feel more serious, more inspectable,
+            and more honest about disagreement, but it still does not solve the underlying seeing problem. That is
+            useful news, not bad news. It tells us where the real engineering work is: better target selection, better
+            retrieval, better evidence, better calibration, and much better benchmarking.
           </p>
 
           <h2>References</h2>

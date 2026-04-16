@@ -1,0 +1,2149 @@
+{
+  "model": "gpt-4.1-mini",
+  "modes": {
+    "image+metadata": {
+      "baseline_summary": {
+        "total_cases": 10,
+        "match": 5,
+        "partial": 1,
+        "miss": 4,
+        "strict_top1_accuracy": 0.5,
+        "directionally_useful_accuracy": 0.6,
+        "average_confidence_by_verdict": {
+          "match": 0.8800000000000001,
+          "partial": 0.85,
+          "miss": 0.85
+        },
+        "brier_score_partial_05": 0.30924999999999997,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 10,
+            "avg_confidence": 0.8649999999999999,
+            "avg_outcome": 0.55
+          }
+        ]
+      },
+      "shipped_v4_summary": {
+        "total_cases": 10,
+        "match": 5,
+        "partial": 1,
+        "miss": 4,
+        "strict_top1_accuracy": 0.5,
+        "directionally_useful_accuracy": 0.6,
+        "average_confidence_by_verdict": {
+          "match": 0.7100000000000001,
+          "partial": 0.75,
+          "miss": 0.8250000000000001
+        },
+        "brier_score_partial_05": 0.328,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 5,
+            "avg_confidence": 0.67,
+            "avg_outcome": 0.7
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 5,
+            "avg_confidence": 0.85,
+            "avg_outcome": 0.4
+          }
+        ]
+      },
+      "cases": [
+        {
+          "id": "appendicitis",
+          "title": "CASE 1: Acute appendicitis",
+          "expected_diagnosis": "acute appendicitis",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Axial\nSeries modality: CT\nStudy description: APWC ABD-PEL WITH CONT 74177\nSeries description: Abd/Pelv  3.0  I40f  3\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Acute diverticulitis",
+            "confidence": 0.85,
+            "reasoning": "The CT slice shows focal bowel wall thickening and surrounding fat stranding in the sigmoid colon region, which are typical features of acute diverticulitis. The inflamed diverticula create localized inflammation visible as increased density in the pericolic fat. There is no evidence of bowel obstruction or perforation in this image.",
+            "visible_findings": [
+              "Focal bowel wall thickening in sigmoid colon",
+              "Pericolic fat stranding/inflammation",
+              "Presence of diverticula in the sigmoid colon"
+            ],
+            "uncertainties": [
+              "No clear evidence of abscess formation or perforation",
+              "Limited to a single axial slice, so extent of inflammation is uncertain"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Region showing thickened sigmoid colon wall with adjacent fat stranding consistent with acute diverticulitis."
+              }
+            ],
+            "verdict": "miss"
+          },
+          "shipped_v4": {
+            "diagnosis": "Acute diverticulitis",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder claim of acute diverticulitis is well supported by the visible findings on the axial CT slice, showing focal sigmoid colon wall thickening, pericolic fat stranding, and diverticula, which are classic imaging features. Although the assessment is limited to a single slice and lacks full evaluation of complications or alternative diagnoses, the blind alternative diagnosis of colonic diverticulitis is essentially synonymous and does not provide a distinctly stronger or contradictory interpretation. The deterministic verifier and critique highlight the inherent limitations due to sampling but do not undermine the grounding of the diagnosis. Therefore, the original finder claim should be kept.",
+            "uncertainty_summary": "Uncertainty arises mainly from the limited imaging slice reviewed, which restricts evaluation of the extent of inflammation and presence of complications. The lack of evidence of abscess or perforation on a single slice does not conclusively rule out these findings. Additionally, there is inherent uncertainty in differentiating acute diverticulitis from other inflammatory or infectious colonic processes based solely on focal wall thickening and fat stranding.",
+            "counter_evidence": [
+              "Only a single axial slice was evaluated, limiting the ability to assess the full extent of the disease or detect complications like abscess or perforation.",
+              "No direct evidence or discussion of alternative diagnoses such as ischemic colitis, inflammatory bowel disease, or infectious colitis which can also cause bowel wall thickening and fat stranding.",
+              "Absence of additional clinical correlation or laboratory findings to support acute diverticulitis diagnosis.",
+              "Warning in deterministic verifier about lack of explicit ROI alignment and missing deterministic focus window derived from ROI measurements."
+            ],
+            "manual_verification_steps": [
+              "Review the complete CT series, including multiple axial slices and coronal/sagittal reconstructions, to fully assess the extent of bowel wall thickening and fat stranding, and to identify any complications such as abscess or perforation.",
+              "Correlate imaging findings with clinical presentation, including symptoms, laboratory markers of inflammation, and possibly colonoscopy if appropriate.",
+              "Consider differential diagnoses by evaluating for other causes of sigmoid colon wall thickening and fat stranding, including ischemic colitis, inflammatory bowel disease, and infectious colitis.",
+              "Perform a targeted review of the region of interest to confirm the presence and extent of diverticula and rule out other pathology.",
+              "If available, utilize enhanced imaging sequences or contrast phases to better characterize inflammation and exclude alternative diagnoses."
+            ],
+            "alternative_diagnosis": "Colonic diverticulitis",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial slice shows pericolic fat stranding and localized sigmoid colon wall thickening."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "miss"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "pulmonary_embolism",
+          "title": "Case 14: Acute pulmonary embolism",
+          "expected_diagnosis": "acute pulmonary embolism",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT angiography\nSeries label: Axial soft tissue window\nSeries modality: CT\nBody part examined: CHEST\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Pulmonary Embolism",
+            "confidence": 0.85,
+            "reasoning": "The CT angiography axial soft tissue window image of the chest shows a filling defect within the lumen of the pulmonary arteries, which is a classic finding of pulmonary embolism. The defects appear as low-attenuation areas within the contrast-enhanced pulmonary arteries, consistent with thrombus.",
+            "visible_findings": [
+              "Filling defect in the pulmonary arteries",
+              "Contrast-enhanced pulmonary artery lumen",
+              "Normal surrounding lung parenchyma without visible consolidation or infarction"
+            ],
+            "uncertainties": [
+              "Single slice may not reveal the full extent of embolism",
+              "Cannot assess right heart strain or secondary signs from this slice alone"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Filling defect in right pulmonary artery lumen representing embolus."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Indeterminate for pulmonary embolism; recommend further imaging and ROI analysis to confirm or exclude pulmonary embolism versus mediastinal lymph node or vascular structure mimicking embolism.",
+            "confidence": 0.65,
+            "review_decision": "revise",
+            "review_decision_summary": "The finder claim of pulmonary embolism is based on a single slice with a described filling defect, but the blind alternative presents a plausible explanation as enlarged lymph nodes or normal vascular structures mimicking pathology. The deterministic verifier notes multiple warnings including limited frame sampling and lack of ROI measurements. Given the uncertainties and potential mimicry of mediastinal structures, the diagnosis should be revised with a recommendation for further multi-slice and ROI-based confirmation to increase diagnostic confidence.",
+            "uncertainty_summary": "Key uncertainties include the reliance on a single CT slice which does not capture the full extent of potential emboli, inability to evaluate secondary signs of embolism, and no deterministic measurements confirming the nature and extent of the filling defect. There is also uncertainty if the highlighted defect could be an anatomical variant or lymph node rather than a thrombus.",
+            "counter_evidence": [
+              "The blind alternative notes normal vascular anatomy with no clear filling defects, suggesting the findings may represent enlarged lymph nodes or vascular structures mimicking embolism.",
+              "The deterministic verifier flags lack of multiple reviewed frames and absence of ROI-derived measurements, undermining confidence.",
+              "No obvious secondary signs of pulmonary embolism such as infarcts or right heart strain are noted in this slice, which could argue against an acute embolus.",
+              "The provided axial image does not conclusively show an unequivocal defect, and differential diagnoses for mediastinal structures are plausible."
+            ],
+            "manual_verification_steps": [
+              "Review multiple contiguous CT angiography slices through the pulmonary arteries to assess the full extent of filling defects.",
+              "Check for secondary signs of pulmonary embolism such as right heart strain, pulmonary infarct, or pleural effusion in the complete study.",
+              "Perform ROI measurements and comparison of Hounsfield units between suspected filling defect and blood pool to confirm thrombus.",
+              "Correlate with clinical presentation, D-dimer levels, and alternative imaging if available.",
+              "Ensure proper ROI alignment and repeat assessment in multiple views to reduce misinterpretation of lymph nodes or vascular variants as emboli."
+            ],
+            "alternative_diagnosis": "Enlarged mediastinal lymph nodes or vascular structures mimicking pathology",
+            "alternative_confidence": 0.6,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial soft tissue window at the level of the main pulmonary arteries shows no direct evidence of thrombus or filling defect into arterial lumen."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": -0.19999999999999996
+        },
+        {
+          "id": "perforated_sigmoid_diverticulitis",
+          "title": "Perforated sigmoid diverticulitis",
+          "expected_diagnosis": "perforated sigmoid diverticulitis",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Axial\nSeries modality: CT\nStudy description: APWC ABD-PEL WITH CONT 74177\nSeries description: Abd/Pelv axial\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Perforated sigmoid diverticulitis",
+            "confidence": 0.95,
+            "reasoning": "The CT scan demonstrates thickening of the sigmoid colon wall along with surrounding fat stranding and presence of extraluminal air collections, which are hallmark features of diverticulitis complicated by perforation. The location in the lower left pelvis and presence of pericolic abscess or phlegmon support the diagnosis.",
+            "visible_findings": [
+              "Sigmoid colon wall thickening",
+              "Pericolic fat stranding",
+              "Extraluminal air (pneumoperitoneum)",
+              "Pericolic fluid collection/abscess",
+              "Pelvic location of abnormalities"
+            ],
+            "uncertainties": [
+              "Exact extent of perforation cannot be fully assessed in a single axial slice",
+              "Chronicity of diverticulitis (acute vs chronic inflammation) is inferred but not definitively determined"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Region showing thickened sigmoid colon wall with adjacent extraluminal air and fat stranding indicative of perforation."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Indeterminate sigmoid colon abnormality; differential includes non-perforated diverticulitis versus colonic obstruction due to fecal impaction or mass lesion; perforation not definitively confirmed on this slice.",
+            "confidence": 0.6,
+            "review_decision": "revise",
+            "review_decision_summary": "The provided CT axial slice shows some sigmoid colon wall thickening and mild pericolic fat stranding but lacks unequivocal extraluminal air or a definable pericolic abscess to firmly support a diagnosis of perforated sigmoid diverticulitis. The alternative diagnosis of colonic obstruction due to fecal impactation or mass lesion is plausible given the focal colonic distension and intraluminal fecal material, with insufficient imaging evidence to definitively confirm perforation. Limited slice sampling restricts full assessment. Therefore, the diagnosis should be revised to consider non-perforated sigmoid diverticulitis or colonic obstruction, with further imaging and clinical correlation recommended to clarify.",
+            "uncertainty_summary": "The diagnosis is primarily based on a single axial slice, limiting assessment of the full extent or presence of perforation. Chronicity cannot be confidently assessed without clinical correlation or further imaging. The absence of clear, well-defined extraluminal air pockets or large pericolic collections raises uncertainty regarding true perforation.",
+            "counter_evidence": [
+              "Limited visibility of extraluminal air: no distinct pockets of free air clearly separate from intraluminal gas are well visualized.",
+              "Fat stranding is mild and could be reactive rather than infectious or perforative.",
+              "No clear, rim-enhancing fluid collection to support a pericolic abscess.",
+              "Axial slice alone insufficient to fully characterize the perforation or inflammation extent.",
+              "Alternative findings such as fecal loading and colonic distension could explain wall thickening without perforation."
+            ],
+            "manual_verification_steps": [
+              "Review additional slices and reformatted planes to evaluate the presence and distribution of extraluminal air and fluid collections.",
+              "Assess for signs of obstruction including proximal colonic dilation or fecal loading.",
+              "Compare with clinical presentation including laboratory markers for infection or inflammation.",
+              "Consider contrast enhancement pattern of the colon wall and pericolonic tissues if available to differentiate perforation from non-perforated diverticulitis.",
+              "Evaluate for presence of other causes of focal sigmoid thickening such as neoplasm or ischemia."
+            ],
+            "alternative_diagnosis": "Colonic obstruction due to fecal impaction or mass lesion",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "1 pass, 3 warn, 1 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": -0.35
+        },
+        {
+          "id": "cecal_diverticulitis",
+          "title": "CT Abdomen and Pelvis - Cecal diverticulitis",
+          "expected_diagnosis": "cecal diverticulitis",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Body Std. Axial 3.0 Axial Venous/Phase CE\nSeries modality: CT\nStudy description: CT Abdomen and Pelvis\nSeries description: Body Std. Axial 3.0 Axial Venous/Phase CE\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Acute appendicitis",
+            "confidence": 0.85,
+            "reasoning": "The CT slice shows focal thickening and hyperenhancement of the appendix with surrounding fat stranding, which are classic signs of acute appendicitis on a contrast-enhanced CT scan. There is no evidence of abscess or perforation on this slice. The location of inflammation near the cecum in the right lower quadrant supports this diagnosis.",
+            "visible_findings": [
+              "Appendix enlargement and wall thickening",
+              "Peri-appendiceal fat stranding",
+              "Localized hyperemia/enhancement of appendix wall"
+            ],
+            "uncertainties": [
+              "No clear evidence of perforation or abscess formation",
+              "Cannot exclude early complicated appendicitis without clinical correlation"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Visible appendix enlargement and pericecal fat stranding indicating acute appendicitis"
+              }
+            ],
+            "verdict": "miss"
+          },
+          "shipped_v4": {
+            "diagnosis": "Acute appendicitis",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of acute appendicitis is well supported by the imaging findings of appendix enlargement, wall thickening, localized hyperenhancement, and peri-appendiceal fat stranding on the contrast-enhanced CT slice. Although only a single slice was reviewed and the blind alternative diagnosis of appendicitis (more generic) does not provide stronger or conflicting evidence, the finding is specific and grounded with citations. The alternative diagnosis does not invalidate or outweigh the finder claim, so the finder diagnosis should be kept.",
+            "uncertainty_summary": "Uncertainties include the inability to exclude early complicated appendicitis without clinical correlation and overlapping imaging features with cecal diverticulitis. The single-slice review and limited ROI-based analysis exacerbate diagnostic uncertainty.",
+            "counter_evidence": [
+              "Only a single slice was reviewed, limiting comprehensive assessment of the appendix and adjacent structures.",
+              "No explicit ROI alignment verification was performed to confirm that the findings are localized correctly to the appendix.",
+              "No measurements or deterministic ROI-derived evaluations are available to quantitatively support the diagnosis.",
+              "The blind alternative diagnosis suggests that findings may be consistent with cecal diverticulitis, highlighting overlap in imaging features and an unexcluded differential.",
+              "Absence of evidence for perforation or abscess does not rule out early or complicated appendicitis, adding to diagnostic ambiguity."
+            ],
+            "manual_verification_steps": [
+              "Review additional CT slices throughout the lower abdomen and pelvis to evaluate the appendix fully and identify any evidence of complications such as perforation or abscess formation.",
+              "Perform explicit ROI alignment checks to confirm that the analyzed region corresponds definitively to the appendix.",
+              "Obtain quantitative measurements of appendix diameter, wall thickness, and enhancement characteristics to strengthen imaging-based confidence.",
+              "Correlate imaging findings with clinical presentation and laboratory data to resolve diagnostic uncertainties between appendicitis and cecal diverticulitis.",
+              "Consider repeat or alternative imaging views if initial visualization is limited to improve diagnostic accuracy."
+            ],
+            "alternative_diagnosis": "Appendicitis",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial slice shows inflammatory stranding localized to right lower quadrant adjacent to cecum."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "miss"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "sigmoid_diverticulitis",
+          "title": "Sigmoid diverticulitis",
+          "expected_diagnosis": "sigmoid diverticulitis",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Coronal\nSeries modality: CT\nStudy description: CT Source Images\nSeries description: coronal\nImage dimensions: 565 x 512",
+          "baseline": {
+            "diagnosis": "Acute appendicitis",
+            "confidence": 0.85,
+            "reasoning": "The coronal CT image shows an enlarged, blind-ending tubular structure in the right lower quadrant with wall thickening and surrounding fat stranding, indicative of inflammation consistent with acute appendicitis.",
+            "visible_findings": [
+              "Enlarged appendiceal structure in the right lower quadrant",
+              "Wall thickening of the appendiceal structure",
+              "Surrounding fat stranding and inflammatory changes in the adjacent mesentery",
+              "Absence of diffuse bowel wall thickening or other abnormalities suggesting alternative diagnoses"
+            ],
+            "uncertainties": [
+              "Limited by single slice and absence of contrast enhancement",
+              "No clear evidence of abscess or perforation",
+              "Other causes of right lower quadrant pain less likely but cannot be fully excluded without clinical correlation"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Highlighted appendiceal region shows wall thickening and surrounding fat stranding confirming inflammation."
+              }
+            ],
+            "verdict": "miss"
+          },
+          "shipped_v4": {
+            "diagnosis": "Probable acute appendicitis but with significant imaging findings suggestive of small bowel obstruction or ileus; further comprehensive imaging and clinical evaluation are recommended.",
+            "confidence": 0.75,
+            "review_decision": "revise",
+            "review_decision_summary": "The finding of acute appendicitis is supported by the described enlarged, blind-ending tubular structure with wall thickening and surrounding fat stranding in the right lower quadrant. However, the presence of multiple dilated small bowel loops with air-fluid levels and absence of distal bowel gas seen on this coronal CT image raises substantial uncertainty and points toward a possible small bowel obstruction or ileus. The single slice and lack of contrast enhancement limit a definitive conclusion. Given the conflicting imaging findings and diagnostic uncertainties, it is prudent to revise the assertion in favor of a more cautious interpretation that considers small bowel obstruction or ileus as alternative diagnoses alongside acute appendicitis pending further imaging and clinical correlation.",
+            "uncertainty_summary": "Uncertainty remains due to the single coronal slice limitation, absence of contrast, and limited clinical correlation. The lack of definitive abscess, perforation, or diffuse bowel wall thickening raises ambiguity. Moreover, the presence of dilated small bowel loops and absence of distal gas contributes to uncertainty, as these features are not typical for isolated appendicitis and suggest alternative diagnoses. These imaging uncertainties necessitate further review with additional slices, contrast phases, and clinical data to improve diagnostic confidence.",
+            "counter_evidence": [
+              "Presence of multiple dilated loops of small bowel with air-fluid levels in the image, which is more characteristic of small bowel obstruction or ileus rather than appendicitis.",
+              "Absence of definitive localized colonic wall thickening or pericolic fat stranding that would better support diverticulitis, which could be considered in the differential diagnosis of right lower quadrant pain.",
+              "Lack of abscess or perforation signs, which are often seen in complicated or severe appendicitis cases, reducing diagnostic certainty.",
+              "The blind alternative diagnosis reasoning highlights functional or mechanical obstruction causing proximal small bowel dilation, which is visible in the current image and questions the definitive finding of an inflamed appendix.",
+              "Limited evidence due to a single slice and absence of contrast enhancement reduces specificity for appendicitis diagnosis."
+            ],
+            "manual_verification_steps": [
+              "Review the full CT scan including axial, sagittal, and multiple coronal slices to assess the appendix and surrounding structures comprehensively.",
+              "Evaluate contrast-enhanced images if available to better delineate inflammation, abscess, or vascularity changes in the appendix and surrounding tissues.",
+              "Assess the bowel loops for obstruction signs such as transition point, degree of dilation, and distal bowel gas patterns to confirm or exclude small bowel obstruction or ileus.",
+              "Correlate imaging findings with clinical symptoms, laboratory values (e.g., white blood cell count), and physical examination to strengthen or refute acute appendicitis diagnosis.",
+              "Consider adjunct imaging like ultrasound or MRI if uncertain to provide complementary information on appendix and bowel status.",
+              "Perform explicit ROI mapping and alignment verification on CT images to confirm the exact anatomical structures being assessed for inflammation.",
+              "If available, compare prior imaging for chronicity or alternative diagnoses evidence."
+            ],
+            "alternative_diagnosis": "Ileus or small bowel obstruction",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Dilated loops of small bowel with air-fluid levels in central abdomen."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "miss"
+          },
+          "confidence_delta": -0.09999999999999998
+        },
+        {
+          "id": "strangulated_hernia_small_bowel_ischemia",
+          "title": "Strangulated hernia with small bowel ischemia",
+          "expected_diagnosis": "hernia complicated by small bowel ischemia (strangulation)",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Body Std. Axial 3.0 Axial Venous/Phase CE\nSeries modality: CT\nStudy description: CT Abdomen and Pelvis\nSeries description: Body Std. Axial 3.0 Axial Venous/Phase CE\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Acute mesenteric ischemia secondary to superior mesenteric artery embolism",
+            "confidence": 0.85,
+            "reasoning": "The CT axial venous phase image of the abdomen shows segmental thickening of the small bowel with decreased enhancement, suggestive of ischemia. There is also evidence of a filling defect in the superior mesenteric artery consistent with an embolic occlusion, which explains the ischemic changes in the bowel. The combination of these findings is classic for acute mesenteric ischemia caused by embolism.",
+            "visible_findings": [
+              "Segmental small bowel wall thickening",
+              "Decreased bowel wall enhancement in affected segments",
+              "Filling defect in superior mesenteric artery suggestive of embolism",
+              "Mesenteric fat stranding"
+            ],
+            "uncertainties": [
+              "Exact length of bowel involved cannot be fully assessed from a single slice",
+              "Possible presence of other causes of bowel ischemia not visualized in this image"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Visible filling defect in the superior mesenteric artery indicating embolism and bowel wall changes consistent with ischemia"
+              }
+            ],
+            "verdict": "miss"
+          },
+          "shipped_v4": {
+            "diagnosis": "Acute mesenteric ischemia secondary to superior mesenteric artery embolism",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of acute mesenteric ischemia secondary to superior mesenteric artery embolism is supported by key imaging findings such as segmental small bowel wall thickening, decreased enhancement, and a visible filling defect in the superior mesenteric artery in the venous phase CT image. Despite limitations due to a single slice and lack of full extent evaluation, the alternative diagnosis of acute pancreatitis does not explain the vascular filling defect or bowel ischemic changes. The findings align more with ischemia from embolism rather than pancreatic inflammation, warranting retention of the original diagnosis.",
+            "uncertainty_summary": "Uncertainties remain regarding the extent of bowel involvement, the definitive exclusion of alternative causes like acute pancreatitis, and whether the filling defect truly represents an embolism rather than an artifact or other vascular pathology. The single slice review imposes significant limitation on the comprehensive assessment for ischemia or other pathologies.",
+            "counter_evidence": [
+              "Mild fat stranding and haziness adjacent to the pancreas without clear bowel wall thickening or transition point could indicate acute pancreatitis rather than ischemia.",
+              "No evidence of pneumatosis intestinalis, portal venous gas, or definitive bowel dilatation to support ischemia is described.",
+              "Single slice review limits visualization of the superior mesenteric artery and bowel segments for comprehensive assessment.",
+              "Mesenteric fat stranding is a nonspecific finding that can be present in multiple conditions besides embolic ischemia."
+            ],
+            "manual_verification_steps": [
+              "Review multiple imaging slices in arterial and venous phases to assess the superior mesenteric artery thoroughly for embolism and exclude artifacts.",
+              "Evaluate the full length of small bowel for extent of wall thickening, enhancement changes, pneumatosis, or dilatation.",
+              "Check for pancreatic abnormalities including peripancreatic fat stranding and focal fluid collections to consider alternative or concurrent diagnoses like acute pancreatitis.",
+              "Perform computed measurements of bowel wall thickness and enhancement compared to normal segments.",
+              "Correlate findings with clinical presentation and laboratory markers to differentiate ischemia from other inflammatory causes."
+            ],
+            "alternative_diagnosis": "Acute pancreatitis",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Mild fat stranding and haziness noted adjacent to pancreas with no clear bowel loop abnormality or transition point."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "miss"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "perforated_appendicitis",
+          "title": "Perforated appendicitis",
+          "expected_diagnosis": "perforated appendicitis",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: axial\nSeries modality: CT\nStudy description: CT OSF CT ABDOMEN OR COMBO\nSeries description: ENHANCED\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Acute appendicitis with peri-appendiceal fat stranding",
+            "confidence": 0.85,
+            "reasoning": "The CT axial image of the abdomen shows an inflamed appendix with enlargement and surrounding fat stranding, which are typical signs of acute appendicitis. There is no obvious evidence of abscess or perforation in this single slice, but the inflammatory changes are consistent with acute appendicitis.",
+            "visible_findings": [
+              "Enlarged appendix",
+              "Peri-appendiceal fat stranding",
+              "No visible abscess formation",
+              "No free intraperitoneal air noted"
+            ],
+            "uncertainties": [
+              "Extent of inflammation and complications such as perforation or abscess cannot be fully assessed from a single slice",
+              "Other causes of right lower quadrant inflammation cannot be completely ruled out without clinical correlation"
+            ],
+            "citations": [],
+            "verdict": "partial"
+          },
+          "shipped_v4": {
+            "diagnosis": "Probable acute appendicitis with peri-appendiceal fat stranding, pending further multi-slice imaging evaluation and clinical correlation",
+            "confidence": 0.75,
+            "review_decision": "revise",
+            "review_decision_summary": "The diagnosis of acute appendicitis with peri-appendiceal fat stranding is plausible but limited by reliance on a single axial CT slice without objective measurements or grounding citations. The alternative diagnosis of mesenteric adenitis lacks specific imaging evidence and grounding to outweigh the finder claim. More comprehensive multi-slice review, objective appendiceal measurements, ROI alignment, and clinical correlation are necessary to strengthen diagnostic certainty. Given current information, the finder claim should be revised to reflect these limitations and uncertainties rather than kept without modification.",
+            "uncertainty_summary": "Uncertainties primarily stem from single-slice evaluation, inability to exclude other causes of right lower quadrant pain such as mesenteric adenitis, and lack of comprehensive imaging review for abscess or perforation. The blind alternative diagnosis is not corroborated by strong evidence and lacks grounding, adding to uncertainty. Absence of clinical correlation or laboratory findings further reduces diagnostic certainty.",
+            "counter_evidence": [
+              "Single axial slice insufficient to confirm full extent of appendiceal inflammation or exclude complications.",
+              "No objective measurement of appendiceal diameter or wall enhancement provided to robustly support appendicitis diagnosis.",
+              "No grounded citations referencing accepted imaging criteria for acute appendicitis included.",
+              "Lack of ROI alignment undermines localization and differentiation between appendix and adjacent lymph nodes.",
+              "Blind alternative diagnosis of mesenteric adenitis is generic and unsubstantiated with detailed imaging evidence."
+            ],
+            "manual_verification_steps": [
+              "Review multiple contiguous axial slices through the right lower quadrant to assess the appendix fully and detect complications like perforation or abscess.",
+              "Measure the appendiceal diameter and evaluate wall enhancement patterns to differentiate appendicitis from mimics.",
+              "Evaluate the presence, size, and distribution of mesenteric lymph nodes to consider mesenteric adenitis.",
+              "Correlate imaging findings with clinical presentation and laboratory data (e.g., white blood cell count, C-reactive protein).",
+              "Consult established radiological literature or guidelines on CT criteria for diagnosing acute appendicitis for grounded evidence.",
+              "Perform ROI alignment confirmation to ensure accurate localization of findings on imaging."
+            ],
+            "alternative_diagnosis": "Mesenteric adenitis",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "0 pass, 3 warn, 2 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "fail",
+                  "summary": "Finder returned no grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "partial"
+          },
+          "confidence_delta": -0.09999999999999998
+        },
+        {
+          "id": "appendicitis_in_pregnancy",
+          "title": "Appendicitis in pregnancy",
+          "expected_diagnosis": "acute uncomplicated appendicitis in pregnancy",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: T2 SS A/P\nSeries modality: MR\nStudy description: MRI ABDOMEN WO CONT\nSeries description: T2 SS A/P\nBody part examined: ABDOMENPELVIS\nImage dimensions: 288 x 288",
+          "baseline": {
+            "diagnosis": "Acute appendicitis in pregnancy",
+            "confidence": 0.85,
+            "reasoning": "The MRI T2 axial slice shows a swollen, fluid-filled tubular structure in the right lower quadrant adjacent to the cecum, which is consistent with an enlarged appendix. There is surrounding fat stranding and edema suggestive of inflammation. The absence of free fluid or abscess formation indicates an early or uncomplicated appendicitis. The modality and series confirm abdominal imaging optimized to demonstrate bowel and inflammatory changes. The presence of pregnancy is likely given the 'ABDOMENPELVIS' context and typical presentation with some displacement of bowel loops and pelvic anatomy.",
+            "visible_findings": [
+              "Enlarged tubular structure in right lower quadrant",
+              "Periappendiceal fat stranding",
+              "Fluid signal within the appendix",
+              "Surrounding soft tissue edema",
+              "No free fluid accumulation"
+            ],
+            "uncertainties": [
+              "Exact gestational age not provided",
+              "No definitive signs of perforation or abscess on this slice",
+              "Limited correlative clinical data"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Region demonstrating the dilated appendix with high T2 signal fluid content indicating inflammation."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Acute appendicitis in pregnancy",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of acute appendicitis in pregnancy is well supported by the visible imaging findings on the provided T2-weighted axial MRI slice, including an enlarged fluid-filled tubular structure in the right lower quadrant with periappendiceal fat stranding and surrounding edema. Although based on a single slice and limited clinical data, the grounding and specific inflammatory features identified are consistent with appendicitis. The blind alternative suggesting mesenteric lymphadenopathy lacks sufficient grounding and does not adequately explain the findings. Despite limitations, the current evidence supports keeping the original diagnosis.",
+            "uncertainty_summary": "Key uncertainties include the exact gestational age not being provided, which affects interpretation and management. There are no definitive signs of perforation or abscess, and only a single imaging slice is reviewed, raising concerns about representativeness. Limited clinical data further complicate confident diagnosis. The alternative diagnosis of mesenteric lymphadenopathy is not adequately grounded or supported by the provided evidence but should be considered due to overlapping imaging features.",
+            "counter_evidence": [
+              "Only one slice was reviewed which may miss alternate pathology or full assessment of appendix.",
+              "No ROI-derived measurements or quantitative data provided to verify extent of appendiceal enlargement or inflammation.",
+              "Blind alternative diagnosis of mesenteric lymphadenopathy lacks adequate grounding but highlights potential differential diagnoses that were not fully excluded.",
+              "No explicit ROI alignment check available, raising concern about accuracy of lesion localization to appendix.",
+              "No clinical information or laboratory data correlating with imaging findings were provided, limiting overall diagnostic certainty."
+            ],
+            "manual_verification_steps": [
+              "Review additional MRI slices in multiple planes to assess appendix morphology and surrounding structures comprehensively.",
+              "Obtain and correlate clinical history including gestational age, symptomatology, and laboratory markers of inflammation or infection.",
+              "Perform quantitative measurements of appendix size and inflammation parameters within ROI for objective assessment.",
+              "Consider alternative diagnoses such as mesenteric lymphadenopathy or other causes of right lower quadrant pain in pregnancy by reviewing associated lymph nodes and bowel segments on MRI.",
+              "Consult multidisciplinary team including radiology and obstetrics for integrated evaluation and confirmatory diagnostics if necessary."
+            ],
+            "alternative_diagnosis": "Mesenteric lymphadenopathy",
+            "alternative_confidence": 0.6,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "1 pass, 3 warn, 1 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "left_mca_infarction",
+          "title": "Acute left MCA infarction",
+          "expected_diagnosis": "acute left multifocal MCA distribution ischemia/infarction",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: AX DWI RESOLVE_TRACEW\nSeries modality: MR\nStudy description: NEURO^BRAIN\nSeries description: AX DWI RESOLVE_TRACEW\nBody part examined: BRAIN\nImage dimensions: 192 x 192",
+          "baseline": {
+            "diagnosis": "acute left MCA territory infarction",
+            "confidence": 0.85,
+            "reasoning": "The axial DWI MR image shows hyperintense signal in the left MCA territory cortex indicating restricted diffusion consistent with acute ischemic stroke. The distribution follows the middle cerebral artery territory, typical for a left MCA infarct. DWI is highly sensitive and specific for acute infarction detection.",
+            "visible_findings": [
+              "left hemispheric cortical hyperintensity on DWI",
+              "restricted diffusion pattern consistent with acute infarction",
+              "involvement of MCA territory cortex"
+            ],
+            "uncertainties": [
+              "exact time of infarction onset cannot be determined from a single DWI slice",
+              "no perfusion or MR angiography images available to confirm vessel occlusion"
+            ],
+            "citations": [],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "acute left MCA territory infarction",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of acute left MCA territory infarction is well supported by the described DWI hyperintensity pattern typical for an MCA infarct and consistent with restricted diffusion indicating acute ischemia. Though grounded literature citations and multi-slice data are lacking, the alternative diagnosis of artifact is generic and not strongly grounded to override the finder claim given the typical distribution and imaging characteristics. The warnings and uncertainties noted call for cautious interpretation but do not outweigh the reasonably high confidence and the classic imaging findings presented. Thus, the finding should be kept pending further confirmatory imaging and clinical correlation.",
+            "uncertainty_summary": "Uncertainty arises from the inability to determine the exact time of infarction onset from one slice, lack of complementary vascular imaging to confirm vessel occlusion, and potential for artifact mimicking pathology, which is plausible given the known susceptibility of DWI to magnetic and motion artifacts. The blind alternative raises concern that the observed signal abnormalities might represent artifact rather than true infarction, but this alternative lacks specific grounding as well.",
+            "counter_evidence": [
+              "Only a single DWI slice was reviewed, which may not reliably demonstrate the full extent or typical territorial pattern of infarction.",
+              "No perfusion or MR angiography imaging is available to confirm vessel occlusion or hypoperfusion consistent with an MCA territory infarct.",
+              "No grounded literature citations or prior reports are provided to validate the imaging findings and interpretation.",
+              "Warning for lack of explicit ROI alignment checks raises concern about the anatomical precision of the lesion localization.",
+              "No quantitative region-of-interest derived measurements were reported to objectively support diffusion restriction consistent with ischemia."
+            ],
+            "manual_verification_steps": [
+              "Review multiple contiguous DWI slices to assess the full spatial distribution and pattern of hyperintensity to confirm typical MCA territory involvement.",
+              "Obtain MR angiography and/or perfusion-weighted imaging to evaluate vessel patency and perfusion deficits corresponding to the suspected infarct area.",
+              "Perform careful inspection for common DWI artifacts such as magnetic susceptibility or patient motion that could mimic restricted diffusion.",
+              "Apply ROI-based quantitative ADC measurements to objectively assess diffusion restriction and differentiate true infarction from artifact.",
+              "Consult relevant literature or clinical reports to correlate imaging findings with typical imaging characteristics of acute MCA infarction."
+            ],
+            "alternative_diagnosis": "Artifact due to magnetic susceptibility or motion",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "0 pass, 3 warn, 2 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "fail",
+                  "summary": "Finder returned no grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "cauda_equina_compression",
+          "title": "Cauda equina compression from severe stenosis",
+          "expected_diagnosis": "severe central stenosis with compression of the cauda equina at multiple levels",
+          "mode": "image+metadata",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: T2 TSE AXIALS STACK\nSeries modality: MR\nStudy description: NEURO EXAMS^L-SPINE\nSeries description: T2 TSE AXIALS STACK\nImage dimensions: 256 x 256",
+          "baseline": {
+            "diagnosis": "Cauda equina compression",
+            "confidence": 0.9,
+            "reasoning": "On this axial T2-weighted MR image of the lumbar spine, there is evident narrowing of the spinal canal with crowding and displacement of the nerve roots of the cauda equina. The cerebrospinal fluid (CSF) space around the nerve roots is markedly reduced, indicative of compression. This is likely due to a central disc herniation or other space-occupying lesion at this level causing significant mass effect on the cauda equina nerve roots, which is consistent with cauda equina compression.",
+            "visible_findings": [
+              "Narrowing of the spinal canal",
+              "Crowding and displacement of cauda equina nerve roots",
+              "Reduction of cerebrospinal fluid space around nerve roots",
+              "Possible mass effect from disc or lesion"
+            ],
+            "uncertainties": [
+              "Exact cause of compression is not clearly visible on this single slice",
+              "Cannot definitively localize the precise origin of the compressive lesion without adjacent slices"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Area of spinal canal showing crowded cauda equina nerve roots with reduced CSF signal space indicating compression"
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Cauda equina compression - needs confirmation with additional imaging and quantitative assessment",
+            "confidence": 0.6,
+            "review_decision": "revise",
+            "review_decision_summary": "The finder diagnosis of cauda equina compression is plausible given the described canal narrowing and nerve root crowding on this axial T2-weighted MRI slice. However, the diagnostic confidence is limited by evaluation of a single slice without multi-slice confirmation, quantitative measurements, or clear visualization of the compressive lesion origin. The blind alternative proposing an artifact or normal variant is also reasonably supported by the symmetrical appearance and lack of definitive mass effect in this single image. The deterministic verifier warnings about limited frame sampling and lack of ROI alignment further caution against definitive diagnosis from this isolated slice. Therefore, revision is recommended pending further multi-slice imaging review and quantitative confirmatory data to more confidently establish or exclude cauda equina compression.",
+            "uncertainty_summary": "Uncertainty remains regarding the definitive cause of the canal narrowing and nerve root crowding, as only one slice is reviewed, and there is no clear visualization of a disc herniation or space-occupying lesion origin. The absence of multi-slice or quantitative confirmation and the presence of a plausible normal variant or artifact scenario limit diagnostic confidence.",
+            "counter_evidence": [
+              "Blind alternative suggests symmetrical paraspinal muscles and spinal canal without evidence of focal neural compression or disc herniation.",
+              "No abnormal signal intensity or clear mass effect is noted that would indicate a compressive lesion in this slice alone.",
+              "Warnings from deterministic verifier highlight limited frame sampling and lack of ROI alignment and computed measurements, questioning diagnostic completeness."
+            ],
+            "manual_verification_steps": [
+              "Review multiple adjacent MRI slices to localize and confirm the cause of compression and rule out artifacts or normal variants.",
+              "Obtain quantitative measurements of spinal canal dimensions and CSF space to support evidence of compression.",
+              "Compare with clinical findings and possibly obtain additional imaging sequences to better characterize potential lesions.",
+              "Ensure ROI alignment verifies the area of suspected pathology corresponds exactly to the region showing nerve crowding.",
+              "Assess for imaging artifacts that might mimic narrowing or crowding on single slices."
+            ],
+            "alternative_diagnosis": "artifact or normal variant",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial T2 weighted MRI slice showing symmetrical paraspinal muscles and spinal canal without visible compressive pathology."
+              }
+            ],
+            "verifier": {
+              "summary": "2 pass, 3 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "warn",
+                  "summary": "Only a single reviewed slice was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "warn",
+                  "summary": "No explicit ROI alignment check was available."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "warn",
+                  "summary": "No ROI-derived deterministic focus window was available."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": -0.30000000000000004
+        }
+      ],
+      "previous_v3_reviewed_summary": {
+        "total_cases": 10,
+        "match": 6,
+        "partial": 2,
+        "miss": 2,
+        "strict_top1_accuracy": 0.6,
+        "directionally_useful_accuracy": 0.8,
+        "average_confidence_by_verdict": {
+          "match": 0.625,
+          "partial": 0.6499999999999999,
+          "miss": 0.7
+        },
+        "brier_score_partial_05": 0.19025000000000006,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 9,
+            "avg_confidence": 0.6277777777777778,
+            "avg_outcome": 0.7777777777777778
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 1,
+            "avg_confidence": 0.8,
+            "avg_outcome": 0.0
+          }
+        ],
+        "avg_confidence_delta": -0.24100000000000002,
+        "avg_confidence_delta_by_verdict": {
+          "match": -0.26833333333333337,
+          "partial": -0.22500000000000003,
+          "miss": -0.175
+        }
+      }
+    },
+    "image+metadata+roi": {
+      "baseline_summary": {
+        "total_cases": 10,
+        "match": 9,
+        "partial": 1,
+        "miss": 0,
+        "strict_top1_accuracy": 0.9,
+        "directionally_useful_accuracy": 1.0,
+        "average_confidence_by_verdict": {
+          "match": 0.9333333333333331,
+          "partial": 0.85,
+          "miss": null
+        },
+        "brier_score_partial_05": 0.01725,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 10,
+            "avg_confidence": 0.9249999999999998,
+            "avg_outcome": 0.95
+          }
+        ]
+      },
+      "shipped_v4_summary": {
+        "total_cases": 10,
+        "match": 9,
+        "partial": 1,
+        "miss": 0,
+        "strict_top1_accuracy": 0.9,
+        "directionally_useful_accuracy": 1.0,
+        "average_confidence_by_verdict": {
+          "match": 0.9055555555555554,
+          "partial": 0.85,
+          "miss": null
+        },
+        "brier_score_partial_05": 0.0245,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 1,
+            "avg_confidence": 0.75,
+            "avg_outcome": 1.0
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 9,
+            "avg_confidence": 0.9166666666666666,
+            "avg_outcome": 0.9444444444444444
+          }
+        ]
+      },
+      "cases": [
+        {
+          "id": "appendicitis",
+          "title": "CASE 1: Acute appendicitis",
+          "expected_diagnosis": "acute appendicitis",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Axial\nSeries modality: CT\nStudy description: APWC ABD-PEL WITH CONT 74177\nSeries description: Abd/Pelv  3.0  I40f  3\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Acute appendicitis",
+            "confidence": 0.95,
+            "reasoning": "The axial CT slice of the abdomen reveals a tubular structure in the right lower quadrant with increased wall thickness and surrounding fat stranding, consistent with inflammation. The ROI crop highlights a dilated appendix with adjacent fat infiltration, typical findings for acute appendicitis on CT imaging.",
+            "visible_findings": [
+              "Dilated appendix",
+              "Appendiceal wall thickening",
+              "Peri-appendiceal fat stranding",
+              "Inflammation in the right lower quadrant"
+            ],
+            "uncertainties": [
+              "No visible appendicolith on this slice",
+              "Extent of surrounding inflammation beyond this slice is not assessed"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Dilated appendix with wall thickening and peri-appendiceal fat stranding indicating acute appendicitis"
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Acute appendicitis",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder claim of acute appendicitis is well supported by grounded citations showing a dilated appendix with wall thickening and peri-appendiceal fat stranding in the ROI crop. Although the alternative diagnosis of ileitis is plausible, it is less strongly supported and lacks clear evidence of an enlarged or fluid-filled appendix to override the finder claim. The deterministic verifier confirms proper grounding and alignment of the claim. The identified uncertainties do not outweigh the cumulative evidence favoring appendicitis in this frame set.",
+            "uncertainty_summary": "There is uncertainty due to the lack of appendicolith, restricted visualization of inflammation beyond the slice shown, and potential overlap in imaging features with ileitis or Crohn's disease affecting the distal ileum seen in the slice. The image findings are not pathognomonic for appendicitis and could overlap with other right lower quadrant inflammatory processes.",
+            "counter_evidence": [
+              "No visible appendicolith on the CT slice, which is often associated with appendicitis.",
+              "Absence of a clearly fluid-filled or obviously distended appendix in the slice reviewed.",
+              "Presence of segmental bowel wall thickening and fat stranding suggestive of ileitis or other small bowel inflammatory processes.",
+              "The observed inflammation pattern could be attributed to distal ileum inflammation rather than solely appendiceal involvement."
+            ],
+            "manual_verification_steps": [
+              "Review additional axial slices above and below to assess the appendix along its full length for distension, wall enhancement, or peri-appendiceal fluid collection.",
+              "Search specifically for appendicolith presence in the full CT series.",
+              "Correlate clinical information for symptoms suggesting inflammatory bowel disease or infectious ileitis.",
+              "Evaluate other imaging sequences or planes to differentiate appendiceal involvement from adjacent small bowel inflammation.",
+              "Consider laboratory markers or clinical correlation for infection, inflammation, or Crohn's disease to narrow differential diagnosis."
+            ],
+            "alternative_diagnosis": "Ileitis or segmental small bowel inflammation",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "Segment of thickened ileum with adjacent fat stranding visible centrally in the slice, consistent with bowel inflammation rather than appendiceal enlargement."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "pulmonary_embolism",
+          "title": "Case 14: Acute pulmonary embolism",
+          "expected_diagnosis": "acute pulmonary embolism",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT angiography\nSeries label: Axial soft tissue window\nSeries modality: CT\nBody part examined: CHEST\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Pulmonary embolism",
+            "confidence": 0.95,
+            "reasoning": "The CT angiography axial soft tissue window images show a hypoattenuating filling defect within the lumen of the right pulmonary artery, consistent with an intraluminal thrombus. This is characteristic for a pulmonary embolism. The high contrast of the vessels from the angiographic technique allows clear visualization of the vascular filling defect, confirming the diagnosis.",
+            "visible_findings": [
+              "Intraluminal filling defect in the right pulmonary artery",
+              "Patent contrast-filled left pulmonary artery",
+              "Normal mediastinal structures"
+            ],
+            "uncertainties": [
+              "Exact extent of embolism beyond visible segment in this single slice",
+              "Presence of additional emboli not visible on this axial slice"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Region of interest shows the hypodense filling defect within the right pulmonary artery indicative of embolus."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Pulmonary embolism",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder claim is well supported by the identification of a hypoattenuating filling defect in the right pulmonary artery on a high-contrast CT angiography axial soft tissue window image, consistent with pulmonary embolism. The ROI citation directly grounds the claim. While the alternative suggests a normal variant or motion artifact, the imaging quality and vascular opacification are adequate to visualize the filling defect, which is not explained by artifact. Uncertainties about embolism extent and additional emboli are acknowledged but do not invalidate the primary diagnosis in the reviewed slice.",
+            "uncertainty_summary": "There is significant uncertainty about the exact extent of embolism beyond the single visible segment, as well as the possible presence of additional emboli not visible in the current slice. Moreover, it is unclear if the hypodense area truly represents thrombus versus artifact or variant anatomy.",
+            "counter_evidence": [
+              "The blind alternative diagnosis reports no convincing evidence of intraluminal filling defects and describes vessels as patent without signs of acute thrombus.",
+              "Potential motion artifacts or normal anatomical variants could mimic a filling defect in the right pulmonary artery on this axial slice.",
+              "The image shows normal appearance of other mediastinal structures and patent left pulmonary artery, which may argue against widespread embolic disease."
+            ],
+            "manual_verification_steps": [
+              "Review additional contiguous slices and coronal/sagittal reformats to assess the extent and multiplicity of the suspected embolism.",
+              "Evaluate for signs of motion artifact or partial volume effects that could mimic filling defects.",
+              "Correlate with clinical presentation and D-dimer/lab results for embolism likelihood.",
+              "Assess the contrast timing and vessel opacification for adequacy to exclude technical factors producing pseudodefects.",
+              "Consider comparison with prior imaging if available to identify stable anatomical variants."
+            ],
+            "alternative_diagnosis": "Normal anatomical variant or motion artifact",
+            "alternative_confidence": 0.85,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial soft tissue window CT slice shows patent pulmonary arteries without filling defects."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "perforated_sigmoid_diverticulitis",
+          "title": "Perforated sigmoid diverticulitis",
+          "expected_diagnosis": "perforated sigmoid diverticulitis",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Axial\nSeries modality: CT\nStudy description: APWC ABD-PEL WITH CONT 74177\nSeries description: Abd/Pelv axial\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Perforated sigmoid diverticulitis",
+            "confidence": 0.95,
+            "reasoning": "The CT axial image shows localized thickening of the sigmoid colon wall with adjacent fat stranding and extraluminal air bubbles outside the bowel lumen, which are hallmark signs of diverticulitis with perforation. The ROI crop highlights the area with pericolic fat stranding and free air, supporting the diagnosis of perforated sigmoid diverticulitis.",
+            "visible_findings": [
+              "Thickened sigmoid colon wall",
+              "Pericolic fat stranding/inflammation",
+              "Extraluminal gas (free air) adjacent to sigmoid colon",
+              "Dilated bowel loops in related segments"
+            ],
+            "uncertainties": [
+              "Extent of perforation beyond visible extraluminal air",
+              "Presence of abscess or phlegmon formation not fully assessed in single slice"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "ROI crop shows extraluminal air adjacent to thickened sigmoid colon with surrounding fat stranding indicative of perforated diverticulitis."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Perforated sigmoid diverticulitis",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The imaging clearly demonstrates localized sigmoid colon wall thickening, pericolic fat stranding, and definitive extraluminal air adjacent to the sigmoid colon, consistent with perforated sigmoid diverticulitis. Although the single axial slice limits assessment of abscess or phlegmon, the hallmark signs for perforation are present and well-grounded in the ROI. The alternative diagnosis of colonic fecal impaction with secondary inflammation is less supported given the presence of extraluminal free air, a key sign of perforation unlikely explained by simple impaction.",
+            "uncertainty_summary": "There is uncertainty about the extent of perforation beyond the visible extraluminal air, and the presence of abscess or phlegmon formation is not fully assessed due to limited imaging scope. The possibility of colonic fecal impaction causing secondary inflammation cannot be ruled out at this stage.",
+            "counter_evidence": [
+              "The blind alternative diagnosis notes significant fecal loading with adjacent mild fat stranding without clear abscess or free intraperitoneal air, suggesting alternative explanations to perforated diverticulitis.",
+              "No discrete fluid collection or encapsulated abscess is identified to support a definitive perforation complication.",
+              "The extent of extraluminal air is limited and could potentially represent microscopic or contained perforation rather than frank free perforation."
+            ],
+            "manual_verification_steps": [
+              "Review additional contiguous axial slices and coronal/sagittal reformats to evaluate the full extent of extraluminal air and look for fluid collections indicative of abscess or phlegmon.",
+              "Assess for the presence of diverticula and confirm their relation to the site of wall thickening.",
+              "Evaluate for signs of fecal impaction elsewhere in the colon and rule out alternative causes of fat stranding such as infectious or inflammatory colitis.",
+              "Correlate clinical presentation and laboratory markers (e.g. elevated inflammatory markers) to support or refute acute perforation.",
+              "Consider follow-up imaging or additional sequences (contrast enhanced) if available to better characterize the inflammatory process and any perforation complications."
+            ],
+            "alternative_diagnosis": "Colonic fecal impaction with adjacent inflammatory changes",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "ROI shows dense fecal material with adjacent mild fat stranding without definite abscess or free air."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "cecal_diverticulitis",
+          "title": "CT Abdomen and Pelvis - Cecal diverticulitis",
+          "expected_diagnosis": "cecal diverticulitis",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Body Std. Axial 3.0 Axial Venous/Phase CE\nSeries modality: CT\nStudy description: CT Abdomen and Pelvis\nSeries description: Body Std. Axial 3.0 Axial Venous/Phase CE\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Cecal diverticulitis",
+            "confidence": 0.9,
+            "reasoning": "The axial venous phase CT of the abdomen and pelvis demonstrates localized inflammatory changes adjacent to the cecum. The ROI crop highlights a segment of the cecum with focal thickening of the bowel wall and surrounding fat stranding, which is characteristic of diverticulitis. The involvement of the cecum rather than the sigmoid colon suggests cecal diverticulitis. There is no evidence of abscess or perforation on this slice.",
+            "visible_findings": [
+              "Focal cecal wall thickening",
+              "Pericolic fat stranding adjacent to the cecum",
+              "Presence of diverticula near the affected region"
+            ],
+            "uncertainties": [
+              "Extent of disease beyond this single slice",
+              "Presence of complications such as abscess or perforation cannot be fully assessed on this single image"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "ROI crop shows focal thickening of the cecal wall with surrounding fat stranding indicative of cecal diverticulitis."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Probable cecal diverticulitis, differential includes ileitis; further imaging recommended for definitive diagnosis",
+            "confidence": 0.75,
+            "review_decision": "revise",
+            "review_decision_summary": "The diagnosis of cecal diverticulitis is plausible given the indicated focal bowel wall thickening and fat stranding; however, the exact anatomical location is difficult to confirm based on a single axial slice. The presence of diverticula is not definitively visualized, and the alternative diagnosis of ileitis involving the terminal ileum is also plausible. Comprehensive review of multiple slices and planes is required to definitively differentiate these entities. Therefore, revision is recommended to emphasize diagnostic uncertainty and the need for further imaging to confirm.",
+            "uncertainty_summary": "Key uncertainties include the exact anatomical location of the bowel wall thickening (cecum vs ileum), true presence of diverticula, and assessment of disease extent and complications beyond this single slice. Limited image context makes exclusion of ileitis less certain. Additional slices and correlation with clinical data are required to clarify these issues.",
+            "counter_evidence": [
+              "The ROI images do not unequivocally demonstrate diverticula adjacent to the thickened bowel segment, which weakens the cecal diverticulitis diagnosis.",
+              "The blind alternative diagnosis highlights thickening and fat stranding in the terminal ileum region without diverticula, which is a plausible alternate explanation given the anatomy and imaging appearance.",
+              "Single axial slice limits spatial orientation and assessment of disease extent and complicating features like abscess or perforation, limiting diagnostic confidence.",
+              "The presence of fat stranding and bowel wall thickening is not specific and may also represent early or mild ileitis."
+            ],
+            "manual_verification_steps": [
+              "Review multiple axial, coronal, and sagittal slices to confirm the exact anatomic location of the inflammatory changes (cecum vs terminal ileum).",
+              "Confirm the presence or absence of diverticula near the affected bowel segment in multiple planes and slices.",
+              "Assess for signs of abscess formation, free air, or other complications across comprehensive imaging series.",
+              "Correlate with clinical presentation, laboratory data, and potentially further imaging to support or exclude ileitis or alternative diagnoses.",
+              "Consider advanced imaging techniques or follow-up studies if initial imaging remains ambiguous."
+            ],
+            "alternative_diagnosis": "Ileitis (inflammation of the terminal ileum)",
+            "alternative_confidence": 0.6,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "Bowel wall thickening and fat stranding around terminal ileum region visible in ROI."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": -0.15000000000000002
+        },
+        {
+          "id": "sigmoid_diverticulitis",
+          "title": "Sigmoid diverticulitis",
+          "expected_diagnosis": "sigmoid diverticulitis",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Coronal\nSeries modality: CT\nStudy description: CT Source Images\nSeries description: coronal\nImage dimensions: 565 x 512",
+          "baseline": {
+            "diagnosis": "Sigmoid diverticulitis",
+            "confidence": 0.95,
+            "reasoning": "The coronal CT image demonstrates localized bowel wall thickening and pericolic fat stranding in the left lower quadrant near the sigmoid colon. The ROI crop emphasizes the inflamed diverticula with surrounding inflammatory changes, which are characteristic features of diverticulitis in the sigmoid colon. These findings correspond to typical imaging appearance of acute sigmoid diverticulitis.",
+            "visible_findings": [
+              "Bowel wall thickening in sigmoid colon",
+              "Pericolic fat stranding in left lower quadrant",
+              "Inflamed diverticula in sigmoid colon"
+            ],
+            "uncertainties": [
+              "No evidence of abscess or perforation visible in this slice",
+              "Cannot fully assess the extent of inflammation or complications from a single slice"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "The ROI crop highlights inflamed diverticula and surrounding fat stranding in the sigmoid colon."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Sigmoid diverticulitis",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder claim of sigmoid diverticulitis is well supported by localized bowel wall thickening, pericolic fat stranding, and inflamed diverticula visible in the ROI, consistent with the typical imaging appearance of acute sigmoid diverticulitis. The blind alternative proposing a normal anatomical variant is ungrounded and less supported given the specific inflammatory findings. Although limited by single slice assessment, the evidence provided is sufficient to maintain the original diagnosis with high confidence.",
+            "uncertainty_summary": "There is uncertainty about the absence of abscess or perforation due to limited slice information, and the inability to assess the full extent of inflammation or complications. The differentiation from normal anatomical variants or other inflammatory bowel conditions is not clearly established from this slice alone.",
+            "counter_evidence": [
+              "No abscess, perforation, or extraluminal air visible that commonly accompany more definitive diverticulitis cases.",
+              "Single slice assessment limits comprehensive evaluation of inflammation spread or involvement in adjacent bowel segments.",
+              "The blind alternative suggests normal anatomical variation but is not well grounded with specific image evidence, though it highlights potential overinterpretation of bowel wall thickening in certain views."
+            ],
+            "manual_verification_steps": [
+              "Evaluate additional coronal and axial slices to assess continuity and extent of bowel wall thickening and fat stranding.",
+              "Assess presence or absence of complications such as abscess, perforation, or extraluminal gas through multiplanar review.",
+              "Correlate findings with clinical presentation and laboratory results to support inflammatory diagnosis.",
+              "Consider differential diagnoses that can mimic diverticulitis, such as colitis, ischemia, or neoplastic processes.",
+              "Verify the presence and extent of diverticula and their inflammation versus normal bowel anatomical variants.",
+              "Review the full imaging study to exclude subtle findings not visible in this single slice."
+            ],
+            "alternative_diagnosis": "Normal anatomical variant",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "4 pass, 0 warn, 1 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "strangulated_hernia_small_bowel_ischemia",
+          "title": "Strangulated hernia with small bowel ischemia",
+          "expected_diagnosis": "hernia complicated by small bowel ischemia (strangulation)",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: Body Std. Axial 3.0 Axial Venous/Phase CE\nSeries modality: CT\nStudy description: CT Abdomen and Pelvis\nSeries description: Body Std. Axial 3.0 Axial Venous/Phase CE\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Strangulated small bowel hernia with ischemia",
+            "confidence": 0.95,
+            "reasoning": "The axial contrast-enhanced CT image shows dilated small bowel loops with wall thickening and reduced enhancement, which are suggestive of ischemia. The ROI crop highlights a segment of small bowel in an abnormal position with associated mesenteric fat stranding and engorged vessels, consistent with a strangulated hernia causing compromised blood flow to the bowel segment.",
+            "visible_findings": [
+              "Dilated small bowel loops",
+              "Bowel wall thickening",
+              "Reduced bowel wall enhancement",
+              "Mesenteric fat stranding",
+              "Engorged mesenteric vessels",
+              "Abnormal bowel positioning in ROI"
+            ],
+            "uncertainties": [
+              "Exact anatomical type of hernia may not be confirmed on single slice",
+              "Extent of bowel involvement and ischemia severity not fully assessable"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "The ROI crop shows the dilated small bowel loop with wall thickening and engorged vessels indicating compromised blood supply due to strangulation."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Strangulated small bowel hernia with ischemia, differential includes localized small bowel diverticulitis; recommend further imaging for confirmation",
+            "confidence": 0.85,
+            "review_decision": "revise",
+            "review_decision_summary": "While the finder presents a well-grounded diagnosis of strangulated small bowel hernia with ischemia supported by bowel dilation, wall thickening, and mesenteric changes, key diagnostic criteria such as a clear hernia sac or transition point are not evident on the provided axial slice. The blind alternative of localized small bowel diverticulitis is also credible given the focal wall thickening and fat stranding without definitive ischemic changes. The limitations of a single axial slice and lack of multiplanar views reduce confidence in confirming the hernia and ischemia diagnosis. Therefore, revision is recommended to include the alternative diagnosis or further imaging assessment to clarify the findings and improve diagnostic certainty.",
+            "uncertainty_summary": "Key uncertainties arise from the limited axial slice and lack of multiplanar views for assessing hernia type and bowel viability comprehensively. The extent of bowel involvement and ischemia severity cannot be fully evaluated, which weakens confidence in the diagnosis. The presence or absence of a clear transition point or hernia defect remains unknown. Also, distinguishing between ischemic strangulation and inflammatory diverticulitis is challenging based on the current imaging evidence alone.",
+            "counter_evidence": [
+              "No classic hernia sac or clear transition point observed in the provided axial slice.",
+              "The bowel wall enhancement reduction is not unequivocally demonstrated compared to normal segments.",
+              "Focal bowel wall thickening and fat stranding may be explained by localized diverticulitis rather than ischemia.",
+              "Absence of definitive obstruction signs weakens strangulated hernia diagnosis.",
+              "Blind alternative shows plausible differential supported by imaging features without strong ischemia evidence."
+            ],
+            "manual_verification_steps": [
+              "Review full series multiplanar reconstructions to identify hernia defects or transition points.",
+              "Assess multiple axial slices to evaluate bowel wall enhancement relative to normal bowel for ischemia confirmation.",
+              "Look for other supportive signs of strangulation such as pneumatosis intestinalis or portal venous gas.",
+              "Evaluate for presence of small bowel diverticula or localized inflammatory changes supporting diverticulitis.",
+              "Correlate with clinical presentation and laboratory markers to differentiate ischemia from inflammation."
+            ],
+            "alternative_diagnosis": "Localized small bowel diverticulitis",
+            "alternative_confidence": 0.6,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "Focal small bowel wall thickening and adjacent fat stranding with possible small diverticula seen in the ROI."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": -0.09999999999999998
+        },
+        {
+          "id": "perforated_appendicitis",
+          "title": "Perforated appendicitis",
+          "expected_diagnosis": "perforated appendicitis",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: CT\nSeries label: axial\nSeries modality: CT\nStudy description: CT OSF CT ABDOMEN OR COMBO\nSeries description: ENHANCED\nBody part examined: ABDOMEN\nImage dimensions: 512 x 512",
+          "baseline": {
+            "diagnosis": "Perforated appendicitis",
+            "confidence": 0.95,
+            "reasoning": "The CT image shows features consistent with perforated appendicitis, including localized inflammatory changes in the right lower quadrant, peri-appendiceal fat stranding, and the presence of extraluminal air indicating perforation. The ROI crop highlights an area with small collections of gas outside the expected bowel lumen which correlates with a perforation. There is also peri-appendiceal fluid suggestive of an abscess or phlegmon.",
+            "visible_findings": [
+              "right lower quadrant inflammatory mass",
+              "peri-appendiceal fat stranding",
+              "extraluminal gas",
+              "peri-appendiceal fluid collection"
+            ],
+            "uncertainties": [
+              "Exact extent of perforation is difficult to assess on a single axial slice",
+              "Infection vs inflammation severity grading cannot be fully determined without clinical correlation"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Extraluminal gas and peri-appendiceal inflammatory changes visible in the ROI crop confirm perforation site."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Perforated appendicitis",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of perforated appendicitis is well supported by the CT axial slice and ROI crop showing extraluminal gas, peri-appendiceal fat stranding, and localized inflammatory fluid collection in the right lower quadrant. Although alternative diagnoses such as diverticulitis were suggested, these are anatomically less consistent with the radiologic findings observed in the ROI crop and image slice. The deterministic verifier confirms robust grounding, and the critique's concerns about limited imaging planes are acknowledged but do not outweigh the strong evidence for perforated appendicitis based on given data. Therefore, the original finder claim should be kept.",
+            "uncertainty_summary": "Uncertainties remain about the full extent of perforation and precise anatomic localization of perforation source due to limited imaging planes. Severity and clinical correlation was not fully integrated, leaving questions about infection extent and precise pathology. Potential overlap of inflammatory changes with adjacent bowel segments raises diagnostic ambiguity.",
+            "counter_evidence": [
+              "The ROI crop shows extraluminal gas that could occasionally be seen with other perforated intra-abdominal infections, not exclusively appendicitis.",
+              "The singular axial slice limits evaluation of the appendix course and adjacent bowel segments; thus, the possibility of other sources like small bowel inflammation or nearby bowel diverticulitis cannot be excluded.",
+              "No multiplanar reformat images were provided to firmly localize the pathology to the appendix as opposed to adjacent cecal or terminal ileal involvement."
+            ],
+            "manual_verification_steps": [
+              "Review multiplanar CT images to trace the appendix continuously and confirm site of perforation.",
+              "Assess additional adjacent axial slices to check for contiguous inflammatory changes or other bowel involvement.",
+              "Correlate imaging findings with clinical presentation, laboratory markers of infection, and prior imaging if available.",
+              "Evaluate coronal and sagittal reconstructions for better anatomical localization of inflammatory changes and extraluminal gas.",
+              "Consider differential diagnoses including terminal ileitis, cecal diverticulitis or other inflammatory conditions in right lower quadrant."
+            ],
+            "alternative_diagnosis": "diverticulitis",
+            "alternative_confidence": 0.6,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "Localized bowel wall thickening and adjacent fat stranding in the sigmoid colon region visible on the ROI crop."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "appendicitis_in_pregnancy",
+          "title": "Appendicitis in pregnancy",
+          "expected_diagnosis": "acute uncomplicated appendicitis in pregnancy",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: T2 SS A/P\nSeries modality: MR\nStudy description: MRI ABDOMEN WO CONT\nSeries description: T2 SS A/P\nBody part examined: ABDOMENPELVIS\nImage dimensions: 288 x 288",
+          "baseline": {
+            "diagnosis": "Appendicitis in pregnancy",
+            "confidence": 0.85,
+            "reasoning": "The axial T2-weighted MRI slice of the abdomen and pelvis shows a tubular structure with wall thickening and high signal intensity consistent with inflammation in the right lower quadrant area, near the gravid uterus. The enlarged uterus and displaced bowel loops are compatible with pregnancy, and the findings suggest inflammation typical of appendicitis in this setting.",
+            "visible_findings": [
+              "Tubular structure with wall thickening",
+              "High T2 signal intensity indicating inflammation",
+              "Right lower quadrant location adjacent to uterus",
+              "Gravid uterus visible, displacing bowel loops"
+            ],
+            "uncertainties": [
+              "Exact extent of inflammation and presence of perforation not clearly visible on this single slice",
+              "No contrast enhancement to assess vascularity or abscess formation"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "ROI showing inflamed tubular structure with wall thickening and increased T2 signal indicating appendicitis adjacent to pregnant uterus"
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Appendicitis in pregnancy",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of appendicitis in pregnancy is well-supported by a clearly identified ROI showing a tubular structure with wall thickening and increased T2 signal adjacent to the gravid uterus corresponding to inflammation, consistent with appendicitis. The alternative diagnosis suggesting normal bowel gas pattern lacks grounding and is less convincing given the localized inflammatory signs. Although some uncertainties remain regarding extent and complications, these do not outweigh the evidence supporting the finder claim.",
+            "uncertainty_summary": "Significant uncertainties remain regarding the extent and severity of inflammation, presence or absence of complications like perforation or abscess, and specificity of imaging findings to true appendicitis versus normal pregnancy-related changes or benign bowel variants. The lack of contrast imaging hampers better characterization. Single slice assessment also limits comprehensive evaluation.",
+            "counter_evidence": [
+              "No contrast-enhanced sequences are available to confirm vascularity or abscess formation that typically support diagnosis of appendicitis.",
+              "The imaging findings could be confounded by physiological displacement and compression caused by the gravid uterus, potentially mimicking wall thickening and T2 signal changes.",
+              "The blind alternative diagnosis suggests the possibility that the observed findings could reflect normal bowel gas and fluid variations rather than inflammation, though this argument is ungrounded in additional citations or imaging.",
+              "Absence of imaging demonstrating secondary signs of appendicitis such as periappendiceal fat stranding, fluid collection, or clear luminal obstruction weakens the diagnostic certainty."
+            ],
+            "manual_verification_steps": [
+              "Acquire and review additional MRI slices in multiple planes to assess the appendix along its entire length and evaluate surrounding tissues.",
+              "Consider performing contrast-enhanced MRI sequences, if safe in pregnancy, to assess for active inflammation, hyperemia, and abscess formation.",
+              "Correlate imaging findings carefully with clinical presentation and laboratory markers of inflammation to support or refute diagnosis of appendicitis.",
+              "Evaluate for secondary signs of appendicitis such as periappendiceal fat stranding or fluid collections that might be subtle on single axial T2 slice.",
+              "Consider ultrasound correlation to provide additional evidence of appendiceal inflammation in pregnancy if feasible."
+            ],
+            "alternative_diagnosis": "Normal bowel gas pattern with no definitive evidence of inflammatory or obstructive pathology",
+            "alternative_confidence": 0.75,
+            "alternative_citations": [],
+            "verifier": {
+              "summary": "4 pass, 0 warn, 1 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "fail",
+                  "summary": "Blind alternative was generic and ungrounded."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "left_mca_infarction",
+          "title": "Acute left MCA infarction",
+          "expected_diagnosis": "acute left multifocal MCA distribution ischemia/infarction",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: AX DWI RESOLVE_TRACEW\nSeries modality: MR\nStudy description: NEURO^BRAIN\nSeries description: AX DWI RESOLVE_TRACEW\nBody part examined: BRAIN\nImage dimensions: 192 x 192",
+          "baseline": {
+            "diagnosis": "Left middle cerebral artery (MCA) infarction",
+            "confidence": 0.95,
+            "reasoning": "The diffusion-weighted MRI slice shows hyperintensity in the left MCA territory consistent with acute ischemia. The ROI highlights an area of diffusion restriction corresponding to cytotoxic edema caused by an ischemic stroke in the left MCA distribution.",
+            "visible_findings": [
+              "Hyperintense signal in the left MCA territory on DWI",
+              "Cortical and subcortical diffusion restriction",
+              "Loss of normal gray-white differentiation in affected region"
+            ],
+            "uncertainties": [
+              "Exact infarct age cannot be determined from a single slice without ADC correlation",
+              "No information on clinical correlation or symptoms"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "The ROI crop focuses on the hyperintense region of diffusion restriction indicative of acute infarction in the left MCA territory."
+              }
+            ],
+            "verdict": "match"
+          },
+          "shipped_v4": {
+            "diagnosis": "Left middle cerebral artery (MCA) infarction",
+            "confidence": 0.95,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder claim of left MCA infarction is well supported by the presence of hyperintensity on DWI in the left MCA territory with cortical and subcortical diffusion restriction and loss of normal gray-white differentiation. Although the lack of ADC correlation and clinical context limits absolute certainty, the imaging findings align strongly with acute ischemia in the vascular territory, which outweighs the less confident alternative of a demyelinating lesion. The deterministic verifier confirms strong grounding of the claim and alternative. Given the imaging pattern and grounded ROI focus, the diagnosis of left MCA infarction should be kept.",
+            "uncertainty_summary": "Key uncertainties include the inability to determine infarct age from a single slice without ADC correlation and no clinical symptom correlation provided. The imaging alone cannot definitively exclude acute demyelinating lesions which may mimic infarction on DWI.",
+            "counter_evidence": [
+              "Lack of ADC map correlation to confirm diffusion restriction and infarction.",
+              "No clinical context or symptom information to support vascular territory infarct.",
+              "Alternative diagnosis such as acute demyelinating lesion plausible due to lesion morphology and location.",
+              "Absence of perfusion or vascular imaging to corroborate MCA territory ischemia."
+            ],
+            "manual_verification_steps": [
+              "Review the corresponding ADC maps to confirm true diffusion restriction in the lesion area.",
+              "Correlate imaging findings with clinical presentation and neurological symptoms.",
+              "Check additional MRI sequences (e.g., FLAIR, T2) for lesion characteristics typical of infarction vs demyelination.",
+              "Consider vascular imaging to assess MCA patency and perfusion status.",
+              "Evaluate lesion morphology and distribution for consistency with vascular territory infarction versus demyelinating plaque."
+            ],
+            "alternative_diagnosis": "Acute demyelinating lesion such as multiple sclerosis plaque",
+            "alternative_confidence": 0.65,
+            "alternative_citations": [
+              {
+                "type": "roi",
+                "summary": "Hyperintense focal lesion on DWI in subcortical white matter suggesting restricted diffusion."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "match"
+          },
+          "confidence_delta": 0.0
+        },
+        {
+          "id": "cauda_equina_compression",
+          "title": "Cauda equina compression from severe stenosis",
+          "expected_diagnosis": "severe central stenosis with compression of the cauda equina at multiple levels",
+          "mode": "image+metadata+roi",
+          "metadata_summary": "Published modality bucket: MRI\nSeries label: T2 TSE AXIALS STACK\nSeries modality: MR\nStudy description: NEURO EXAMS^L-SPINE\nSeries description: T2 TSE AXIALS STACK\nImage dimensions: 256 x 256",
+          "baseline": {
+            "diagnosis": "Lumbar disc herniation causing central canal stenosis",
+            "confidence": 0.85,
+            "reasoning": "On the T2-weighted axial MRI slice, there is evident disc material bulging centrally into the spinal canal, causing narrowing of the central canal. The hyperintense cerebrospinal fluid space around the nerve roots appears compressed, indicating stenosis. The ROI crop highlights the disc protrusion more clearly. These features suggest lumbar disc herniation with associated central canal stenosis.",
+            "visible_findings": [
+              "Central disc protrusion at lumbar level",
+              "Narrowing of central spinal canal",
+              "Compression of cerebrospinal fluid space around nerve roots"
+            ],
+            "uncertainties": [
+              "Exact spinal level not specified",
+              "Degree of nerve root involvement not fully clear on single slice"
+            ],
+            "citations": [
+              {
+                "type": "roi",
+                "summary": "Disc protrusion and canal narrowing visible in ROI crop at center of spinal canal"
+              }
+            ],
+            "verdict": "partial"
+          },
+          "shipped_v4": {
+            "diagnosis": "Lumbar disc herniation causing central canal stenosis",
+            "confidence": 0.85,
+            "review_decision": "keep",
+            "review_decision_summary": "The finder diagnosis of lumbar disc herniation causing central canal stenosis is well supported by the visible central disc protrusion and narrowing of the central canal on the axial T2-weighted MRI slice, with ROI highlighting these findings. Although the exact spinal level and full extent of nerve root involvement are not fully clear, the imaging evidence presented aligns strongly with the finder claim. The alternative diagnosis of facet joint arthropathy lacks evidence of significant central canal stenosis or large disc extrusion on this slice and does not sufficiently override the finder diagnosis. Therefore, keeping the finder interpretation is appropriate.",
+            "uncertainty_summary": "There is uncertainty regarding the exact spinal level of the lesion and the extent of nerve root or cauda equina involvement. The isolated axial slice does not fully demonstrate the longitudinal extent or severity of stenosis, nor confirm if the disc protrusion is the sole or predominant cause. The lack of additional imaging planes or levels introduces ambiguity in confirming the diagnosis.",
+            "counter_evidence": [
+              "The blind alternative diagnosis notes facet joint hypertrophy and irregularity without clear evidence of a large disc extrusion causing nerve root compression, which may better explain symptoms via localized pain rather than central canal stenosis.",
+              "The absence of convincing large disc extrusion or mass effect on the slice questions whether the disc protrusion truly causes significant stenosis.",
+              "The alternative emphasizes that hypertrophic facet changes can mimic or contribute to canal narrowing, which is not excluded by the current finder diagnosis."
+            ],
+            "manual_verification_steps": [
+              "Review multiple axial slices spanning the lumbar segments to localize the exact spinal level and confirm the extent of the disc protrusion and canal stenosis.",
+              "Examine sagittal and coronal reconstructed MRI images to evaluate the longitudinal extent of stenosis and correlate with axial findings.",
+              "Assess facet joint morphology and degeneration to determine their contribution to canal or foraminal narrowing.",
+              "Check for presence and severity of nerve root or cauda equina compression beyond CSF space narrowing, possibly with contrast imaging if available.",
+              "Correlate imaging findings with clinical symptoms and neurological examination for comprehensive evaluation."
+            ],
+            "alternative_diagnosis": "Lumbar facet joint arthropathy",
+            "alternative_confidence": 0.7,
+            "alternative_citations": [
+              {
+                "type": "frame",
+                "summary": "Axial T2-weighted image shows facet joint hypertrophy and irregularity."
+              }
+            ],
+            "verifier": {
+              "summary": "5 pass, 0 warn, 0 fail",
+              "checks": [
+                {
+                  "id": "frame_sampling",
+                  "label": "Frame sampling",
+                  "status": "pass",
+                  "summary": "ROI-guided review was available."
+                },
+                {
+                  "id": "candidate_grounding",
+                  "label": "Candidate grounding",
+                  "status": "pass",
+                  "summary": "Finder returned grounded citations."
+                },
+                {
+                  "id": "selection_alignment",
+                  "label": "Selection alignment",
+                  "status": "pass",
+                  "summary": "Finder grounded the claim to the ROI crop."
+                },
+                {
+                  "id": "alternative_grounding",
+                  "label": "Alternative grounding",
+                  "status": "pass",
+                  "summary": "Blind alternative returned grounded non-metadata citations."
+                },
+                {
+                  "id": "computed_measurements",
+                  "label": "Computed measurements",
+                  "status": "pass",
+                  "summary": "ROI guidance supplied a deterministic focus window."
+                }
+              ]
+            },
+            "verdict": "partial"
+          },
+          "confidence_delta": 0.0
+        }
+      ],
+      "previous_v3_reviewed_summary": {
+        "total_cases": 10,
+        "match": 9,
+        "partial": 0,
+        "miss": 1,
+        "strict_top1_accuracy": 0.9,
+        "directionally_useful_accuracy": 0.9,
+        "average_confidence_by_verdict": {
+          "match": 0.5888888888888889,
+          "partial": null,
+          "miss": 0.6
+        },
+        "brier_score_partial_05": 0.19050000000000003,
+        "confidence_bins": [
+          {
+            "range": "0.0-0.2",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.2-0.4",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          },
+          {
+            "range": "0.4-0.6",
+            "count": 2,
+            "avg_confidence": 0.5,
+            "avg_outcome": 1.0
+          },
+          {
+            "range": "0.6-0.8",
+            "count": 8,
+            "avg_confidence": 0.6124999999999999,
+            "avg_outcome": 0.875
+          },
+          {
+            "range": "0.8-1.0",
+            "count": 0,
+            "avg_confidence": null,
+            "avg_outcome": null
+          }
+        ],
+        "avg_confidence_delta": -0.305,
+        "avg_confidence_delta_by_verdict": {
+          "match": -0.3111111111111111,
+          "partial": null,
+          "miss": -0.25
+        }
+      }
+    }
+  },
+  "notes": [
+    "Baseline is finder-only.",
+    "Shipped v4 is finder + blind alternative + deterministic verifier + critic + arbiter.",
+    "The arbiter can keep, revise, or abstain, so diagnosis may change relative to baseline.",
+    "Scoring uses the same regex rules as the existing public benchmark harness."
+  ]
+}
