@@ -69,10 +69,9 @@
           <p>
             The original public benchmark used the Codex CLI path on <code>gpt-5.4</code>. The follow-up harness also
             included direct OpenAI API testing, and the published review-pipeline comparison used
-            <code>gpt-4.1-mini</code>. In that follow-up, the workflow was rebuilt around an ROI-first flow and a
-            review stack: <code>finder -&gt; blind alternative -&gt; verifier -&gt; critic -&gt; arbiter</code>. That made the
-            answer object much better. It gave grounded evidence, counter-evidence, and a cleaner audit trail. It did
-            not fix the core problem.
+            <code>gpt-4.1-mini</code>. The new workflow was ROI-first and stopped trusting one answer. One pass made the
+            first call, another proposed a competing explanation, and a few checks tried to decide which story held up
+            better. That made the output easier to inspect and audit. It still did not solve the core problem.
           </p>
           <figure class="media-shot">
             <img
