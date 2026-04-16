@@ -85,6 +85,23 @@
             comparison. Reasoning improved faster than perception.
           </p>
 
+          <h2>Operational Cost</h2>
+          <p>
+            Medical AI becomes an operational problem very quickly. A DICOM study is not a neat image file. It can
+            span hundreds or thousands of instances and reach gigabytes. In many regulated industries, public cloud is
+            not a free choice, so pushing that data through laptops, temp folders, and shared drives is slow,
+            expensive, and hard to control.
+          </p>
+          <p>
+            A concrete example is a worker pod reading a large study from mounted storage. If the network share stalls
+            or drops, the worker can fail in the middle of processing. In a script-like setup, that often leaves the
+            case hanging in an unclear state. In a fault-tolerant clustered runtime, the pod can die, restart, or be
+            rescheduled while the case state stays outside the process in a queue or status store. The same applies to
+            scale: metadata workers and heavy GPU inference workers can scale separately instead of fighting for one
+            machine. That is the real value. Not that failures disappear, but that storage faults, restarts, and load
+            spikes stop breaking the whole pipeline.
+          </p>
+
           <h2>Conclusion</h2>
           <p>
             The conclusion is simple. A polished DICOM chat surface does not make a general multimodal model a
