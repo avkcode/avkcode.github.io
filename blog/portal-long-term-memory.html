@@ -327,27 +327,6 @@
             laptop, SSH node, and Kubernetes-backed execution.
           </p>
 
-          <figure class="diagram-card">
-            <div class="diagram-card-inner">
-              <div class="mermaid">sequenceDiagram
-  participant U as Operator
-  participant P as Portal
-  participant DB as Local DB
-  participant S3 as S3 share
-  participant R as SSH or K8s runtime
-
-  U-&gt;&gt;P: activate devops profile
-  P-&gt;&gt;DB: load local profile state
-  DB--&gt;&gt;P: keys, settings, targets
-  P-&gt;&gt;S3: pull latest shared revision
-  S3--&gt;&gt;P: synced profile bundle
-  P-&gt;&gt;R: mount secrets and runtime config
-  R--&gt;&gt;U: session starts with full profile context
-              </div>
-            </div>
-            <figcaption>Profile activation resolves local state first, then converges with the shared S3-backed profile bundle.</figcaption>
-          </figure>
-
           <h2>Secrets become part of continuity</h2>
           <p>
             This is the practical part many AI products avoid. Long-term memory is only useful if sensitive information
@@ -511,18 +490,22 @@
         theme: "base",
         securityLevel: "loose",
         themeVariables: {
-          background: "#f7fbfe",
+          darkMode: true,
+          background: "#120d18",
           fontFamily: "Manrope, Avenir Next, Helvetica Neue, Arial, sans-serif",
-          primaryColor: "#f7fbfe",
-          primaryTextColor: "#17212b",
-          primaryBorderColor: "#b8c8d6",
-          lineColor: "#7796b4",
-          secondaryColor: "#edf3f8",
-          tertiaryColor: "#ffffff",
-          clusterBkg: "#eef4f8",
-          clusterBorder: "#c7d3de",
-          nodeBorder: "#b8c8d6",
-          edgeLabelBackground: "#ffffff",
+          primaryColor: "#23192d",
+          primaryTextColor: "#f7ecd3",
+          primaryBorderColor: "#d4a95a",
+          lineColor: "#e2c178",
+          secondaryColor: "#2a1f34",
+          tertiaryColor: "#18111f",
+          clusterBkg: "#1d1425",
+          clusterBorder: "#b98f4c",
+          nodeBorder: "#d4a95a",
+          edgeLabelBackground: "#17101d",
+          textColor: "#f7ecd3",
+          nodeTextColor: "#f7ecd3",
+          clusterTextColor: "#f1e3c5",
         },
       });
     </script>
