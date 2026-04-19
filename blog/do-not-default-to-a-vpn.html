@@ -40,47 +40,36 @@
 
         <section class="content">
           <p class="lead">
-            Start with the short version. If I want narrow web access for a device, an agent request can look like
-            this:
+            Internet censorship and blocking push people toward public VPNs. That is understandable. But public VPNs
+            are not a strong security answer. You are moving your traffic and trust boundary onto someone else&apos;s
+            infrastructure.
           </p>
+
+          <p>With an agent, the request can be this simple:</p>
 
           <pre><code>Add a new OpenZiti rule for web access to YouTube and Telegram only.</code></pre>
 
           <p>
-            That is the level most people actually want to work at. Define the access, apply it, and move on. The
-            agent can handle the controller objects and the role changes behind it.
+            That is easier to work with than doing everything by hand. The agent can create the configs, service,
+            policies, and identity role changes without turning a small access change into a long controller session.
           </p>
 
-          <h2>Why I Would Not Trust a Public VPN</h2>
           <p>
-            Internet censorship and blocking are real. A public VPN may be the fastest way around them. But it is still
-            a weak trust model. Your traffic, metadata, and access path move onto someone else&apos;s infrastructure. You
-            do not control the server, the logs, the keys, or the operating discipline.
-          </p>
-          <p>
-            If the goal is security, it is better to run the access layer on your own VM or your own infrastructure.
-            That keeps the trust boundary in your hands. The problem is that running a traditional VPN like OpenVPN is
-            not simple. You still have to manage certificates, client profiles, revocation, routing, DNS, and mobile
-            client behavior.
+            If you need this kind of access, it is safer to host it yourself on your own VM or your own infrastructure.
+            Then you control the server, keys, logs, and policies. Running a traditional VPN like OpenVPN is possible,
+            but it is not simple. You have to manage certificates, client profiles, routing, DNS, revocation, and
+            mobile client behavior.
           </p>
 
-          <h2>Why OpenZiti Is Narrower</h2>
           <p>
-            OpenZiti is useful because it is service-first, not network-first. Instead of putting a device onto part of
-            a routed network, you give an identity access to a specific service.
-          </p>
-          <p>
-            The technical detail that matters is how the policy is split. OpenZiti has client intercept config for what
-            the client can match, host forwarding config for what the hosting side can forward, and dial and bind
-            policies for who can use or host the service. The hosting side can stay outbound-only. That is narrower
-            than the usual VPN model where authentication often turns into general network reachability.
+            OpenZiti is useful because it is service-first, not network-first. Instead of giving a device access to
+            part of a subnet, you give an identity access to a specific service. One technical detail matters here:
+            OpenZiti separates client intercept config, host forwarding config, and dial/bind policies. The hosting
+            side can stay outbound-only, and the client only gets the domains and ports defined by policy. That is
+            narrower than the usual commercial VPN model.
           </p>
 
-          <h2>What The Manual Version Looks Like</h2>
-          <p>
-            The short agent request above is hiding a fair amount of work. Doing the same thing manually takes longer
-            and is easy to get wrong in small ways.
-          </p>
+          <p>Doing the same thing manually takes much longer. It looks like this:</p>
 
           <pre><code>ssh hawking 'bash -s' &lt;&lt;'EOF'
 set -euo pipefail
@@ -158,14 +147,9 @@ EOF
 ssh hawking 'source /root/.ziti/quickstart/ziti/ziti.env &gt;/dev/null 2&gt;&amp;1; /opt/openziti/bin/ziti edge update identity anton-iphone-qs3 -a yt-tg-web'</code></pre>
 
           <p>
-            That is why the agent flow matters. The result can stay narrow, but the operator does not need to write and
-            maintain every step by hand.
-          </p>
-
-          <p>
-            If the job is just “get around blocking,” a public VPN may be convenient. If the job is private access with
-            a better security model, host it yourself and keep access tied to identities and services instead of broad
-            network reach.
+            The difference is not just convenience. The agent request is short, but the resulting access is still
+            narrow: specific domains, specific ports, specific roles. That is a better model than putting a device onto
+            a broad VPN and treating the rest as cleanup later.
           </p>
         </section>
       </article>
