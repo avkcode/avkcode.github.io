@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Do Not Default to a VPN</title>
+    <meta
+      name="description"
+      content="Public VPNs may help with blocked networks, but they are a weak trust model. A short note on self-hosting, OpenZiti, and why service-first access is narrower than VPN access."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/do-not-default-to-a-vpn.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Do Not Default to a VPN" />
+    <meta
+      property="og:description"
+      content="Public VPNs are convenient for blocked networks, but they move trust to someone else. OpenZiti offers a narrower service-first model."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/do-not-default-to-a-vpn.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+  </head>
+  <body class="article-page">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <h1>Do Not Default to a VPN</h1>
+          <div class="hero-quick">
+            <span class="hero-pill">3 min read</span>
+            <span class="hero-pill">Published April 19, 2026</span>
+            <span class="hero-pill">OpenZiti</span>
+          </div>
+          <p class="deck">
+            Internet blocking pushes people toward public VPNs. That is understandable. It is not a strong security
+            model. If you need private access, host it yourself and keep access tied to identities and specific
+            services.
+          </p>
+          <p class="meta">Published April 19, 2026</p>
+        </header>
+
+        <section class="content">
+          <p class="lead">
+            Start with the short version. If I want narrow web access for a device, an agent request can look like
+            this:
+          </p>
+
+          <pre><code>Add a new OpenZiti rule for web access to YouTube and Telegram only.</code></pre>
+
+          <p>
+            That is the level most people actually want to work at. Define the access, apply it, and move on. The
+            agent can handle the controller objects and the role changes behind it.
+          </p>
+
+          <h2>Why I Would Not Trust a Public VPN</h2>
+          <p>
+            Internet censorship and blocking are real. A public VPN may be the fastest way around them. But it is still
+            a weak trust model. Your traffic, metadata, and access path move onto someone else&apos;s infrastructure. You
+            do not control the server, the logs, the keys, or the operating discipline.
+          </p>
+          <p>
+            If the goal is security, it is better to run the access layer on your own VM or your own infrastructure.
+            That keeps the trust boundary in your hands. The problem is that running a traditional VPN like OpenVPN is
+            not simple. You still have to manage certificates, client profiles, revocation, routing, DNS, and mobile
+            client behavior.
+          </p>
+
+          <h2>Why OpenZiti Is Narrower</h2>
+          <p>
+            OpenZiti is useful because it is service-first, not network-first. Instead of putting a device onto part of
+            a routed network, you give an identity access to a specific service.
+          </p>
+          <p>
+            The technical detail that matters is how the policy is split. OpenZiti has client intercept config for what
+            the client can match, host forwarding config for what the hosting side can forward, and dial and bind
+            policies for who can use or host the service. The hosting side can stay outbound-only. That is narrower
+            than the usual VPN model where authentication often turns into general network reachability.
+          </p>
+
+          <h2>What The Manual Version Looks Like</h2>
+          <p>
+            The short agent request above is hiding a fair amount of work. Doing the same thing manually takes longer
+            and is easy to get wrong in small ways.
+          </p>
+
+          <pre><code>ssh hawking 'bash -s' &lt;&lt;'EOF'
+set -euo pipefail
+
+source /root/.ziti/quickstart/ziti/ziti.env &gt;/dev/null 2&gt;&amp;1
+/opt/openziti/bin/ziti edge login \
+  "${ZITI_CTRL_EDGE_ADVERTISED_ADDRESS}:${ZITI_CTRL_EDGE_ADVERTISED_PORT}" \
+  -u "$ZITI_USER" -p "$ZITI_PWD" -y &gt;/dev/null
+
+cat &gt;/tmp/yt-tg-web.intercept.v1.json &lt;&lt;'JSON'
+{
+  "protocols": ["tcp", "udp"],
+  "addresses": [
+    "youtube.com",
+    "*.youtube.com",
+    "youtu.be",
+    "*.googlevideo.com",
+    "*.ytimg.com",
+    "telegram.org",
+    "*.telegram.org",
+    "t.me",
+    "*.t.me",
+    "telegram.me",
+    "*.telegram.me",
+    "web.telegram.org"
+  ],
+  "portRanges": [
+    { "low": 80, "high": 80 },
+    { "low": 443, "high": 443 }
+  ]
+}
+JSON
+
+cat &gt;/tmp/yt-tg-web.host.v1.json &lt;&lt;'JSON'
+{
+  "forwardAddress": true,
+  "allowedAddresses": [
+    "youtube.com",
+    "*.youtube.com",
+    "youtu.be",
+    "*.googlevideo.com",
+    "*.ytimg.com",
+    "telegram.org",
+    "*.telegram.org",
+    "t.me",
+    "*.t.me",
+    "telegram.me",
+    "*.telegram.me",
+    "web.telegram.org"
+  ],
+  "forwardPort": true,
+  "allowedPortRanges": [
+    { "low": 80, "high": 80 },
+    { "low": 443, "high": 443 }
+  ],
+  "forwardProtocol": true,
+  "allowedProtocols": ["tcp", "udp"]
+}
+JSON
+
+/opt/openziti/bin/ziti edge create config yt-tg-web.intercept.v1 intercept.v1 -f /tmp/yt-tg-web.intercept.v1.json
+/opt/openziti/bin/ziti edge create config yt-tg-web.host.v1 host.v1 -f /tmp/yt-tg-web.host.v1.json
+/opt/openziti/bin/ziti edge create service yt-tg-web-egress \
+  --configs yt-tg-web.intercept.v1,yt-tg-web.host.v1
+
+/opt/openziti/bin/ziti edge create service-policy yt-tg-web-egress-dial Dial \
+  --identity-roles '#yt-tg-web' \
+  --service-roles '@yt-tg-web-egress'
+
+/opt/openziti/bin/ziti edge create service-policy yt-tg-web-egress-bind Bind \
+  --identity-roles '#yt-host-qs' \
+  --service-roles '@yt-tg-web-egress'
+EOF
+
+ssh hawking 'source /root/.ziti/quickstart/ziti/ziti.env &gt;/dev/null 2&gt;&amp;1; /opt/openziti/bin/ziti edge update identity anton-iphone-qs3 -a yt-tg-web'</code></pre>
+
+          <p>
+            That is why the agent flow matters. The result can stay narrow, but the operator does not need to write and
+            maintain every step by hand.
+          </p>
+
+          <p>
+            If the job is just “get around blocking,” a public VPN may be convenient. If the job is private access with
+            a better security model, host it yourself and keep access tied to identities and services instead of broad
+            network reach.
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
