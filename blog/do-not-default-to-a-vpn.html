@@ -34,15 +34,6 @@
             infrastructure.
           </p>
 
-          <p>With an agent, the request can be this simple:</p>
-
-          <pre><code>Add a new OpenZiti rule for web access to YouTube and Telegram only.</code></pre>
-
-          <p>
-            That is easier to work with than doing everything by hand. The agent can create the configs, service,
-            policies, and identity role changes without turning a small access change into a long controller session.
-          </p>
-
           <p>
             If you need this kind of access, it is safer to host it yourself on your own VM or your own infrastructure.
             Then you control the server, keys, logs, and policies. Running a traditional VPN like OpenVPN is possible,
@@ -56,6 +47,15 @@
             OpenZiti separates client intercept config, host forwarding config, and dial/bind policies. The hosting
             side can stay outbound-only, and the client only gets the domains and ports defined by policy. That is
             narrower than the usual commercial VPN model.
+          </p>
+
+          <p>With an agent, the request can be this simple:</p>
+
+          <pre><code>Add a new OpenZiti rule for web access to YouTube and Telegram only.</code></pre>
+
+          <p>
+            That is easier to work with than doing everything by hand. The agent can create the configs, service,
+            policies, and identity role changes without turning a small access change into a long controller session.
           </p>
 
           <p>Doing the same thing manually takes much longer. It looks like this:</p>
