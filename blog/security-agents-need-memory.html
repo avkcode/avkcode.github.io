@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Security Agents Need Memory</title>
+    <meta
+      name="description"
+      content="Mythos is an interesting signal, but security agents need more than model reasoning: repo memory, deterministic evidence, verification, and long-running workflows."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/security-agents-need-memory.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Security Agents Need Memory" />
+    <meta
+      property="og:description"
+      content="AI security analysis needs repo memory, runtime evidence, verification, and long-running workflows around the model."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/security-agents-need-memory.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <style>
+      body.article-page.security-agent-post .hero {
+        padding-bottom: 28px;
+      }
+
+      body.article-page.security-agent-post .content {
+        padding-top: 42px;
+      }
+
+      body.article-page.security-agent-post .content p {
+        max-width: 43rem;
+      }
+
+      body.article-page.security-agent-post .lead {
+        margin-bottom: 28px;
+        color: #f2e8d7;
+        font-size: 1.16rem;
+        line-height: 1.9;
+      }
+
+      body.article-page.security-agent-post .lead::after {
+        content: "";
+        display: block;
+        width: 72px;
+        height: 1px;
+        margin-top: 22px;
+        background: linear-gradient(90deg, rgba(207, 170, 104, 0.7), rgba(207, 170, 104, 0));
+      }
+
+      body.article-page.security-agent-post .example-intro {
+        margin-top: 34px;
+        margin-bottom: 12px;
+        color: #f0e3cb;
+      }
+
+      body.article-page.security-agent-post .agent-card,
+      body.article-page.security-agent-post .terminal-card {
+        position: relative;
+        margin-top: 0;
+        padding-top: 34px;
+        border-color: rgba(207, 170, 104, 0.12);
+        background: linear-gradient(180deg, #0f0b15, #14101b);
+      }
+
+      body.article-page.security-agent-post .agent-card::after,
+      body.article-page.security-agent-post .terminal-card::after {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 18px;
+        width: 44px;
+        height: 10px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at 5px 5px, rgba(255, 122, 122, 0.95) 0 3px, transparent 3.5px),
+          radial-gradient(circle at 22px 5px, rgba(245, 195, 104, 0.92) 0 3px, transparent 3.5px),
+          radial-gradient(circle at 39px 5px, rgba(122, 214, 161, 0.95) 0 3px, transparent 3.5px);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      body.article-page.security-agent-post .after-example {
+        margin-top: -6px;
+      }
+
+      @media (max-width: 760px) {
+        body.article-page.security-agent-post .content {
+          padding-top: 28px;
+        }
+
+        body.article-page.security-agent-post .lead {
+          font-size: 1.06rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+  </head>
+  <body class="article-page security-agent-post">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <h1>Security Agents Need Memory</h1>
+        </header>
+
+        <section class="content">
+          <p class="lead">
+            Mythos is an interesting signal, but the public description is still vague. Anthropic frames it as a
+            frontier direction for defensive cybersecurity, but it is not clear whether Mythos is a separately trained
+            vulnerability model, Claude with more security tools and prompting, or a larger system around Claude.
+          </p>
+
+          <p>
+            AI security analysis alone is not enough. A model can flag suspicious code and suggest a fix, but security
+            also needs deterministic context: reachability, dependency usage, policy rules, audit logs, runtime
+            behavior, customer environment signals, and verified exploitability.
+          </p>
+
+          <p>
+            A
+            <a href="https://arxiv.org/pdf/2602.08915">2026 study of coding agents</a>
+            points in the same direction. No single agent dominated every task type. The model matters, but the system
+            around the model matters too.
+          </p>
+
+          <p>
+            I have been working for a bit on my own project, Acto, from that system angle. It is not meant to be a
+            better model. It is a security agent layer around models, tools, repo memory, verification, and external
+            evidence.
+          </p>
+
+          <p>
+            Codex, Claude Code, Cursor, Devin, and similar agents can be strong in one session. They search the repo,
+            read files, run tests, and build temporary context. Acto is about keeping the useful parts after the task
+            ends.
+          </p>
+
+          <p class="example-intro">The memory is not chat history. It is evidence like this:</p>
+
+          <pre class="agent-card"><code>scanner rule D is noisy here
+test B caught regression C
+trace G proved input reached sink H</code></pre>
+
+          <p class="after-example">
+            That can be connected to public CVE and advisory feeds, package metadata, SBOMs, internal scanner results,
+            incident history, ClickHouse logs, traces, WAF events, exploit attempts, and production signals.
+          </p>
+
+          <p>
+            This matters because the hard part is not just finding alerts. It is knowing what is real, what is
+            reachable, what is exposed in the actual environment, and what can be fixed without breaking something
+            else.
+          </p>
+
+          <p class="example-intro">A normal agent might do this:</p>
+
+          <pre class="terminal-card"><code>alert -&gt; read code -&gt; suggest fix</code></pre>
+
+          <p class="example-intro">Acto is meant to keep more of the chain:</p>
+
+          <pre class="terminal-card"><code>finding
+ -&gt; affected code
+ -&gt; external and internal evidence
+ -&gt; reachability
+ -&gt; tests and candidate fixes
+ -&gt; verifier result
+ -&gt; memory update</code></pre>
+
+          <p>
+            The memory update changes later runs. Useful context can be retrieved earlier. Noisy rules can be demoted.
+            Tests can be linked to the code they protect. Internal data sources can be tracked by where they actually
+            helped.
+          </p>
+
+          <p>
+            Codex, Claude, or Mythos-like systems may be stronger at raw reasoning. Acto's role is to preserve
+            repo-specific evidence between runs, so security work becomes less cold, less noisy, and easier to verify.
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
