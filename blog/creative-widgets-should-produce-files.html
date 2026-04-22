@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Creative Widgets Should Produce Files</title>
+    <title>Creativity Harness</title>
     <meta
       name="description"
-      content="A short note on storytelling image generation widgets, world building, Scene DNA, export packs, terminal artifacts, and Codex skill packs."
+      content="A short note on why chat is too limiting for AI, and why canvas-based creative harnesses need widgets, artifacts, and exports."
     />
     <link rel="canonical" href="https://avkcode.github.io/blog/creative-widgets-should-produce-files.html" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Creative Widgets Should Produce Files" />
+    <meta property="og:title" content="Creativity Harness" />
     <meta
       property="og:description"
-      content="Widgets are more useful when they turn short ideas into files that can be inspected, reused, and versioned."
+      content="Chat is too limiting for creative AI work. A canvas can turn short ideas into durable files, worlds, variants, and artifacts."
     />
     <meta property="og:url" content="https://avkcode.github.io/blog/creative-widgets-should-produce-files.html" />
     <meta property="og:site_name" content="Anton Krylov" />
@@ -72,7 +72,9 @@
       }
 
       body.article-page.widget-post .story-gallery,
-      body.article-page.widget-post .terminal-shot {
+      body.article-page.widget-post .idea-cells-gallery,
+      body.article-page.widget-post .terminal-shot,
+      body.article-page.widget-post .canvas-shot {
         max-width: 58rem;
         margin: 30px auto 30px;
       }
@@ -83,8 +85,16 @@
         gap: 12px;
       }
 
+      body.article-page.widget-post .idea-cells-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
       body.article-page.widget-post .story-gallery img,
-      body.article-page.widget-post .terminal-shot img {
+      body.article-page.widget-post .idea-cells-gallery img,
+      body.article-page.widget-post .terminal-shot img,
+      body.article-page.widget-post .canvas-shot img {
         display: block;
         width: 100%;
         height: auto;
@@ -94,8 +104,17 @@
         box-shadow: 0 22px 56px rgba(0, 0, 0, 0.34);
       }
 
+      body.article-page.widget-post img[data-expandable="true"] {
+        cursor: zoom-in;
+      }
+
       body.article-page.widget-post .story-gallery img {
         aspect-ratio: 3 / 2;
+        object-fit: cover;
+      }
+
+      body.article-page.widget-post .idea-cells-gallery img {
+        aspect-ratio: 16 / 9;
         object-fit: cover;
       }
 
@@ -103,10 +122,59 @@
         aspect-ratio: 1;
       }
 
+      body.article-page.widget-post .idea-cells-gallery img.idea-square {
+        aspect-ratio: 1;
+      }
+
+      body.article-page.widget-post .idea-cells-gallery img.idea-wide {
+        grid-column: 1 / -1;
+        aspect-ratio: 16 / 3;
+      }
+
       body.article-page.widget-post .media-note {
         margin-top: -6px;
         color: #bfb4a4;
         font-size: 0.92rem;
+      }
+
+      body.article-page.widget-post .image-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 28px;
+        border: 0;
+        background: rgba(4, 5, 6, 0.86);
+        backdrop-filter: blur(18px);
+      }
+
+      body.article-page.widget-post .image-lightbox[open] {
+        display: flex;
+      }
+
+      body.article-page.widget-post .image-lightbox img {
+        max-width: min(94vw, 1500px);
+        max-height: 88vh;
+        border: 1px solid rgba(232, 224, 211, 0.18);
+        border-radius: 22px;
+        background: #0b0c0d;
+        box-shadow: 0 32px 100px rgba(0, 0, 0, 0.56);
+      }
+
+      body.article-page.widget-post .image-lightbox-close {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        min-width: 44px;
+        min-height: 44px;
+        border: 1px solid rgba(232, 224, 211, 0.18);
+        border-radius: 999px;
+        background: rgba(18, 20, 22, 0.86);
+        color: #f3efe7;
+        font: inherit;
+        cursor: pointer;
       }
 
       @media (max-width: 760px) {
@@ -118,8 +186,14 @@
           font-size: 1.06rem;
         }
 
-        body.article-page.widget-post .story-gallery {
+        body.article-page.widget-post .story-gallery,
+        body.article-page.widget-post .idea-cells-gallery {
           grid-template-columns: 1fr;
+        }
+
+        body.article-page.widget-post .idea-cells-gallery img.idea-wide {
+          grid-column: auto;
+          aspect-ratio: 16 / 7;
         }
       }
     </style>
@@ -130,13 +204,53 @@
       <article class="article">
         <header class="hero">
           <a class="back" href="./index.html">Back to Blog</a>
-          <h1>Creative Widgets Should Produce Files</h1>
+          <h1>Creativity Harness</h1>
         </header>
 
         <section class="content">
           <p class="lead">
-            We added notebook widgets for image generation, world building, immersive scenes, and Codex packs. The
-            useful part is not the button. The useful part is what the button leaves behind.
+            Chat is too limiting for creative AI work. A chat box is good for one answer. It is weak for building a
+            world, comparing variants, saving files, and returning to context later. That is why
+            <a href="https://avkcode.github.io/blog/portal-long-term-memory.html">Portal uses a canvas</a>.
+          </p>
+
+          <p>
+            Coding agents are built around a harness. They need files, terminals, logs, tests, diffs, memory, and a
+            way to recover when something goes wrong. Creative AI apps need the same kind of harness. They should not
+            be just prompt boxes with prettier output. They should give the model a place to make artifacts and give
+            the user a way to inspect, compare, reuse, and export them.
+          </p>
+
+          <p>
+            That was the point of my earlier
+            <a href="https://sphera.substack.com/p/idea-cells">Idea Cells</a> note. A notebook can be split into typed
+            units. A terminal cell runs commands and keeps stdout and generated files. A writer cell edits text through
+            explicit operations. An idea cell produces a testable thesis instead of a loose brainstorm. Research, risk,
+            execution, figure, presentation, vector, comic, and formal reasoning cells each have their own inputs and
+            failure modes.
+          </p>
+
+          <p>
+            The important part is that links are typed. One cell output should route into a named field in another
+            cell, not disappear into the next prompt. The canvas should also keep history, so the user can inspect what
+            changed and recover earlier states. That is a smaller and more useful idea than a universal assistant. It
+            is a working surface made of small units.
+          </p>
+
+          <div class="idea-cells-gallery" aria-label="Idea Cells article examples">
+            <img data-expandable="true" class="idea-square" src="/assets/idea-cells/cell-01.jpg" width="1024" height="1024" loading="lazy" decoding="async" alt="Illustration of a cell-like notebook unit as a structured workspace." />
+            <img data-expandable="true" src="/assets/idea-cells/cell-02.jpg" width="1456" height="839" loading="lazy" decoding="async" alt="Terminal cell example with output routing to another cell." />
+            <img data-expandable="true" src="/assets/idea-cells/cell-03.jpg" width="1456" height="860" loading="lazy" decoding="async" alt="Terminal cell preserving process output and controls." />
+            <img data-expandable="true" src="/assets/idea-cells/cell-04.jpg" width="1456" height="867" loading="lazy" decoding="async" alt="Writer cell example with controlled rewrite operations." />
+            <img data-expandable="true" src="/assets/idea-cells/cell-05.jpg" width="1456" height="855" loading="lazy" decoding="async" alt="Idea cell example producing a structured thesis." />
+            <img data-expandable="true" src="/assets/idea-cells/cell-06.jpg" width="1456" height="863" loading="lazy" decoding="async" alt="Canvas cell example for structured AI work." />
+            <img data-expandable="true" class="idea-wide" src="/assets/idea-cells/cell-07.jpg" width="1456" height="268" loading="lazy" decoding="async" alt="Typed cell routing diagram from the Idea Cells article." />
+          </div>
+
+          <p>
+            The same rule applies to creative work. A canvas gives the model places to put work. It can hold image
+            widgets, terminals, world notes, generated packs, and artifacts side by side. The useful part is not the
+            button. The useful part is what the button leaves behind.
           </p>
 
           <p>
@@ -153,15 +267,17 @@
           </p>
 
           <div class="story-gallery" aria-label="Storytelling image generation examples">
-            <img src="/assets/creative-widgets/image-01.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated story frame with a figure holding light in a floating stained glass city." />
-            <img src="/assets/creative-widgets/image-02.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated noir action frame with a character moving through rain." />
-            <img src="/assets/creative-widgets/image-03.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated character expression sheet in a comic style." />
-            <img src="/assets/creative-widgets/image-04.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated Islamic geometric architecture study with warm interior light." />
-            <img src="/assets/creative-widgets/image-05.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated science illustration panel for a bright reactor concept." />
-            <img class="story-square" src="/assets/creative-widgets/image-06.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated square comic frame with a flying character and lantern city." />
-            <img src="/assets/creative-widgets/image-07.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character facing a star over a distant city." />
-            <img src="/assets/creative-widgets/image-08.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character carrying a light through ruins." />
-            <img class="story-square" src="/assets/creative-widgets/image-09.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated noir comic panel with a train scene." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-01.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated story frame with a figure holding light in a floating stained glass city." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-02.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated noir action frame with a character moving through rain." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-03.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated character expression sheet in a comic style." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-04.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated Islamic geometric architecture study with warm interior light." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-05.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated science illustration panel for a bright reactor concept." />
+            <img data-expandable="true" class="story-square" src="/assets/creative-widgets/image-06.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated square comic frame with a flying character and lantern city." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-07.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character facing a star over a distant city." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-08.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character carrying a light through ruins." />
+            <img data-expandable="true" class="story-square" src="/assets/creative-widgets/image-09.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated noir comic panel with a train scene." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-10.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated science-fiction story frame with a glowing DNA structure in a dark hall." />
+            <img data-expandable="true" src="/assets/creative-widgets/image-11.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated comic story frame with a character reaching toward a glowing device." />
           </div>
 
           <p>
@@ -169,6 +285,10 @@
             characters, locations, objects, faction marks, palettes, and repeatable motifs. Style DNA helps here. It
             stores the look as text rules. It can be mixed. It can be used again across panels, pages, and packs.
           </p>
+
+          <figure class="canvas-shot">
+            <img data-expandable="true" src="/assets/creative-widgets/canvas-terminal-widget.png" width="2406" height="1822" loading="lazy" decoding="async" alt="Portal canvas with an immersive widget beside a live terminal widget." />
+          </figure>
 
           <p>
             The immersive widget uses Three.js to render a procedural scene. The same prompt becomes a scene with
@@ -182,7 +302,7 @@
 /immersive glass city inside a storm</code></pre>
 
           <figure class="terminal-shot">
-            <img src="/assets/creative-widgets/terminal-artifact-strip.png" width="2452" height="1280" loading="lazy" decoding="async" alt="Terminal widget showing a detected file artifact strip after a file is created." />
+            <img data-expandable="true" src="/assets/creative-widgets/terminal-artifact-strip.png" width="2452" height="1280" loading="lazy" decoding="async" alt="Terminal widget showing a detected file artifact strip after a file is created." />
           </figure>
 
           <p class="media-note">
@@ -210,5 +330,31 @@
         </section>
       </article>
     </main>
+    <dialog class="image-lightbox" aria-label="Expanded image preview">
+      <button type="button" class="image-lightbox-close" aria-label="Close expanded image">×</button>
+      <img alt="" />
+    </dialog>
+    <script>
+      const lightbox = document.querySelector(".image-lightbox");
+      const lightboxImage = lightbox?.querySelector("img");
+      const closeButton = lightbox?.querySelector(".image-lightbox-close");
+
+      document.querySelectorAll('img[data-expandable="true"]').forEach((image) => {
+        image.setAttribute("title", "Double-click to enlarge");
+        image.addEventListener("dblclick", () => {
+          if (!lightbox || !lightboxImage) return;
+          lightboxImage.src = image.currentSrc || image.src;
+          lightboxImage.alt = image.alt;
+          lightbox.showModal();
+        });
+      });
+
+      closeButton?.addEventListener("click", () => lightbox?.close());
+      lightbox?.addEventListener("click", (event) => {
+        if (event.target === lightbox) {
+          lightbox.close();
+        }
+      });
+    </script>
   </body>
 </html>
