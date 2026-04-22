@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Creative Widgets Should Produce Files</title>
+    <meta
+      name="description"
+      content="A short note on storytelling image generation widgets, world building, Scene DNA, export packs, terminal artifacts, and Codex skill packs."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/creative-widgets-should-produce-files.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Creative Widgets Should Produce Files" />
+    <meta
+      property="og:description"
+      content="Widgets are more useful when they turn short ideas into files that can be inspected, reused, and versioned."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/creative-widgets-should-produce-files.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <style>
+      body.article-page.widget-post .hero {
+        padding-bottom: 28px;
+      }
+
+      body.article-page.widget-post .content {
+        padding-top: 42px;
+      }
+
+      body.article-page.widget-post .content p {
+        max-width: 43rem;
+      }
+
+      body.article-page.widget-post .lead {
+        margin-bottom: 28px;
+        color: #f2e8d7;
+        font-size: 1.16rem;
+        line-height: 1.9;
+      }
+
+      body.article-page.widget-post .lead::after {
+        content: "";
+        display: block;
+        width: 72px;
+        height: 1px;
+        margin-top: 22px;
+        background: linear-gradient(90deg, rgba(207, 170, 104, 0.7), rgba(207, 170, 104, 0));
+      }
+
+      body.article-page.widget-post .agent-card {
+        position: relative;
+        margin-top: 28px;
+        margin-bottom: 24px;
+        padding-top: 34px;
+        border-color: rgba(207, 170, 104, 0.12);
+        background: linear-gradient(180deg, #0f0b15, #14101b);
+      }
+
+      body.article-page.widget-post .agent-card::after {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 18px;
+        width: 44px;
+        height: 10px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at 5px 5px, rgba(255, 122, 122, 0.95) 0 3px, transparent 3.5px),
+          radial-gradient(circle at 22px 5px, rgba(245, 195, 104, 0.92) 0 3px, transparent 3.5px),
+          radial-gradient(circle at 39px 5px, rgba(122, 214, 161, 0.95) 0 3px, transparent 3.5px);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      body.article-page.widget-post .story-gallery,
+      body.article-page.widget-post .terminal-shot {
+        max-width: 58rem;
+        margin: 30px auto 30px;
+      }
+
+      body.article-page.widget-post .story-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      body.article-page.widget-post .story-gallery img,
+      body.article-page.widget-post .terminal-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid rgba(232, 224, 211, 0.12);
+        border-radius: 18px;
+        background: #0b0c0d;
+        box-shadow: 0 22px 56px rgba(0, 0, 0, 0.34);
+      }
+
+      body.article-page.widget-post .story-gallery img {
+        aspect-ratio: 3 / 2;
+        object-fit: cover;
+      }
+
+      body.article-page.widget-post .story-gallery img.story-square {
+        aspect-ratio: 1;
+      }
+
+      body.article-page.widget-post .media-note {
+        margin-top: -6px;
+        color: #bfb4a4;
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 760px) {
+        body.article-page.widget-post .content {
+          padding-top: 28px;
+        }
+
+        body.article-page.widget-post .lead {
+          font-size: 1.06rem;
+        }
+
+        body.article-page.widget-post .story-gallery {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+  </head>
+  <body class="article-page widget-post">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <h1>Creative Widgets Should Produce Files</h1>
+        </header>
+
+        <section class="content">
+          <p class="lead">
+            We added notebook widgets for image generation, world building, immersive scenes, and Codex packs. The
+            useful part is not the button. The useful part is what the button leaves behind.
+          </p>
+
+          <p>
+            The image widget started as comic panel generation. Then it grew into book mode, world mode, character
+            packs, decks, trailers, albums, game kits, brand worlds, science plates, and faith study packs. Each mode
+            gives the model a narrower job. The prompt is still free text. But the widget adds structure around size,
+            style, quality, background, Style DNA, variants, history, and downloads. That makes the result easier to
+            reuse.
+          </p>
+
+          <p>
+            These images are examples of storytelling generation. The point is the harness. A good harness turns a short
+            idea into frames, studies, styles, and reusable assets.
+          </p>
+
+          <div class="story-gallery" aria-label="Storytelling image generation examples">
+            <img src="/assets/creative-widgets/image-01.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated story frame with a figure holding light in a floating stained glass city." />
+            <img src="/assets/creative-widgets/image-02.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated noir action frame with a character moving through rain." />
+            <img src="/assets/creative-widgets/image-03.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated character expression sheet in a comic style." />
+            <img src="/assets/creative-widgets/image-04.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated Islamic geometric architecture study with warm interior light." />
+            <img src="/assets/creative-widgets/image-05.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated science illustration panel for a bright reactor concept." />
+            <img class="story-square" src="/assets/creative-widgets/image-06.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated square comic frame with a flying character and lantern city." />
+            <img src="/assets/creative-widgets/image-07.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character facing a star over a distant city." />
+            <img src="/assets/creative-widgets/image-08.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Generated wide story frame with a character carrying a light through ruins." />
+            <img class="story-square" src="/assets/creative-widgets/image-09.png" width="1024" height="1024" loading="lazy" decoding="async" alt="Generated noir comic panel with a train scene." />
+          </div>
+
+          <p>
+            World building is a different problem. One good image is not enough. A world needs visual rules. It needs
+            characters, locations, objects, faction marks, palettes, and repeatable motifs. Style DNA helps here. It
+            stores the look as text rules. It can be mixed. It can be used again across panels, pages, and packs.
+          </p>
+
+          <p>
+            The immersive widget uses Three.js to render a procedural scene. The same prompt becomes a scene with
+            motion, seed, palette, and camera behavior. Scene DNA turns that scene into a small specification. Variants
+            explore nearby directions. Export Pack downloads a zip with a PNG frame, JSON, prompts, a manifest, and a
+            small HTML microsite.
+          </p>
+
+          <pre class="agent-card"><code>/world lost library under the sea
+/projectpack calm habit tracker for remote teams
+/immersive glass city inside a storm</code></pre>
+
+          <figure class="terminal-shot">
+            <img src="/assets/creative-widgets/terminal-artifact-strip.png" width="2452" height="1280" loading="lazy" decoding="async" alt="Terminal widget showing a detected file artifact strip after a file is created." />
+          </figure>
+
+          <p class="media-note">
+            The terminal widget follows the same rule. When a command creates a file, the interface should surface it as
+            an artifact, not leave it hidden in scrollback.
+          </p>
+
+          <p>
+            Skill packs and project packs are for a different kind of output. They do not make images. They make work
+            material for agents. A one line idea becomes a project brain. The pack includes assumptions, tasks, files,
+            prompts, and Codex skill instructions. It is still not magic. It is a better starting point. It gives the
+            agent context before it edits code.
+          </p>
+
+          <p>
+            That is the pattern I like. The widget is a small interface. The output is a durable artifact. It can be
+            inspected, downloaded, versioned, and used somewhere else. This matters more than adding another prompt box.
+          </p>
+
+          <p>
+            The next step is making every widget behave this way. Every result should have memory. Every result should
+            have variants. Every result should have an export. A creative tool should not trap work inside the screen.
+            It should turn short ideas into files that survive the session.
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
