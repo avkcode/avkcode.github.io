@@ -122,15 +122,6 @@
         aspect-ratio: 1;
       }
 
-      body.article-page.widget-post .idea-cells-gallery img.idea-square {
-        aspect-ratio: 1;
-      }
-
-      body.article-page.widget-post .idea-cells-gallery img.idea-wide {
-        grid-column: 1 / -1;
-        aspect-ratio: 16 / 3;
-      }
-
       body.article-page.widget-post .media-note {
         margin-top: -6px;
         color: #bfb4a4;
@@ -191,10 +182,6 @@
           grid-template-columns: 1fr;
         }
 
-        body.article-page.widget-post .idea-cells-gallery img.idea-wide {
-          grid-column: auto;
-          aspect-ratio: 16 / 7;
-        }
       }
     </style>
     <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
@@ -210,7 +197,9 @@
         <section class="content">
           <p class="lead">
             Chat is too limiting for creative AI work. A chat box is good for one answer. It is weak for building a
-            world, comparing variants, saving files, and returning to context later. That is why
+            world, comparing variants, saving files, and returning to context later. Splitting multimodal AI into
+            separate apps also feels too limiting. Voice, sound, terminal work, images, video, text, and research
+            should be able to live in one working surface. That is why
             <a href="https://avkcode.github.io/blog/portal-long-term-memory.html">Portal uses a canvas</a>.
           </p>
 
@@ -222,29 +211,23 @@
           </p>
 
           <p>
-            That was the point of my earlier
-            <a href="https://sphera.substack.com/p/idea-cells">Idea Cells</a> note. A notebook can be split into typed
-            units. A terminal cell runs commands and keeps stdout and generated files. A writer cell edits text through
-            explicit operations. An idea cell produces a testable thesis instead of a loose brainstorm. Research, risk,
-            execution, figure, presentation, vector, comic, and formal reasoning cells each have their own inputs and
-            failure modes.
+            The old software package metaphors are starting to feel too fixed. Photoshop layers are useful, but they
+            assume the work is mainly a stack of visual surfaces. Word documents are useful, but they assume the work is
+            mainly a linear text file. Modern AI work is messier. It mixes writing, images, terminals, research, plans,
+            assets, errors, exports, and revisions in the same session.
           </p>
 
           <p>
-            The important part is that links are typed. One cell output should route into a named field in another
-            cell, not disappear into the next prompt. The canvas should also keep history, so the user can inspect what
-            changed and recover earlier states. That is a smaller and more useful idea than a universal assistant. It
-            is a working surface made of small units.
+            An infinite canvas fits this better. It can hold different kinds of cells without forcing them into one
+            document shape. One cell can generate an image. Another can edit text. Another can run a command. Another
+            can hold a brief, a risk list, or a reasoning trace. The useful connection is not just visual proximity.
+            Outputs should route into other cells as explicit inputs, and the canvas should keep enough history to make
+            the work inspectable.
           </p>
 
           <div class="idea-cells-gallery" aria-label="Idea Cells article examples">
-            <img data-expandable="true" class="idea-square" src="/assets/idea-cells/cell-01.jpg" width="1024" height="1024" loading="lazy" decoding="async" alt="Illustration of a cell-like notebook unit as a structured workspace." />
-            <img data-expandable="true" src="/assets/idea-cells/cell-02.jpg" width="1456" height="839" loading="lazy" decoding="async" alt="Terminal cell example with output routing to another cell." />
-            <img data-expandable="true" src="/assets/idea-cells/cell-03.jpg" width="1456" height="860" loading="lazy" decoding="async" alt="Terminal cell preserving process output and controls." />
             <img data-expandable="true" src="/assets/idea-cells/cell-04.jpg" width="1456" height="867" loading="lazy" decoding="async" alt="Writer cell example with controlled rewrite operations." />
             <img data-expandable="true" src="/assets/idea-cells/cell-05.jpg" width="1456" height="855" loading="lazy" decoding="async" alt="Idea cell example producing a structured thesis." />
-            <img data-expandable="true" src="/assets/idea-cells/cell-06.jpg" width="1456" height="863" loading="lazy" decoding="async" alt="Canvas cell example for structured AI work." />
-            <img data-expandable="true" class="idea-wide" src="/assets/idea-cells/cell-07.jpg" width="1456" height="268" loading="lazy" decoding="async" alt="Typed cell routing diagram from the Idea Cells article." />
           </div>
 
           <p>
