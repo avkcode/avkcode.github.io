@@ -107,20 +107,18 @@
       align-self: center;
       justify-self: center;
       text-align: center;
-      max-width: 760px;
+      max-width: 880px;
     }
     .hero-back-link {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      z-index: 2;
       display: inline-flex;
       align-items: center;
-      min-height: 32px;
+      justify-content: center;
+      min-height: 34px;
+      margin-top: 24px;
       border: 1px solid rgba(244, 241, 232, .22);
       border-radius: 999px;
-      padding: 7px 11px;
-      background: rgba(7, 12, 15, .52);
+      padding: 8px 13px;
+      background: rgba(7, 12, 15, .42);
       color: var(--board-ink);
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 11px;
@@ -135,17 +133,19 @@
     }
     h1 {
       margin: 0;
-      max-width: 760px;
-      color: #f8f4e8;
-      font-size: 82px;
+      max-width: 880px;
+      color: rgba(248, 244, 232, .84);
+      font-size: 104px;
       font-weight: 800;
-      line-height: .86;
+      line-height: .82;
       letter-spacing: 0;
       overflow-wrap: anywhere;
       text-transform: uppercase;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, .15);
       text-shadow:
         0 2px 10px rgba(0, 0, 0, .72),
-        0 18px 46px rgba(0, 0, 0, .48);
+        0 18px 46px rgba(0, 0, 0, .48),
+        0 0 38px rgba(212, 181, 108, .2);
       text-wrap: balance;
     }
     h1::after {
@@ -178,23 +178,27 @@
       line-height: 1.55;
     }
     .hero-contact {
+      position: absolute;
+      right: 22px;
+      bottom: 22px;
+      z-index: 2;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
     }
     .hero-contact a {
       display: inline-flex;
       align-items: center;
-      min-height: 34px;
+      gap: 7px;
+      min-height: 30px;
       border: 1px solid rgba(244, 241, 232, .22);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 7px 10px;
       background: rgba(7, 12, 15, .52);
       color: var(--board-ink);
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1;
       text-decoration: none;
       backdrop-filter: blur(12px) saturate(1.1);
@@ -202,33 +206,50 @@
     .hero-contact a:hover {
       background: rgba(7, 12, 15, .72);
     }
+    .contact-icon {
+      flex: 0 0 auto;
+      width: 12px;
+      height: 12px;
+      color: rgba(248, 244, 232, .84);
+    }
+    .hero-contact span {
+      min-width: 0;
+    }
     .stress-frame {
       display: grid;
       grid-template-columns: minmax(210px, .48fr) minmax(0, 1fr);
       gap: 20px;
       align-items: stretch;
-      background: var(--board-surface);
-      color: var(--board-ink);
-      border-color: rgba(23, 25, 21, .2);
+      background:
+        linear-gradient(135deg, rgba(255, 254, 249, .98), rgba(231, 238, 230, .98)),
+        linear-gradient(90deg, rgba(36, 101, 84, .08), rgba(212, 181, 108, .1));
+      color: var(--ink);
+      border-color: rgba(36, 101, 84, .2);
     }
-    .stress-frame .label { color: rgba(244, 241, 232, .58); }
+    .stress-frame .label { color: var(--accent); }
     .hero-stat {
       margin-top: 10px;
       font-size: 32px;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
+    .stress-frame .hero-stat {
+      color: #1b2b23;
+    }
     .stress-frame p {
       margin: 10px 0 0;
-      color: rgba(244, 241, 232, .68);
+      color: #3e473d;
       font-size: 14px;
     }
     .stress-frame .tournament-note {
-      border-top: 1px solid rgba(244, 241, 232, .12);
-      padding-top: 10px;
+      border-left: 3px solid rgba(36, 101, 84, .44);
+      border-top: 0;
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      background: rgba(36, 101, 84, .07);
     }
     .stress-frame .tournament-note strong {
-      color: var(--board-ink);
+      color: #173f35;
     }
     .hero-rail {
       display: grid;
@@ -240,10 +261,10 @@
       display: grid;
       align-content: start;
       gap: 8px;
-      border-left: 1px solid rgba(244, 241, 232, .12);
+      border-left: 1px solid rgba(36, 101, 84, .2);
       border-top: 0;
       padding: 2px 0 2px 14px;
-      color: rgba(244, 241, 232, .72);
+      color: #526052;
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
     }
@@ -252,7 +273,7 @@
       margin: 0;
     }
     .hero-rail dd {
-      color: var(--board-ink);
+      color: #18241e;
       font-weight: 700;
       text-align: left;
     }
@@ -923,8 +944,8 @@
       header, section, .panel, .table-shell, pre { width: auto; }
       header,
       section {
-        width: calc(100vw - 32px) !important;
-        max-width: calc(100vw - 32px) !important;
+        width: 100% !important;
+        max-width: 100% !important;
       }
       header {
         grid-template-columns: 1fr;
@@ -932,7 +953,7 @@
         border-radius: 22px;
         padding: 24px 20px;
         min-height: 560px;
-        max-width: calc(100vw - 32px);
+        max-width: 100%;
         background-position: 56% center;
       }
       .hero-title-block {
@@ -940,9 +961,9 @@
       }
       h1 {
         max-width: 100%;
-        margin-top: 36px;
-        font-size: 40px;
-        line-height: .94;
+        margin-top: 12px;
+        font-size: 58px;
+        line-height: .86;
         text-wrap: wrap;
         overflow-wrap: break-word;
         word-break: normal;
@@ -955,10 +976,31 @@
         display: block;
       }
       .dek { font-size: 16px; }
+      .hero-back-link {
+        margin-top: 18px;
+      }
+      .hero-contact {
+        right: 16px;
+        bottom: 16px;
+        align-items: flex-end;
+        max-width: calc(100% - 32px);
+      }
       .hero-contact a {
         max-width: 100%;
         line-height: 1.35;
         overflow-wrap: anywhere;
+        white-space: normal;
+      }
+      .hero-contact span {
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 430px) {
+        h1 {
+          font-size: 48px;
+        }
+        .hero-contact a {
+          font-size: 10px;
+        }
       }
       .stress-frame {
         grid-template-columns: 1fr;
@@ -977,7 +1019,7 @@
       .hero-rail div {
         gap: 4px;
         border-left: 0;
-        border-top: 1px solid rgba(244, 241, 232, .12);
+        border-top: 1px solid rgba(36, 101, 84, .2);
         padding: 10px 0 0;
       }
       .hero-rail dd {
@@ -1074,13 +1116,24 @@
 <a class="skip-link" href="#report-content">Skip to report</a>
 <main>
   <header>
-    <a class="hero-back-link" href="./index.html">Back to blog</a>
     <div class="hero-title-block">
       <h1>Hormuz Shock</h1>
-      <div class="hero-contact" aria-label="Author contact">
-        <a href="mailto:antonnvkrylov@gmail.com">antonnvkrylov@gmail.com</a>
-        <a href="https://t.me/akrylof">@akrylof</a>
-      </div>
+      <a class="hero-back-link" href="./index.html">Back to blog</a>
+    </div>
+    <div class="hero-contact" aria-label="Author contact">
+      <a href="mailto:antonvkrylov@gmail.com">
+        <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+          <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>antonvkrylov@gmail.com</span>
+      </a>
+      <a href="https://t.me/akrylof">
+        <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 4.6 18.1 19c-.2 1-1 1.2-1.8.7l-4.8-3.6-2.3 2.2c-.3.3-.6.5-1.1.5l.4-5.1 9.4-8.5c.4-.4-.1-.5-.6-.2L5.7 12.2.8 10.7c-1-.3-1-1 .2-1.5L19.8 2c.9-.3 1.6.2 1.2 2.6Z" fill="currentColor"></path>
+        </svg>
+        <span>@akrylof</span>
+      </a>
     </div>
   </header>
 
