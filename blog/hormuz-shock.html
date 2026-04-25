@@ -110,33 +110,70 @@
       max-width: 880px;
     }
     .hero-back-link {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
+      width: 58px;
+      height: 34px;
       margin-top: 24px;
       border: 1px solid rgba(244, 241, 232, .22);
-      border-radius: 999px;
+      border-radius: 6px;
       padding: 0;
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .025)),
-        rgba(7, 12, 15, .46);
+        linear-gradient(135deg, rgba(212, 181, 108, .18), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .018)),
+        rgba(7, 12, 15, .5);
       color: var(--board-ink);
+      clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+      overflow: hidden;
       text-decoration: none;
       backdrop-filter: blur(12px) saturate(1.1);
       box-shadow:
-        0 14px 32px rgba(0, 0, 0, .22),
-        inset 0 1px 0 rgba(255, 255, 255, .14);
+        0 14px 30px rgba(0, 0, 0, .2),
+        inset 0 1px 0 rgba(255, 255, 255, .13);
+      transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        transform 160ms ease,
+        box-shadow 160ms ease;
+    }
+    .hero-back-link::before,
+    .hero-back-link::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+    .hero-back-link::before {
+      left: 8px;
+      right: 8px;
+      bottom: 6px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(212, 181, 108, 0), rgba(212, 181, 108, .72), rgba(134, 185, 165, .52), rgba(212, 181, 108, 0));
+    }
+    .hero-back-link::after {
+      right: 6px;
+      top: 6px;
+      width: 5px;
+      height: 5px;
+      border-top: 1px solid rgba(134, 185, 165, .76);
+      border-right: 1px solid rgba(134, 185, 165, .76);
     }
     .hero-back-link:hover {
-      background: rgba(7, 12, 15, .72);
+      background:
+        linear-gradient(135deg, rgba(212, 181, 108, .24), transparent 42%),
+        rgba(7, 12, 15, .72);
       border-color: rgba(212, 181, 108, .46);
+      box-shadow:
+        0 16px 34px rgba(0, 0, 0, .26),
+        0 0 22px rgba(134, 185, 165, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .14);
       transform: translateY(-1px);
     }
     .hero-back-icon {
-      width: 18px;
-      height: 18px;
+      position: relative;
+      width: 17px;
+      height: 17px;
       color: rgba(248, 244, 232, .9);
     }
     h1 {
