@@ -226,53 +226,34 @@
       align-items: stretch;
     }
     .panel.legend-method {
+      display: flex;
+      align-items: center;
       background:
         linear-gradient(135deg, rgba(23, 63, 53, .98), rgba(32, 35, 30, .98)),
         linear-gradient(90deg, rgba(212, 181, 108, .12), rgba(134, 185, 165, .08));
       color: var(--board-ink);
       border-color: rgba(244, 241, 232, .16);
     }
-    .panel.legend-method .label {
-      color: rgba(212, 181, 108, .86);
-    }
-    .panel.legend-method h2 {
-      max-width: 11ch;
-      margin-top: 14px;
-      color: #fff8e7;
-      font-size: clamp(28px, 3vw, 42px);
-    }
-    .panel.legend-method p {
+    .panel.legend-method .method-note {
       max-width: 66ch;
-      margin: 14px 0 0;
-      color: rgba(244, 241, 232, .78);
+      margin: 0;
+      color: rgba(244, 241, 232, .82);
       font-size: 15px;
     }
-    .method-steps {
-      display: grid;
-      gap: 8px;
-      margin: 18px 0 0;
-      padding: 0;
-      list-style: none;
+    .panel.legend-method .method-note strong {
+      color: #fff8e7;
+      font-weight: 800;
     }
-    .method-steps li {
-      border-left: 3px solid rgba(212, 181, 108, .58);
-      border-radius: 0 10px 10px 0;
-      padding: 9px 11px;
-      background: rgba(255, 255, 255, .06);
-      color: rgba(244, 241, 232, .86);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .stress-frame {
+    .panel.stress-frame {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
       align-items: start;
       background:
-        linear-gradient(135deg, rgba(255, 254, 249, .98), rgba(231, 238, 230, .98)),
-        linear-gradient(90deg, rgba(36, 101, 84, .08), rgba(212, 181, 108, .1));
-      color: var(--ink);
-      border-color: rgba(36, 101, 84, .2);
+        linear-gradient(135deg, rgba(23, 63, 53, .98), rgba(32, 35, 30, .98)),
+        linear-gradient(90deg, rgba(212, 181, 108, .12), rgba(134, 185, 165, .08));
+      color: var(--board-ink);
+      border-color: rgba(244, 241, 232, .16);
     }
     .stress-frame .label { color: var(--accent); }
     .hero-stat {
@@ -282,11 +263,11 @@
       font-variant-numeric: tabular-nums;
     }
     .stress-frame .hero-stat {
-      color: #1b2b23;
+      color: #fff8e7;
     }
     .stress-frame p {
       margin: 10px 0 0;
-      color: #3e473d;
+      color: rgba(244, 241, 232, .78);
       font-size: 14px;
     }
     .hero-rail {
@@ -299,10 +280,12 @@
       display: grid;
       align-content: start;
       gap: 8px;
-      border-left: 1px solid rgba(36, 101, 84, .2);
+      border-left: 0;
       border-top: 0;
-      padding: 2px 0 2px 14px;
-      color: #526052;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, .06);
+      color: rgba(244, 241, 232, .68);
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
     }
@@ -311,7 +294,7 @@
       margin: 0;
     }
     .hero-rail dd {
-      color: #18241e;
+      color: #fff8e7;
       font-weight: 700;
       text-align: left;
     }
@@ -1058,7 +1041,7 @@
       .hero-rail div {
         gap: 4px;
         border-left: 0;
-        border-top: 1px solid rgba(36, 101, 84, .2);
+        border-top: 0;
         padding: 10px 0 0;
       }
       .hero-rail dd {
@@ -1177,18 +1160,11 @@
   </header>
 
   <section class="section report-legend report-legend-grid" id="report-content" aria-label="Report method and stress frame">
-    <article class="panel legend-method" aria-labelledby="tournament-pattern-heading">
-      <div class="label">Bespoke agentic framework</div>
-      <h2 id="tournament-pattern-heading">Tournament Pattern</h2>
-      <p>Specialist agents independently modeled country exposure, sector transmission, energy-market mechanics, shipping and insurance pressure, LNG substitution, consumer pass-through, and horizon timing.</p>
-      <ul class="method-steps">
-        <li>Competing reads were challenged against source evidence, counterarguments, and failure modes before synthesis.</li>
-        <li>The tournament pass selected the strongest supported thread while keeping direct model paths separate from interpolated horizons.</li>
-      </ul>
+    <article class="panel legend-method" aria-label="Report method note">
+      <p class="method-note">Built with a <strong>bespoke agentic framework</strong>: country-exposure, sector-transmission, energy-market, shipping-and-insurance, LNG-substitution, consumer-pass-through, horizon-timing, and source-audit agents produced competing reads, evaluated each other's claims, challenged weak assumptions, and fed the strongest evidence-backed synthesis into the report.</p>
     </article>
     <aside class="panel stress-frame" aria-label="Scenario frame">
       <div>
-        <div class="label" id="stress-frame-heading">Stress frame</div>
         <div class="hero-stat">1-12 months</div>
         <p>Uses EIA, IEA, Dallas Fed, FRED/EIA, BLS, and IMF inputs to separate direct model paths from interpolated horizons.</p>
       </div>
