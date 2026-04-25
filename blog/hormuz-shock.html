@@ -86,8 +86,8 @@
       min-height: 520px;
       color: var(--board-ink);
       background:
-        linear-gradient(90deg, rgba(7, 12, 15, .88) 0%, rgba(7, 12, 15, .72) 43%, rgba(7, 12, 15, .46) 100%),
-        linear-gradient(180deg, rgba(7, 12, 15, .18), rgba(7, 12, 15, .72)),
+        linear-gradient(90deg, rgba(7, 12, 15, .7) 0%, rgba(7, 12, 15, .58) 43%, rgba(7, 12, 15, .37) 100%),
+        linear-gradient(180deg, rgba(7, 12, 15, .14), rgba(7, 12, 15, .58)),
         url("../assets/hormuz-shock-header.png") center / cover no-repeat;
       box-shadow: var(--shadow);
     }
@@ -113,23 +113,31 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 34px;
+      width: 42px;
+      height: 42px;
       margin-top: 24px;
       border: 1px solid rgba(244, 241, 232, .22);
       border-radius: 999px;
-      padding: 8px 13px;
-      background: rgba(7, 12, 15, .42);
+      padding: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .025)),
+        rgba(7, 12, 15, .46);
       color: var(--board-ink);
-      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
-      line-height: 1;
       text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: .08em;
       backdrop-filter: blur(12px) saturate(1.1);
+      box-shadow:
+        0 14px 32px rgba(0, 0, 0, .22),
+        inset 0 1px 0 rgba(255, 255, 255, .14);
     }
     .hero-back-link:hover {
       background: rgba(7, 12, 15, .72);
+      border-color: rgba(212, 181, 108, .46);
+      transform: translateY(-1px);
+    }
+    .hero-back-icon {
+      width: 18px;
+      height: 18px;
+      color: rgba(248, 244, 232, .9);
     }
     h1 {
       margin: 0;
@@ -186,38 +194,63 @@
       right: 22px;
       bottom: 22px;
       z-index: 2;
-      display: flex;
-      flex-direction: column;
+      display: inline-flex;
       align-items: flex-end;
-      gap: 8px;
+      max-width: calc(100% - 44px);
+      gap: 2px;
+      border: 1px solid rgba(244, 241, 232, .18);
+      border-radius: 999px;
+      padding: 5px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .022)),
+        rgba(7, 12, 15, .55);
+      backdrop-filter: blur(14px) saturate(1.08);
+      box-shadow:
+        0 16px 34px rgba(0, 0, 0, .26),
+        inset 0 1px 0 rgba(255, 255, 255, .12);
     }
     .hero-contact a {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       min-height: 30px;
-      border: 1px solid rgba(244, 241, 232, .22);
+      min-width: 0;
+      border: 0;
       border-radius: 999px;
-      padding: 7px 10px;
-      background: rgba(7, 12, 15, .52);
+      padding: 7px 9px;
+      background: transparent;
       color: var(--board-ink);
-      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
+      font-family: Manrope, Inter, Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
       line-height: 1;
       text-decoration: none;
-      backdrop-filter: blur(12px) saturate(1.1);
+      white-space: nowrap;
     }
     .hero-contact a:hover {
-      background: rgba(7, 12, 15, .72);
+      background: rgba(255, 255, 255, .08);
+    }
+    .hero-contact a + a::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(244, 241, 232, .16);
     }
     .contact-icon {
       flex: 0 0 auto;
-      width: 12px;
-      height: 12px;
-      color: rgba(248, 244, 232, .84);
+      width: 13px;
+      height: 13px;
+      color: rgba(212, 181, 108, .92);
     }
     .hero-contact span {
       min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .report-legend-grid {
       display: grid;
@@ -1354,17 +1387,17 @@
       .hero-contact {
         right: 16px;
         bottom: 16px;
-        align-items: flex-end;
+        align-items: center;
         max-width: calc(100% - 32px);
       }
       .hero-contact a {
         max-width: 100%;
-        line-height: 1.35;
-        overflow-wrap: anywhere;
-        white-space: normal;
+        line-height: 1;
+        overflow-wrap: normal;
+        white-space: nowrap;
       }
       .hero-contact span {
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
       }
       @media (max-width: 430px) {
         h1 {
@@ -1536,7 +1569,12 @@
   <header>
     <div class="hero-title-block">
       <h1>Hormuz Shock</h1>
-      <a class="hero-back-link" href="./index.html">Back to blog</a>
+      <a class="hero-back-link" href="./index.html" aria-label="Back to blog">
+        <svg class="hero-back-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 6 9 12l6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M10 12h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path>
+        </svg>
+      </a>
     </div>
     <div class="hero-contact" aria-label="Author contact">
       <a href="mailto:antonvkrylov@gmail.com">
