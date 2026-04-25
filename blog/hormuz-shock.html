@@ -104,9 +104,38 @@
       z-index: 1;
       min-width: 0;
     }
+    .hero-title-block {
+      align-self: center;
+      justify-self: center;
+      text-align: center;
+    }
+    .hero-back-link {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      border: 1px solid rgba(244, 241, 232, .22);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(7, 12, 15, .52);
+      color: var(--board-ink);
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      backdrop-filter: blur(12px) saturate(1.1);
+    }
+    .hero-back-link:hover {
+      background: rgba(7, 12, 15, .72);
+    }
     h1 {
       margin: 0;
-      max-width: 820px;
+      max-width: 640px;
       font-size: clamp(38px, 6vw, 76px);
       line-height: .94;
       letter-spacing: 0;
@@ -857,8 +886,12 @@
         max-width: calc(100vw - 32px);
         background-position: 56% center;
       }
+      .hero-title-block {
+        justify-self: stretch;
+      }
       h1 {
         max-width: 100%;
+        margin-top: 36px;
         font-size: 31px;
         line-height: 1.02;
         text-wrap: wrap;
@@ -979,7 +1012,8 @@
 <a class="skip-link" href="#report-content">Skip to report</a>
 <main>
   <header>
-    <div>
+    <a class="hero-back-link" href="./index.html">Back to blog</a>
+    <div class="hero-title-block">
       <h1>Hormuz Shock</h1>
     </div>
     <aside class="hero-panel" aria-label="Scenario frame">
