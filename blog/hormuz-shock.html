@@ -34,6 +34,9 @@
       --radius-lg: 26px;
       --radius-md: 18px;
       --radius-sm: 12px;
+      --ease-premium: cubic-bezier(.2, .8, .2, 1);
+      --micro-fast: 180ms;
+      --micro-med: 280ms;
     }
     * { box-sizing: border-box; }
     html { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
@@ -264,6 +267,18 @@
       box-shadow:
         0 16px 34px rgba(0, 0, 0, .26),
         inset 0 1px 0 rgba(255, 255, 255, .12);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .hero-contact:hover {
+      border-color: rgba(212, 181, 108, .32);
+      box-shadow:
+        0 18px 38px rgba(0, 0, 0, .28),
+        0 0 24px rgba(134, 185, 165, .1),
+        inset 0 1px 0 rgba(255, 255, 255, .14);
+      transform: translate3d(0, -1px, 0);
     }
     .hero-contact a {
       position: relative;
@@ -284,9 +299,17 @@
       line-height: 1;
       text-decoration: none;
       white-space: nowrap;
+      transition:
+        background-color var(--micro-fast) var(--ease-premium),
+        color var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
     }
     .hero-contact a:hover {
       background: rgba(255, 255, 255, .08);
+      transform: translate3d(0, -1px, 0);
+    }
+    .hero-contact a:active {
+      transform: translate3d(0, 0, 0) scale(.98);
     }
     .hero-contact a + a::before {
       content: "";
@@ -302,6 +325,13 @@
       width: 13px;
       height: 13px;
       color: rgba(212, 181, 108, .92);
+      transition:
+        color var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
+    }
+    .hero-contact a:hover .contact-icon {
+      color: rgba(134, 185, 165, .96);
+      transform: translate3d(0, -1px, 0) scale(1.06);
     }
     .hero-contact span {
       min-width: 0;
@@ -400,10 +430,23 @@
       border-radius: var(--radius-md);
       padding: 18px;
       box-shadow: var(--shadow-soft);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
     }
     .metric-card {
       position: relative;
       overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, .42) 46%, transparent 58%);
+      opacity: 0;
+      transform: translateX(-120%);
+      pointer-events: none;
     }
     .metric-card::after {
       content: "";
@@ -411,6 +454,20 @@
       inset: 0 0 auto;
       height: 3px;
       background: linear-gradient(90deg, rgba(36, 101, 84, .82), rgba(212, 181, 108, .42), transparent);
+    }
+    .metric-card:hover {
+      border-color: rgba(36, 101, 84, .22);
+      box-shadow:
+        0 18px 42px rgba(26, 30, 24, .11),
+        inset 0 1px 0 rgba(255, 255, 255, .74);
+      transform: translate3d(0, -3px, 0);
+    }
+    .metric-card:hover::before {
+      opacity: .42;
+      transform: translateX(120%);
+      transition:
+        opacity 160ms var(--ease-premium),
+        transform 760ms var(--ease-premium);
     }
     .metric {
       font-size: clamp(29px, 3.2vw, 38px);
@@ -452,57 +509,98 @@
       font-size: 12px;
       cursor: pointer;
       touch-action: manipulation;
-      transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+      transition:
+        background-color var(--micro-fast) var(--ease-premium),
+        color var(--micro-fast) var(--ease-premium),
+        border-color var(--micro-fast) var(--ease-premium),
+        box-shadow var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
     }
     .viz-controls button[aria-pressed="true"] { background: #246554; color: #fffdfa; }
-    .viz-controls button:hover { border-color: rgba(36, 101, 84, .48); }
+    .viz-controls button:hover {
+      border-color: rgba(36, 101, 84, .48);
+      transform: translate3d(0, -1px, 0);
+    }
+    .viz-controls button:active {
+      transform: translate3d(0, 0, 0) scale(.98);
+    }
     .viz-controls input[type="range"] { min-width: 220px; accent-color: #246554; }
     #sectorCubeControls {
       width: fit-content;
       max-width: 100%;
-      gap: 4px;
+      gap: 0;
       margin-bottom: 16px;
-      border: 1px solid rgba(36, 101, 84, .16);
-      border-radius: 999px;
-      padding: 5px;
+      border: 1px solid rgba(36, 101, 84, .14);
+      border-radius: 12px;
+      padding: 3px;
       background:
-        linear-gradient(180deg, rgba(255, 254, 249, .92), rgba(236, 241, 232, .84)),
-        radial-gradient(circle at 0% 0%, rgba(36, 101, 84, .08), transparent 34%);
+        linear-gradient(180deg, rgba(255, 254, 249, .7), rgba(237, 242, 233, .54));
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, .82),
-        0 12px 28px rgba(26, 30, 24, .08);
+        inset 0 1px 0 rgba(255, 255, 255, .74),
+        0 8px 20px rgba(26, 30, 24, .055);
     }
     #sectorCubeControls button {
       position: relative;
-      min-width: 48px;
-      min-height: 34px;
+      min-width: 42px;
+      min-height: 30px;
       border: 0;
-      border-radius: 999px;
-      padding: 8px 13px;
+      border-radius: 9px;
+      padding: 7px 11px 8px;
       background: transparent;
-      color: #4d584f;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .03em;
+      color: #59645c;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
       font-variant-numeric: tabular-nums;
       transition:
-        background-color 160ms ease,
-        color 160ms ease,
-        box-shadow 160ms ease,
-        transform 160ms ease;
+        background-color var(--micro-fast) var(--ease-premium),
+        color var(--micro-fast) var(--ease-premium),
+        box-shadow var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
+    }
+    #sectorCubeControls button + button::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(36, 101, 84, .12);
+    }
+    #sectorCubeControls button::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 5px;
+      width: 14px;
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(212, 181, 108, .88), rgba(134, 185, 165, .88));
+      opacity: 0;
+      transform: translateX(-50%) scaleX(.5);
+      transition:
+        opacity var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
     }
     #sectorCubeControls button:hover {
       color: #173f35;
-      background: rgba(36, 101, 84, .07);
+      background: rgba(36, 101, 84, .055);
     }
     #sectorCubeControls button[aria-pressed="true"] {
-      background:
-        linear-gradient(180deg, #2d7867, #1f5d4f);
-      color: #fffdfa;
+      background: rgba(36, 101, 84, .09);
+      color: #173f35;
       box-shadow:
-        0 8px 18px rgba(36, 101, 84, .22),
-        inset 0 1px 0 rgba(255, 255, 255, .18);
+        inset 0 0 0 1px rgba(36, 101, 84, .08),
+        0 6px 14px rgba(36, 101, 84, .08);
       transform: translateY(-1px);
+    }
+    #sectorCubeControls button[aria-pressed="true"]::after {
+      opacity: 1;
+      transform: translateX(-50%) scaleX(1);
+    }
+    #sectorCubeControls button:active {
+      transform: translateY(0) scale(.97);
     }
     .pass-panel {
       position: relative;
@@ -519,6 +617,10 @@
       box-shadow:
         0 24px 58px rgba(26, 30, 24, .12),
         inset 0 1px 0 rgba(255, 255, 255, .74);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
     }
     .pass-panel::before {
       content: "";
@@ -526,6 +628,13 @@
       inset: 0 0 auto;
       height: 4px;
       background: linear-gradient(90deg, rgba(36, 101, 84, .92), rgba(212, 181, 108, .72), rgba(159, 82, 37, .7));
+    }
+    .pass-panel:hover {
+      border-color: rgba(36, 101, 84, .24);
+      box-shadow:
+        0 28px 68px rgba(26, 30, 24, .14),
+        inset 0 1px 0 rgba(255, 255, 255, .82);
+      transform: translate3d(0, -2px, 0);
     }
     .pass-control {
       display: grid;
@@ -593,6 +702,19 @@
       box-shadow:
         0 7px 18px rgba(0, 0, 0, .34),
         0 0 0 5px rgba(212, 181, 108, .16);
+      transition:
+        box-shadow var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium),
+        background-color var(--micro-fast) var(--ease-premium);
+    }
+    .pass-slider:hover::-webkit-slider-thumb,
+    .pass-slider:active::-webkit-slider-thumb {
+      background: #dec37c;
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, .38),
+        0 0 0 7px rgba(212, 181, 108, .2),
+        0 0 24px rgba(212, 181, 108, .2);
+      transform: scale(1.05);
     }
     .pass-slider::-moz-range-track {
       height: 10px;
@@ -609,6 +731,19 @@
       box-shadow:
         0 7px 18px rgba(0, 0, 0, .34),
         0 0 0 5px rgba(212, 181, 108, .16);
+      transition:
+        box-shadow var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium),
+        background-color var(--micro-fast) var(--ease-premium);
+    }
+    .pass-slider:hover::-moz-range-thumb,
+    .pass-slider:active::-moz-range-thumb {
+      background: #dec37c;
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, .38),
+        0 0 0 7px rgba(212, 181, 108, .2),
+        0 0 24px rgba(212, 181, 108, .2);
+      transform: scale(1.05);
     }
     .pass-output-grid {
       display: grid;
@@ -626,6 +761,10 @@
         linear-gradient(180deg, rgba(255, 255, 252, .94), rgba(245, 246, 240, .88)),
         radial-gradient(circle at 100% 0%, rgba(36, 101, 84, .08), transparent 42%);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
     }
     .pass-output::before {
       content: "";
@@ -639,6 +778,13 @@
     .pass-output:nth-child(3) { --metric-accent: #d4b56c; }
     .pass-output:nth-child(4) { --metric-accent: #6f765f; }
     .pass-output:last-child { border-right: 1px solid rgba(36, 101, 84, .12); }
+    .pass-output:hover {
+      border-color: rgba(36, 101, 84, .2);
+      box-shadow:
+        0 14px 32px rgba(26, 30, 24, .08),
+        inset 0 1px 0 rgba(255, 255, 255, .84);
+      transform: translate3d(0, -2px, 0);
+    }
     .pass-output strong {
       display: block;
       margin-top: 8px;
@@ -648,6 +794,9 @@
       letter-spacing: 0;
       font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
+    }
+    .value-pop {
+      animation: value-pop 360ms var(--ease-premium);
     }
     .pass-band-wrap {
       display: grid;
@@ -707,6 +856,15 @@
       border-radius: 16px;
       padding: 15px 16px 16px;
       background: linear-gradient(180deg, rgba(252, 251, 245, .92), rgba(239, 243, 236, .82));
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .pass-chain-step:hover {
+      border-color: rgba(36, 101, 84, .22);
+      box-shadow: 0 12px 26px rgba(26, 30, 24, .08);
+      transform: translate3d(0, -2px, 0);
     }
     .pass-chain-step:last-child { border-right: 1px solid rgba(36, 101, 84, .14); }
     .pass-chain-step:not(:last-child)::after {
@@ -774,6 +932,15 @@
       border-radius: 14px;
       padding: 11px 12px;
       background: rgba(255, 255, 252, .7);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        background-color var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .pain-row:hover {
+      border-color: rgba(36, 101, 84, .2);
+      background: rgba(255, 255, 252, .9);
+      transform: translate3d(0, -1px, 0);
     }
     .pain-name {
       min-width: 0;
@@ -950,8 +1117,38 @@
       cursor: zoom-in;
       user-select: none;
       transition:
-        background-color 180ms ease,
-        box-shadow 180ms ease;
+        background-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .hidden-link-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 16px;
+      bottom: 16px;
+      width: 2px;
+      border-radius: 999px;
+      background: var(--thread);
+      opacity: 0;
+      transform: scaleY(.4);
+      transition:
+        opacity var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .hidden-link-card::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      width: 8px;
+      height: 8px;
+      border-top: 1px solid color-mix(in srgb, var(--thread), white 12%);
+      border-right: 1px solid color-mix(in srgb, var(--thread), white 12%);
+      opacity: .22;
+      transition:
+        opacity var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
     }
     .hidden-link-card:nth-child(-n + 2) {
       border-top: 0;
@@ -961,7 +1158,20 @@
     }
     .hidden-link-card:hover {
       background-color: rgba(255, 255, 255, .045);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .035),
+        0 12px 28px rgba(0, 0, 0, .12);
+      transform: translate3d(0, -2px, 0);
+    }
+    .hidden-link-card:hover::before,
+    .hidden-link-card:focus-visible::before {
+      opacity: .96;
+      transform: scaleY(1);
+    }
+    .hidden-link-card:hover::after,
+    .hidden-link-card:focus-visible::after {
+      opacity: .68;
+      transform: translate3d(2px, -2px, 0);
     }
     .hidden-link-card:focus-visible {
       z-index: 2;
@@ -971,6 +1181,10 @@
     }
     .hidden-link-card:active {
       background-color: rgba(255, 255, 255, .07);
+      transform: translate3d(0, 0, 0) scale(.997);
+    }
+    .hidden-link-card.is-pressing {
+      animation: card-confirm 420ms var(--ease-premium);
     }
     .hidden-link-card.agent-industrial { --thread: #86b9a5; }
     .hidden-link-card.agent-commodity { --thread: #d4b56c; }
@@ -1007,6 +1221,14 @@
       border-radius: 999px;
       background: var(--thread);
       box-shadow: 0 0 10px color-mix(in srgb, var(--thread), transparent 36%);
+      transition:
+        box-shadow var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .hidden-link-card:hover .hidden-link-agent::before,
+    .hidden-link-card:focus-visible .hidden-link-agent::before {
+      box-shadow: 0 0 18px color-mix(in srgb, var(--thread), transparent 14%);
+      transform: scale(1.18);
     }
     .hidden-link-agent span {
       min-width: 0;
@@ -1054,11 +1276,15 @@
       place-items: center;
       padding: 24px;
     }
+    .link-modal:not([hidden]) {
+      animation: modal-fade-in 220ms var(--ease-premium);
+    }
     .link-modal__backdrop {
       position: absolute;
       inset: 0;
       background: rgba(13, 16, 13, .58);
       backdrop-filter: blur(10px) saturate(.92);
+      animation: modal-backdrop-in 260ms var(--ease-premium);
     }
     .link-modal__panel {
       position: relative;
@@ -1075,6 +1301,7 @@
       box-shadow:
         0 32px 90px rgba(0, 0, 0, .38),
         inset 0 1px 0 rgba(255, 255, 255, .08);
+      animation: modal-panel-in 340ms var(--ease-premium);
     }
     .link-modal__panel::before {
       content: "";
@@ -1097,9 +1324,18 @@
       cursor: pointer;
       font-size: 22px;
       line-height: 1;
+      transition:
+        background-color var(--micro-fast) var(--ease-premium),
+        border-color var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
     }
     .link-modal__close:hover {
       background: rgba(255, 255, 255, .1);
+      border-color: rgba(212, 181, 108, .36);
+      transform: rotate(90deg) scale(1.03);
+    }
+    .link-modal__close:active {
+      transform: rotate(90deg) scale(.96);
     }
     .link-modal__eyebrow {
       max-width: calc(100% - 46px);
@@ -1151,6 +1387,15 @@
       border-radius: 16px;
       padding: 14px;
       background: rgba(255, 255, 255, .045);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        background-color var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .link-modal__read:hover {
+      border-color: rgba(212, 181, 108, .22);
+      background: rgba(255, 255, 255, .065);
+      transform: translate3d(0, -2px, 0);
     }
     .link-modal__read h4 {
       margin: 0 0 8px;
@@ -1199,6 +1444,13 @@
       min-width: 0;
       padding: 14px 18px;
       border-bottom: 1px solid rgba(217, 213, 202, .72);
+      transition:
+        background-color var(--micro-med) var(--ease-premium),
+        transform var(--micro-med) var(--ease-premium);
+    }
+    .projection-row:hover {
+      background: rgba(36, 101, 84, .035);
+      transform: translate3d(0, -1px, 0);
     }
     .projection-row:last-child { border-bottom: 0; }
     .projection-industry {
@@ -1219,6 +1471,15 @@
     }
     .projection-cell {
       min-width: 0;
+      border-radius: 10px;
+      padding: 5px;
+      transition:
+        background-color var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
+    }
+    .projection-cell:hover {
+      background: rgba(36, 101, 84, .045);
+      transform: translate3d(0, -1px, 0);
     }
     .projection-value {
       display: flex;
@@ -1246,6 +1507,12 @@
       height: 100%;
       border-radius: inherit;
       background: var(--stress-color);
+      transition:
+        width 320ms var(--ease-premium),
+        filter var(--micro-fast) var(--ease-premium);
+    }
+    .projection-cell:hover .projection-fill {
+      filter: saturate(1.12) brightness(1.04);
     }
     .projection-peak {
       display: inline-flex;
@@ -1290,6 +1557,12 @@
       background: transparent;
       overflow: hidden;
     }
+    tbody tr {
+      transition: transform var(--micro-med) var(--ease-premium);
+    }
+    tbody tr:hover {
+      transform: translate3d(0, -2px, 0);
+    }
     th,
     td {
       padding: 16px;
@@ -1313,6 +1586,10 @@
       color: #30372f;
       font-size: 14px;
       line-height: 1.5;
+      transition:
+        background-color var(--micro-med) var(--ease-premium),
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium);
     }
     td:first-child {
       border-left: 1px solid rgba(36, 101, 84, .1);
@@ -1343,6 +1620,7 @@
     tbody tr:hover td {
       background: rgba(255, 253, 247, .94);
       border-color: rgba(36, 101, 84, .2);
+      box-shadow: 0 10px 24px rgba(26, 30, 24, .06);
     }
     tbody tr:hover td:nth-child(4) {
       background: rgba(238, 244, 236, .9);
@@ -1374,6 +1652,31 @@
     }
     .axis text { fill: #4f554e; font-size: 12px; }
     .axis path, .axis line { stroke: #c7c1b5; }
+    #countryChart rect,
+    #sectorHeatmap rect,
+    #sectorCube rect,
+    #shockNetwork circle,
+    #flowMap path,
+    #rippleSankey path,
+    #probabilityDashboard rect,
+    #decisionFrontier circle,
+    #portfolioMap circle,
+    #claimGraph circle {
+      transition:
+        filter var(--micro-fast) var(--ease-premium),
+        opacity var(--micro-fast) var(--ease-premium),
+        stroke-width var(--micro-fast) var(--ease-premium);
+    }
+    #countryChart rect:hover,
+    #sectorHeatmap rect:hover,
+    #sectorCube rect:hover,
+    #shockNetwork circle:hover,
+    #probabilityDashboard rect:hover,
+    #decisionFrontier circle:hover,
+    #portfolioMap circle:hover,
+    #claimGraph circle:hover {
+      filter: saturate(1.18) brightness(1.06) drop-shadow(0 4px 8px rgba(26, 30, 24, .18));
+    }
     .tooltip {
       position: fixed;
       pointer-events: none;
@@ -1387,6 +1690,48 @@
       box-shadow: var(--shadow);
       font-size: 13px;
       line-height: 1.4;
+      opacity: 0;
+      transform: translate3d(0, 5px, 0) scale(.98);
+      transition:
+        opacity var(--micro-fast) var(--ease-premium),
+        transform var(--micro-fast) var(--ease-premium);
+    }
+    .tooltip[style*="display: block"] {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    @keyframes value-pop {
+      0% { transform: translateY(0) scale(1); filter: none; }
+      42% { transform: translateY(-2px) scale(1.018); filter: drop-shadow(0 6px 12px rgba(212, 181, 108, .18)); }
+      100% { transform: translateY(0) scale(1); filter: none; }
+    }
+    @keyframes card-confirm {
+      0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035); }
+      45% {
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, .06),
+          0 0 0 1px color-mix(in srgb, var(--thread), transparent 48%),
+          0 0 28px color-mix(in srgb, var(--thread), transparent 68%);
+      }
+      100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035); }
+    }
+    @keyframes modal-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes modal-backdrop-in {
+      from { opacity: 0; backdrop-filter: blur(2px) saturate(.92); }
+      to { opacity: 1; backdrop-filter: blur(10px) saturate(.92); }
+    }
+    @keyframes modal-panel-in {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 14px, 0) scale(.985);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       *,
@@ -13559,6 +13904,12 @@
     const detail = hiddenLinkDetails[id];
     if (!detail) return;
     hiddenLinkLastFocus = document.activeElement;
+    if (card) {
+      card.classList.remove("is-pressing");
+      void card.offsetWidth;
+      card.classList.add("is-pressing");
+      window.setTimeout(() => card.classList.remove("is-pressing"), 460);
+    }
     const thread = card ? getComputedStyle(card).getPropertyValue("--thread").trim() : "";
     if (hiddenLinkModalPanel && thread) hiddenLinkModalPanel.style.setProperty("--modal-thread", thread);
     setModalText(hiddenLinkModalAgent, detail.agent);
@@ -13616,9 +13967,17 @@
       if (cents === 0) return "0c/gal";
       return (cents > 0 ? "+" : "-") + Math.abs(cents) + "c/gal";
     };
-    const setText = (id, value) => {
+    let oilPassHasRendered = false;
+    const setText = (id, value, pulse) => {
       const element = document.getElementById(id);
-      if (element) element.textContent = value;
+      if (!element) return;
+      const changed = element.textContent !== value;
+      element.textContent = value;
+      if (pulse && changed) {
+        element.classList.remove("value-pop");
+        void element.offsetWidth;
+        element.classList.add("value-pop");
+      }
     };
     const setRegimeBar = (barId, scoreId, score, color) => {
       const bar = document.getElementById(barId);
@@ -13735,16 +14094,16 @@
       const gasRangeLabel = gasFormat.format(gasLow) + "-" + gasFormat.format(gasHigh) + "/gal";
       const pumpDeltaLabel = signedCents(gasMid - oilPassData.baselineGas);
       const cpiLabel = signedPp(cpiImpulse);
-      setText("oilPassOil", oilLabel);
-      setText("oilPassGasRange", gasRangeLabel);
-      setText("oilPassPumpDelta", pumpDeltaLabel);
-      setText("oilPassCpi", cpiLabel);
-      setText("oilPassChainOil", oilLabel + " WTI proxy");
-      setText("oilPassChainGas", gasRangeLabel + " regular");
-      setText("oilPassChainCpi", cpiLabel + " direct CPI level impulse");
-      setText("oilPassBandLow", gasFormat.format(gasLow) + " low");
-      setText("oilPassBandMidLabel", gasFormat.format(gasMid) + " midpoint");
-      setText("oilPassBandHigh", gasFormat.format(gasHigh) + " high");
+      setText("oilPassOil", oilLabel, oilPassHasRendered);
+      setText("oilPassGasRange", gasRangeLabel, oilPassHasRendered);
+      setText("oilPassPumpDelta", pumpDeltaLabel, oilPassHasRendered);
+      setText("oilPassCpi", cpiLabel, oilPassHasRendered);
+      setText("oilPassChainOil", oilLabel + " WTI proxy", oilPassHasRendered);
+      setText("oilPassChainGas", gasRangeLabel + " regular", oilPassHasRendered);
+      setText("oilPassChainCpi", cpiLabel + " direct CPI level impulse", oilPassHasRendered);
+      setText("oilPassBandLow", gasFormat.format(gasLow) + " low", oilPassHasRendered);
+      setText("oilPassBandMidLabel", gasFormat.format(gasMid) + " midpoint", oilPassHasRendered);
+      setText("oilPassBandHigh", gasFormat.format(gasHigh) + " high", oilPassHasRendered);
       const bandElement = document.getElementById("oilPassBand");
       if (bandElement) {
         const left = bandPercent(gasLow);
@@ -13756,6 +14115,7 @@
       updatePainGap(gasMid, gasMid - oilPassData.baselineGas, (gasMid / oilPassData.baselineGas) - 1, cpiImpulse);
       updateBondRegime(gasMid - oilPassData.baselineGas, (gasMid / oilPassData.baselineGas) - 1, cpiImpulse);
       oilPassSlider.setAttribute("aria-valuetext", oilFormat.format(oil) + " per barrel WTI proxy");
+      oilPassHasRendered = true;
     };
     setText(
       "oilPassSource",
