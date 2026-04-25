@@ -753,10 +753,13 @@
     .pass-output {
       position: relative;
       min-width: 0;
+      isolation: isolate;
       overflow: hidden;
       border: 1px solid rgba(36, 101, 84, .12);
       border-radius: 16px;
       padding: 16px 16px 17px;
+      --liquid-level: 0%;
+      --liquid-alpha: .54;
       background:
         linear-gradient(180deg, rgba(255, 255, 252, .94), rgba(245, 246, 240, .88)),
         radial-gradient(circle at 100% 0%, rgba(36, 101, 84, .08), transparent 42%);
@@ -772,18 +775,62 @@
       inset: 0 0 auto;
       height: 3px;
       background: linear-gradient(90deg, var(--metric-accent, var(--accent)), rgba(212, 181, 108, .28), transparent);
+      z-index: 3;
+    }
+    .pass-output::after {
+      content: "";
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      bottom: 0;
+      z-index: 0;
+      height: var(--liquid-level);
+      min-height: 9px;
+      opacity: var(--liquid-alpha);
+      background:
+        radial-gradient(ellipse at 18% -12%, rgba(255, 196, 143, .28) 0 13%, transparent 14%),
+        radial-gradient(ellipse at 62% -10%, rgba(246, 105, 77, .2) 0 12%, transparent 13%),
+        linear-gradient(180deg, rgba(116, 18, 19, .74), rgba(65, 12, 14, .7) 42%, rgba(24, 12, 10, .62));
+      border-radius: 55% 45% 0 0 / 18px 16px 0 0;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 224, 173, .18),
+        inset 0 14px 28px rgba(255, 81, 59, .08),
+        0 -1px 12px rgba(110, 18, 18, .12);
+      transform: translate3d(0, 0, 0);
+      transition:
+        height 620ms var(--ease-premium),
+        opacity var(--micro-med) var(--ease-premium),
+        background 620ms var(--ease-premium);
+      animation: oil-surface 5.8s ease-in-out infinite;
     }
     .pass-output:nth-child(1) { --metric-accent: #246554; }
     .pass-output:nth-child(2) { --metric-accent: #9f5225; }
     .pass-output:nth-child(3) { --metric-accent: #d4b56c; }
     .pass-output:nth-child(4) { --metric-accent: #6f765f; }
     .pass-output:last-child { border-right: 1px solid rgba(36, 101, 84, .12); }
+    .pass-output.is-negative {
+      --liquid-alpha: .68;
+    }
+    .pass-output.is-negative::after {
+      background:
+        radial-gradient(ellipse at 18% -12%, rgba(255, 188, 144, .3) 0 13%, transparent 14%),
+        radial-gradient(ellipse at 62% -10%, rgba(246, 105, 77, .24) 0 12%, transparent 13%),
+        linear-gradient(180deg, rgba(132, 18, 22, .82), rgba(78, 10, 15, .75) 46%, rgba(27, 11, 10, .66));
+    }
     .pass-output:hover {
       border-color: rgba(36, 101, 84, .2);
       box-shadow:
         0 14px 32px rgba(26, 30, 24, .08),
         inset 0 1px 0 rgba(255, 255, 255, .84);
       transform: translate3d(0, -2px, 0);
+    }
+    .pass-output:hover::after {
+      opacity: .76;
+    }
+    .pass-output .label,
+    .pass-output strong {
+      position: relative;
+      z-index: 2;
     }
     .pass-output strong {
       display: block;
@@ -1704,6 +1751,16 @@
       0% { transform: translateY(0) scale(1); filter: none; }
       42% { transform: translateY(-2px) scale(1.018); filter: drop-shadow(0 6px 12px rgba(212, 181, 108, .18)); }
       100% { transform: translateY(0) scale(1); filter: none; }
+    }
+    @keyframes oil-surface {
+      0%, 100% {
+        border-radius: 55% 45% 0 0 / 18px 16px 0 0;
+        transform: translate3d(-1.5%, 0, 0);
+      }
+      50% {
+        border-radius: 45% 55% 0 0 / 14px 19px 0 0;
+        transform: translate3d(1.5%, -1px, 0);
+      }
     }
     @keyframes card-confirm {
       0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035); }
@@ -13957,6 +14014,14 @@
     const numberFormat = new Intl.NumberFormat("en-US", {maximumFractionDigits: 0});
     const clampPercent = value => Math.max(0, Math.min(100, value));
     const bandPercent = value => clampPercent(((value - oilPassData.gasDomainMin) / (oilPassData.gasDomainMax - oilPassData.gasDomainMin)) * 100);
+    const setLiquidOutput = (id, level, signedValue) => {
+      const element = document.getElementById(id);
+      const card = element ? element.closest(".pass-output") : null;
+      if (!card) return;
+      const visibleLevel = Math.max(9, Math.min(92, level));
+      card.style.setProperty("--liquid-level", visibleLevel.toFixed(2) + "%");
+      card.classList.toggle("is-negative", signedValue < -0.001);
+    };
     const signedPp = value => (value > 0 ? "+" : "") + value.toFixed(2) + " pp";
     const signedMonthly = value => {
       const prefix = value > 0 ? "+" : value < 0 ? "-" : "";
@@ -14098,6 +14163,11 @@
       setText("oilPassGasRange", gasRangeLabel, oilPassHasRendered);
       setText("oilPassPumpDelta", pumpDeltaLabel, oilPassHasRendered);
       setText("oilPassCpi", cpiLabel, oilPassHasRendered);
+      const oilRange = Math.max(1, Number(oilPassSlider.max) - Number(oilPassSlider.min));
+      setLiquidOutput("oilPassOil", clampPercent(((oil - Number(oilPassSlider.min)) / oilRange) * 100), oilDelta);
+      setLiquidOutput("oilPassGasRange", bandPercent(gasMid), gasMid - oilPassData.baselineGas);
+      setLiquidOutput("oilPassPumpDelta", clampPercent((Math.abs(gasMid - oilPassData.baselineGas) / 1.1) * 100), gasMid - oilPassData.baselineGas);
+      setLiquidOutput("oilPassCpi", clampPercent((Math.abs(cpiImpulse) / 1.1) * 100), cpiImpulse);
       setText("oilPassChainOil", oilLabel + " WTI proxy", oilPassHasRendered);
       setText("oilPassChainGas", gasRangeLabel + " regular", oilPassHasRendered);
       setText("oilPassChainCpi", cpiLabel + " direct CPI level impulse", oilPassHasRendered);
