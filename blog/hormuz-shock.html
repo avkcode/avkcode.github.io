@@ -759,7 +759,7 @@
       border-radius: 16px;
       padding: 16px 16px 17px;
       --liquid-level: 0%;
-      --liquid-alpha: .54;
+      --liquid-alpha: .48;
       background:
         linear-gradient(180deg, rgba(255, 255, 252, .94), rgba(245, 246, 240, .88)),
         radial-gradient(circle at 100% 0%, rgba(36, 101, 84, .08), transparent 42%);
@@ -780,28 +780,30 @@
     .pass-output::after {
       content: "";
       position: absolute;
-      left: -8%;
-      right: -8%;
-      bottom: 0;
+      left: -14%;
+      right: -14%;
+      bottom: -2px;
       z-index: 0;
       height: var(--liquid-level);
       min-height: 9px;
       opacity: var(--liquid-alpha);
       background:
-        radial-gradient(ellipse at 18% -12%, rgba(255, 196, 143, .28) 0 13%, transparent 14%),
-        radial-gradient(ellipse at 62% -10%, rgba(246, 105, 77, .2) 0 12%, transparent 13%),
-        linear-gradient(180deg, rgba(116, 18, 19, .74), rgba(65, 12, 14, .7) 42%, rgba(24, 12, 10, .62));
-      border-radius: 55% 45% 0 0 / 18px 16px 0 0;
+        radial-gradient(ellipse at 18% -10%, rgba(255, 204, 158, .26) 0 13%, transparent 14%),
+        radial-gradient(ellipse at 72% -8%, rgba(247, 88, 65, .18) 0 12%, transparent 13%),
+        linear-gradient(180deg, rgba(136, 26, 24, .7), rgba(66, 13, 15, .72) 48%, rgba(17, 13, 11, .66));
+      background-size: 128% 112%, 142% 108%, 100% 100%;
+      border-radius: 58% 42% 0 0 / 20px 16px 0 0;
       box-shadow:
-        inset 0 1px 0 rgba(255, 224, 173, .18),
-        inset 0 14px 28px rgba(255, 81, 59, .08),
+        inset 0 1px 0 rgba(255, 224, 173, .16),
+        inset 0 16px 30px rgba(255, 81, 59, .08),
         0 -1px 12px rgba(110, 18, 18, .12);
       transform: translate3d(0, 0, 0);
+      filter: saturate(1.08) contrast(1.03);
       transition:
-        height 620ms var(--ease-premium),
+        height 760ms var(--ease-premium),
         opacity var(--micro-med) var(--ease-premium),
-        background 620ms var(--ease-premium);
-      animation: oil-surface 5.8s ease-in-out infinite;
+        background 760ms var(--ease-premium);
+      animation: oil-surface 7.4s ease-in-out infinite;
     }
     .pass-output:nth-child(1) { --metric-accent: #246554; }
     .pass-output:nth-child(2) { --metric-accent: #9f5225; }
@@ -809,13 +811,13 @@
     .pass-output:nth-child(4) { --metric-accent: #6f765f; }
     .pass-output:last-child { border-right: 1px solid rgba(36, 101, 84, .12); }
     .pass-output.is-negative {
-      --liquid-alpha: .68;
+      --liquid-alpha: .7;
     }
     .pass-output.is-negative::after {
       background:
-        radial-gradient(ellipse at 18% -12%, rgba(255, 188, 144, .3) 0 13%, transparent 14%),
-        radial-gradient(ellipse at 62% -10%, rgba(246, 105, 77, .24) 0 12%, transparent 13%),
-        linear-gradient(180deg, rgba(132, 18, 22, .82), rgba(78, 10, 15, .75) 46%, rgba(27, 11, 10, .66));
+        radial-gradient(ellipse at 18% -10%, rgba(255, 190, 150, .32) 0 13%, transparent 14%),
+        radial-gradient(ellipse at 72% -8%, rgba(255, 75, 58, .25) 0 12%, transparent 13%),
+        linear-gradient(180deg, rgba(146, 18, 24, .86), rgba(78, 10, 15, .78) 48%, rgba(20, 11, 10, .68));
     }
     .pass-output:hover {
       border-color: rgba(36, 101, 84, .2);
@@ -827,10 +829,64 @@
     .pass-output:hover::after {
       opacity: .76;
     }
+    .pass-liquid {
+      position: absolute;
+      left: -18%;
+      right: -18%;
+      bottom: calc(var(--liquid-level) - 13px);
+      z-index: 1;
+      height: 28px;
+      pointer-events: none;
+      opacity: .68;
+      background:
+        radial-gradient(ellipse at 50% 54%, rgba(255, 222, 168, .2) 0 4%, transparent 5%),
+        linear-gradient(90deg, transparent, rgba(255, 181, 128, .18) 22%, rgba(255, 235, 195, .26) 48%, rgba(134, 28, 27, .14) 72%, transparent);
+      border-radius: 50%;
+      filter: blur(.15px);
+      mix-blend-mode: multiply;
+      transform-origin: 50% 50%;
+      transition:
+        bottom 760ms var(--ease-premium),
+        opacity var(--micro-med) var(--ease-premium);
+      animation: oil-meniscus 4.8s ease-in-out infinite;
+    }
+    .pass-liquid::before,
+    .pass-liquid::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+    }
+    .pass-liquid::before {
+      left: 11%;
+      right: 17%;
+      top: 9px;
+      height: 8px;
+      background: linear-gradient(90deg, transparent, rgba(255, 228, 181, .32), rgba(142, 24, 24, .12), transparent);
+      filter: blur(.6px);
+      transform: rotate(-1deg);
+      animation: oil-sheen 3.9s ease-in-out infinite;
+    }
+    .pass-liquid::after {
+      left: 64%;
+      top: 7px;
+      width: 34px;
+      height: 13px;
+      background: radial-gradient(ellipse, rgba(255, 224, 177, .2), rgba(121, 18, 18, .12) 48%, transparent 72%);
+      filter: blur(.4px);
+      animation: oil-lens 6.2s ease-in-out infinite;
+    }
+    .pass-output.is-negative .pass-liquid {
+      opacity: .82;
+      mix-blend-mode: normal;
+    }
+    .pass-output.is-negative .pass-liquid::before {
+      background: linear-gradient(90deg, transparent, rgba(255, 208, 174, .34), rgba(112, 12, 18, .2), transparent);
+    }
     .pass-output .label,
     .pass-output strong {
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
     .pass-output strong {
       display: block;
@@ -1754,12 +1810,42 @@
     }
     @keyframes oil-surface {
       0%, 100% {
-        border-radius: 55% 45% 0 0 / 18px 16px 0 0;
-        transform: translate3d(-1.5%, 0, 0);
+        border-radius: 58% 42% 0 0 / 20px 16px 0 0;
+        background-position: 0 0, 46% 0, 0 0;
+        transform: translate3d(-1.8%, 0, 0) skewX(-1.2deg);
       }
       50% {
-        border-radius: 45% 55% 0 0 / 14px 19px 0 0;
-        transform: translate3d(1.5%, -1px, 0);
+        border-radius: 43% 57% 0 0 / 15px 22px 0 0;
+        background-position: 7% 0, 54% 0, 0 0;
+        transform: translate3d(1.8%, -1px, 0) skewX(1.2deg);
+      }
+    }
+    @keyframes oil-meniscus {
+      0%, 100% {
+        transform: translate3d(-2.2%, 0, 0) rotate(-1deg) scaleX(1.03);
+      }
+      50% {
+        transform: translate3d(2.2%, -2px, 0) rotate(1deg) scaleX(.98);
+      }
+    }
+    @keyframes oil-sheen {
+      0%, 100% {
+        opacity: .42;
+        transform: translateX(-4%) rotate(-1deg) scaleX(.82);
+      }
+      50% {
+        opacity: .78;
+        transform: translateX(7%) rotate(.6deg) scaleX(1.06);
+      }
+    }
+    @keyframes oil-lens {
+      0%, 100% {
+        opacity: .36;
+        transform: translate3d(-8px, 0, 0) scale(.86);
+      }
+      50% {
+        opacity: .66;
+        transform: translate3d(7px, -1px, 0) scale(1.08);
       }
     }
     @keyframes card-confirm {
@@ -2090,10 +2176,10 @@
         <input class="pass-slider" id="oilPassSlider" type="range" min="50" max="160" step="1" value="98" aria-label="WTI proxy price in dollars per barrel">
       </div>
       <div class="pass-output-grid" aria-live="polite">
-        <div class="pass-output"><div class="label">WTI proxy</div><strong id="oilPassOil">$98/bbl</strong></div>
-        <div class="pass-output"><div class="label">Retail gas range</div><strong id="oilPassGasRange">$4.01-$4.41/gal</strong></div>
-        <div class="pass-output"><div class="label">Pump midpoint</div><strong id="oilPassPumpDelta">+17c/gal</strong></div>
-        <div class="pass-output"><div class="label">Direct CPI impulse</div><strong id="oilPassCpi">+0.12 pp</strong></div>
+        <div class="pass-output"><span class="pass-liquid" aria-hidden="true"></span><div class="label">WTI proxy</div><strong id="oilPassOil">$98/bbl</strong></div>
+        <div class="pass-output"><span class="pass-liquid" aria-hidden="true"></span><div class="label">Retail gas range</div><strong id="oilPassGasRange">$4.01-$4.41/gal</strong></div>
+        <div class="pass-output"><span class="pass-liquid" aria-hidden="true"></span><div class="label">Pump midpoint</div><strong id="oilPassPumpDelta">+17c/gal</strong></div>
+        <div class="pass-output"><span class="pass-liquid" aria-hidden="true"></span><div class="label">Direct CPI impulse</div><strong id="oilPassCpi">+0.12 pp</strong></div>
       </div>
       <div class="pass-band-wrap" role="group" aria-label="Estimated gasoline uncertainty band">
         <div class="pass-band" id="oilPassBand"><span class="pass-band-fill" id="oilPassBandFill"></span><span class="pass-band-mid" id="oilPassBandMid"></span></div>
