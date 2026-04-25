@@ -649,6 +649,18 @@
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .07),
         0 14px 32px rgba(23, 63, 53, .12);
+      transition:
+        border-color var(--micro-med) var(--ease-premium),
+        box-shadow var(--micro-med) var(--ease-premium),
+        filter var(--micro-med) var(--ease-premium);
+    }
+    .pass-control.is-high-shock {
+      border-color: rgba(212, 181, 108, .3);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .08),
+        0 18px 38px rgba(84, 26, 21, .16),
+        0 0 0 1px rgba(212, 181, 108, .06);
+      filter: saturate(1.04);
     }
     .pass-slider-head {
       display: flex;
@@ -708,7 +720,8 @@
         background-color var(--micro-fast) var(--ease-premium);
     }
     .pass-slider:hover::-webkit-slider-thumb,
-    .pass-slider:active::-webkit-slider-thumb {
+    .pass-slider:active::-webkit-slider-thumb,
+    .pass-control.is-high-shock .pass-slider::-webkit-slider-thumb {
       background: #dec37c;
       box-shadow:
         0 8px 20px rgba(0, 0, 0, .38),
@@ -737,7 +750,8 @@
         background-color var(--micro-fast) var(--ease-premium);
     }
     .pass-slider:hover::-moz-range-thumb,
-    .pass-slider:active::-moz-range-thumb {
+    .pass-slider:active::-moz-range-thumb,
+    .pass-control.is-high-shock .pass-slider::-moz-range-thumb {
       background: #dec37c;
       box-shadow:
         0 8px 20px rgba(0, 0, 0, .38),
@@ -799,6 +813,7 @@
         0 -1px 12px rgba(110, 18, 18, .12);
       transform: translate3d(0, 0, 0);
       filter: saturate(1.08) contrast(1.03);
+      will-change: height, transform, opacity;
       transition:
         height 760ms var(--ease-premium),
         opacity var(--micro-med) var(--ease-premium),
@@ -829,6 +844,21 @@
     .pass-output:hover::after {
       opacity: .76;
     }
+    .pass-output-grid.is-filling .pass-output {
+      animation: pass-fill-card 980ms var(--ease-premium);
+    }
+    .pass-output-grid.is-filling .pass-output::after {
+      transition-duration: 1120ms;
+      transition-timing-function: cubic-bezier(.16, .84, .24, 1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 224, 173, .2),
+        inset 0 20px 34px rgba(255, 81, 59, .12),
+        0 -2px 18px rgba(110, 18, 18, .18);
+    }
+    .pass-output.is-fill-priming::after,
+    .pass-output.is-fill-priming .pass-liquid {
+      transition-duration: 0ms !important;
+    }
     .pass-liquid {
       position: absolute;
       left: -18%;
@@ -845,10 +875,18 @@
       filter: blur(.15px);
       mix-blend-mode: multiply;
       transform-origin: 50% 50%;
+      will-change: bottom, transform, opacity;
       transition:
         bottom 760ms var(--ease-premium),
         opacity var(--micro-med) var(--ease-premium);
       animation: oil-meniscus 4.8s ease-in-out infinite;
+    }
+    .pass-output-grid.is-filling .pass-liquid {
+      transition-duration: 1120ms;
+      transition-timing-function: cubic-bezier(.16, .84, .24, 1);
+      animation:
+        oil-meniscus 4.8s ease-in-out infinite,
+        oil-fill-glint 1120ms var(--ease-premium);
     }
     .pass-liquid::before,
     .pass-liquid::after {
@@ -1846,6 +1884,36 @@
       50% {
         opacity: .66;
         transform: translate3d(7px, -1px, 0) scale(1.08);
+      }
+    }
+    @keyframes oil-fill-glint {
+      0% {
+        opacity: .36;
+        filter: blur(.25px) saturate(.96);
+      }
+      38% {
+        opacity: .92;
+        filter: blur(.1px) saturate(1.18);
+      }
+      100% {
+        opacity: .72;
+        filter: blur(.15px) saturate(1);
+      }
+    }
+    @keyframes pass-fill-card {
+      0% {
+        border-color: rgba(36, 101, 84, .12);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
+      }
+      44% {
+        border-color: rgba(146, 18, 24, .28);
+        box-shadow:
+          0 16px 34px rgba(84, 26, 21, .1),
+          inset 0 1px 0 rgba(255, 255, 255, .86);
+      }
+      100% {
+        border-color: rgba(36, 101, 84, .12);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
       }
     }
     @keyframes card-confirm {
@@ -14094,19 +14162,67 @@
   }
   const oilPassSlider = document.getElementById("oilPassSlider");
   if (oilPassSlider) {
+    const oilPassControl = oilPassSlider.closest(".pass-control");
+    const oilPassOutputGrid = document.querySelector(".pass-output-grid");
+    const reduceOilMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const oilFormat = new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0});
     const gasFormat = new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2});
     const monthlyFormat = new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0});
     const numberFormat = new Intl.NumberFormat("en-US", {maximumFractionDigits: 0});
     const clampPercent = value => Math.max(0, Math.min(100, value));
     const bandPercent = value => clampPercent(((value - oilPassData.gasDomainMin) / (oilPassData.gasDomainMax - oilPassData.gasDomainMin)) * 100);
-    const setLiquidOutput = (id, level, signedValue) => {
+    const highOilThreshold = oilPassData.baselineOil + 8;
+    let oilPassFillFrame = 0;
+    let oilPassFillTimer = 0;
+    let oilPassHighFillArmed = true;
+    let oilPassLastOil = Number(oilPassData.defaultOil);
+    const getLiquidTarget = (id, level, signedValue) => {
       const element = document.getElementById(id);
       const card = element ? element.closest(".pass-output") : null;
-      if (!card) return;
+      if (!card) return null;
       const visibleLevel = Math.max(9, Math.min(92, level));
-      card.style.setProperty("--liquid-level", visibleLevel.toFixed(2) + "%");
       card.classList.toggle("is-negative", signedValue < -0.001);
+      return {
+        card,
+        level: visibleLevel.toFixed(2) + "%"
+      };
+    };
+    const clearOilFillFrame = () => {
+      if (!oilPassFillFrame) return;
+      cancelAnimationFrame(oilPassFillFrame);
+      oilPassFillFrame = 0;
+    };
+    const applyLiquidTargets = (targets, replayFromFloor) => {
+      const validTargets = targets.filter(Boolean);
+      if (!validTargets.length) return;
+      if (replayFromFloor && oilPassOutputGrid && !reduceOilMotion) {
+        clearOilFillFrame();
+        clearTimeout(oilPassFillTimer);
+        oilPassOutputGrid.classList.remove("is-filling");
+        validTargets.forEach(target => {
+          target.card.classList.add("is-fill-priming");
+          target.card.style.setProperty("--liquid-level", "0%");
+        });
+        void oilPassOutputGrid.offsetWidth;
+        validTargets.forEach(target => {
+          target.card.classList.remove("is-fill-priming");
+        });
+        oilPassOutputGrid.classList.add("is-filling");
+        oilPassFillFrame = requestAnimationFrame(() => {
+          oilPassFillFrame = 0;
+          validTargets.forEach(target => {
+            target.card.style.setProperty("--liquid-level", target.level);
+          });
+        });
+        oilPassFillTimer = setTimeout(() => {
+          oilPassOutputGrid.classList.remove("is-filling");
+        }, 1180);
+        return;
+      }
+      clearOilFillFrame();
+      validTargets.forEach(target => {
+        target.card.style.setProperty("--liquid-level", target.level);
+      });
     };
     const signedPp = value => (value > 0 ? "+" : "") + value.toFixed(2) + " pp";
     const signedMonthly = value => {
@@ -14235,6 +14351,7 @@
     };
     const updateOilPass = () => {
       const oil = Number(oilPassSlider.value);
+      const previousOil = oilPassLastOil;
       const oilDelta = oil - oilPassData.baselineOil;
       const gasMid = Math.max(0, oilPassData.baselineGas + oilPassData.beta * oilDelta);
       const band = oilPassData.uncertaintyBase + Math.abs(oilDelta) * oilPassData.uncertaintySlope;
@@ -14250,10 +14367,19 @@
       setText("oilPassPumpDelta", pumpDeltaLabel, oilPassHasRendered);
       setText("oilPassCpi", cpiLabel, oilPassHasRendered);
       const oilRange = Math.max(1, Number(oilPassSlider.max) - Number(oilPassSlider.min));
-      setLiquidOutput("oilPassOil", clampPercent(((oil - Number(oilPassSlider.min)) / oilRange) * 100), oilDelta);
-      setLiquidOutput("oilPassGasRange", bandPercent(gasMid), gasMid - oilPassData.baselineGas);
-      setLiquidOutput("oilPassPumpDelta", clampPercent((Math.abs(gasMid - oilPassData.baselineGas) / 1.1) * 100), gasMid - oilPassData.baselineGas);
-      setLiquidOutput("oilPassCpi", clampPercent((Math.abs(cpiImpulse) / 1.1) * 100), cpiImpulse);
+      const oilIsRising = oilPassHasRendered && oil > previousOil + .25;
+      const oilIsFalling = oilPassHasRendered && oil < previousOil - .25;
+      const replayFill = oilIsRising && oilPassHighFillArmed && oil >= highOilThreshold;
+      const liquidTargets = [
+        getLiquidTarget("oilPassOil", clampPercent(((oil - Number(oilPassSlider.min)) / oilRange) * 100), oilDelta),
+        getLiquidTarget("oilPassGasRange", bandPercent(gasMid), gasMid - oilPassData.baselineGas),
+        getLiquidTarget("oilPassPumpDelta", clampPercent((Math.abs(gasMid - oilPassData.baselineGas) / 1.1) * 100), gasMid - oilPassData.baselineGas),
+        getLiquidTarget("oilPassCpi", clampPercent((Math.abs(cpiImpulse) / 1.1) * 100), cpiImpulse)
+      ];
+      applyLiquidTargets(liquidTargets, replayFill);
+      if (replayFill) oilPassHighFillArmed = false;
+      if (oilIsFalling || oil < highOilThreshold - 3) oilPassHighFillArmed = true;
+      if (oilPassControl) oilPassControl.classList.toggle("is-high-shock", oil >= highOilThreshold);
       setText("oilPassChainOil", oilLabel + " WTI proxy", oilPassHasRendered);
       setText("oilPassChainGas", gasRangeLabel + " regular", oilPassHasRendered);
       setText("oilPassChainCpi", cpiLabel + " direct CPI level impulse", oilPassHasRendered);
@@ -14271,6 +14397,7 @@
       updatePainGap(gasMid, gasMid - oilPassData.baselineGas, (gasMid / oilPassData.baselineGas) - 1, cpiImpulse);
       updateBondRegime(gasMid - oilPassData.baselineGas, (gasMid / oilPassData.baselineGas) - 1, cpiImpulse);
       oilPassSlider.setAttribute("aria-valuetext", oilFormat.format(oil) + " per barrel WTI proxy");
+      oilPassLastOil = oil;
       oilPassHasRendered = true;
     };
     setText(
