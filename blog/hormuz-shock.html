@@ -369,15 +369,41 @@
     .viz-controls button:hover { border-color: rgba(36, 101, 84, .48); }
     .viz-controls input[type="range"] { min-width: 220px; accent-color: #246554; }
     .pass-panel {
+      position: relative;
       display: grid;
-      gap: 18px;
-      padding: 0;
+      gap: 16px;
+      padding: 18px;
       overflow: hidden;
+      border-color: rgba(36, 101, 84, .18);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 254, 249, .98), rgba(245, 247, 242, .97)),
+        radial-gradient(circle at 8% 0%, rgba(36, 101, 84, .08), transparent 34%),
+        radial-gradient(circle at 100% 18%, rgba(212, 181, 108, .1), transparent 32%);
+      box-shadow:
+        0 24px 58px rgba(26, 30, 24, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .74);
+    }
+    .pass-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(36, 101, 84, .92), rgba(212, 181, 108, .72), rgba(159, 82, 37, .7));
     }
     .pass-control {
       display: grid;
-      gap: 12px;
-      padding: 18px 18px 0;
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid rgba(244, 241, 232, .12);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(23, 63, 53, .98), rgba(32, 35, 30, .98)),
+        linear-gradient(90deg, rgba(212, 181, 108, .12), rgba(134, 185, 165, .08));
+      color: var(--board-ink);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .07),
+        0 14px 32px rgba(23, 63, 53, .12);
     }
     .pass-slider-head {
       display: flex;
@@ -387,11 +413,13 @@
       min-width: 0;
     }
     .pass-slider-head label {
+      color: #fff8e7;
       font-weight: 800;
       line-height: 1.2;
     }
     .pass-source {
-      color: var(--muted);
+      max-width: 560px;
+      color: rgba(244, 241, 232, .66);
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 11px;
       line-height: 1.35;
@@ -400,48 +428,107 @@
     }
     .pass-slider {
       width: 100%;
-      height: 34px;
+      height: 28px;
       margin: 0;
       accent-color: var(--accent);
       cursor: pointer;
       touch-action: manipulation;
+      appearance: none;
+      background: transparent;
     }
     .pass-slider:focus-visible {
-      outline: 3px solid rgba(36, 101, 84, .28);
+      outline: 3px solid rgba(212, 181, 108, .32);
       outline-offset: 3px;
+    }
+    .pass-slider::-webkit-slider-runnable-track {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(134, 185, 165, .34), rgba(212, 181, 108, .66), rgba(159, 82, 37, .74));
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .28);
+    }
+    .pass-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      margin-top: -7px;
+      border: 2px solid rgba(255, 248, 231, .94);
+      border-radius: 999px;
+      background: #d4b56c;
+      box-shadow:
+        0 7px 18px rgba(0, 0, 0, .34),
+        0 0 0 5px rgba(212, 181, 108, .16);
+    }
+    .pass-slider::-moz-range-track {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(134, 185, 165, .34), rgba(212, 181, 108, .66), rgba(159, 82, 37, .74));
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .28);
+    }
+    .pass-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(255, 248, 231, .94);
+      border-radius: 999px;
+      background: #d4b56c;
+      box-shadow:
+        0 7px 18px rgba(0, 0, 0, .34),
+        0 0 0 5px rgba(212, 181, 108, .16);
     }
     .pass-output-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      gap: 12px;
     }
     .pass-output {
+      position: relative;
       min-width: 0;
-      padding: 15px 18px;
-      border-right: 1px solid var(--line);
+      overflow: hidden;
+      border: 1px solid rgba(36, 101, 84, .12);
+      border-radius: 16px;
+      padding: 16px 16px 17px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 252, .94), rgba(245, 246, 240, .88)),
+        radial-gradient(circle at 100% 0%, rgba(36, 101, 84, .08), transparent 42%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
     }
-    .pass-output:last-child { border-right: 0; }
+    .pass-output::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, var(--metric-accent, var(--accent)), rgba(212, 181, 108, .28), transparent);
+    }
+    .pass-output:nth-child(1) { --metric-accent: #246554; }
+    .pass-output:nth-child(2) { --metric-accent: #9f5225; }
+    .pass-output:nth-child(3) { --metric-accent: #d4b56c; }
+    .pass-output:nth-child(4) { --metric-accent: #6f765f; }
+    .pass-output:last-child { border-right: 1px solid rgba(36, 101, 84, .12); }
     .pass-output strong {
       display: block;
-      margin-top: 6px;
-      font-size: 25px;
-      line-height: 1;
+      margin-top: 8px;
+      color: #17231f;
+      font-size: clamp(23px, 2.2vw, 29px);
+      line-height: .98;
       letter-spacing: 0;
       font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
     }
     .pass-band-wrap {
       display: grid;
-      gap: 9px;
-      padding: 0 18px;
+      gap: 11px;
+      border: 1px solid rgba(36, 101, 84, .12);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255, 253, 250, .72);
     }
     .pass-band {
       position: relative;
-      height: 10px;
+      height: 16px;
       overflow: hidden;
       border-radius: 999px;
-      background: rgba(217, 213, 202, .72);
+      background:
+        linear-gradient(180deg, rgba(220, 224, 215, .88), rgba(202, 207, 198, .78));
+      box-shadow: inset 0 1px 3px rgba(26, 30, 24, .16);
     }
     .pass-band-fill,
     .pass-band-mid {
@@ -453,13 +540,15 @@
     .pass-band-fill {
       left: var(--band-left, 0%);
       width: var(--band-width, 0%);
-      background: linear-gradient(90deg, rgba(36, 101, 84, .2), rgba(36, 101, 84, .86), rgba(159, 82, 37, .72));
+      background: linear-gradient(90deg, rgba(36, 101, 84, .2), rgba(36, 101, 84, .92), rgba(212, 181, 108, .8), rgba(159, 82, 37, .74));
+      box-shadow: 0 0 18px rgba(36, 101, 84, .2);
     }
     .pass-band-mid {
       left: var(--band-mid, 0%);
-      width: 2px;
-      transform: translateX(-1px);
-      background: var(--ink);
+      width: 4px;
+      transform: translateX(-2px);
+      background: #111711;
+      box-shadow: 0 0 0 3px rgba(255, 253, 250, .76);
     }
     .pass-band-labels {
       display: flex;
@@ -473,26 +562,27 @@
     .pass-chain {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      border-top: 1px solid rgba(217, 213, 202, .74);
+      gap: 12px;
     }
     .pass-chain-step {
       position: relative;
       min-width: 0;
-      padding: 15px 18px 17px;
-      border-right: 1px solid rgba(217, 213, 202, .74);
+      border: 1px solid rgba(36, 101, 84, .14);
+      border-radius: 16px;
+      padding: 15px 16px 16px;
+      background: linear-gradient(180deg, rgba(252, 251, 245, .92), rgba(239, 243, 236, .82));
     }
-    .pass-chain-step:last-child { border-right: 0; }
+    .pass-chain-step:last-child { border-right: 1px solid rgba(36, 101, 84, .14); }
     .pass-chain-step:not(:last-child)::after {
       content: "";
       position: absolute;
-      right: -5px;
+      right: -15px;
       top: 50%;
-      width: 9px;
-      height: 9px;
-      border-top: 1px solid rgba(96, 102, 93, .72);
-      border-right: 1px solid rgba(96, 102, 93, .72);
-      background: var(--panel);
-      transform: translateY(-50%) rotate(45deg);
+      width: 18px;
+      height: 1px;
+      border: 0;
+      background: linear-gradient(90deg, rgba(36, 101, 84, .36), rgba(212, 181, 108, .58));
+      transform: translateY(-50%);
       z-index: 1;
     }
     .pass-chain-step span {
@@ -506,7 +596,7 @@
     }
     .pass-chain-step strong {
       display: block;
-      margin-top: 6px;
+      margin-top: 7px;
       font-size: 16px;
       line-height: 1.3;
       overflow-wrap: anywhere;
@@ -514,8 +604,10 @@
     .pass-subsection {
       display: grid;
       gap: 14px;
-      border-top: 1px solid rgba(217, 213, 202, .74);
-      padding: 17px 18px 0;
+      border: 1px solid rgba(36, 101, 84, .12);
+      border-radius: 18px;
+      padding: 17px;
+      background: rgba(255, 253, 250, .7);
     }
     .pass-subhead {
       display: flex;
@@ -534,7 +626,7 @@
     }
     .pain-gap-rows {
       display: grid;
-      gap: 9px;
+      gap: 10px;
     }
     .pain-row {
       display: grid;
@@ -542,6 +634,10 @@
       gap: 12px;
       align-items: center;
       min-width: 0;
+      border: 1px solid rgba(36, 101, 84, .1);
+      border-radius: 14px;
+      padding: 11px 12px;
+      background: rgba(255, 255, 252, .7);
     }
     .pain-name {
       min-width: 0;
@@ -558,10 +654,11 @@
       font-variant-numeric: tabular-nums;
     }
     .pain-bar {
-      height: 8px;
+      height: 10px;
       overflow: hidden;
       border-radius: 999px;
-      background: rgba(217, 213, 202, .72);
+      background: rgba(210, 216, 205, .86);
+      box-shadow: inset 0 1px 2px rgba(26, 30, 24, .12);
     }
     .pain-fill {
       display: block;
@@ -571,24 +668,25 @@
       background: linear-gradient(90deg, rgba(36, 101, 84, .78), rgba(159, 82, 37, .82));
     }
     .pain-value {
-      color: var(--ink);
+      color: #17231f;
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
+      font-weight: 700;
       line-height: 1.3;
       text-align: right;
       font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
     }
     .bond-regime {
-      padding-bottom: 0;
+      padding-bottom: 17px;
     }
     .bond-regime-summary {
       display: grid;
       gap: 5px;
-      border: 1px solid rgba(217, 213, 202, .88);
+      border: 1px solid rgba(36, 101, 84, .14);
       border-radius: 14px;
       padding: 13px 14px;
-      background: rgba(245, 243, 237, .58);
+      background: linear-gradient(180deg, rgba(250, 250, 244, .9), rgba(237, 242, 235, .82));
     }
     .bond-regime-summary strong {
       font-size: 19px;
@@ -620,10 +718,11 @@
       letter-spacing: .08em;
     }
     .regime-meter {
-      height: 8px;
+      height: 10px;
       overflow: hidden;
       border-radius: 999px;
-      background: rgba(217, 213, 202, .72);
+      background: rgba(210, 216, 205, .86);
+      box-shadow: inset 0 1px 2px rgba(26, 30, 24, .12);
     }
     .regime-fill {
       display: block;
@@ -642,17 +741,16 @@
     .bond-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      border: 1px solid rgba(217, 213, 202, .88);
-      border-radius: 14px;
-      overflow: hidden;
+      gap: 10px;
     }
     .bond-cell {
       min-width: 0;
+      border: 1px solid rgba(36, 101, 84, .12);
+      border-radius: 14px;
       padding: 12px 13px;
-      border-right: 1px solid rgba(217, 213, 202, .88);
-      background: rgba(255, 253, 250, .66);
+      background: rgba(255, 255, 252, .72);
     }
-    .bond-cell:last-child { border-right: 0; }
+    .bond-cell:last-child { border-right: 1px solid rgba(36, 101, 84, .12); }
     .bond-cell strong {
       display: block;
       margin-top: 5px;
@@ -661,8 +759,12 @@
       overflow-wrap: anywhere;
     }
     .pass-caveat {
-      margin: -4px 18px 18px;
-      color: var(--muted);
+      margin: 0;
+      border: 1px solid rgba(36, 101, 84, .1);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(231, 234, 227, .58);
+      color: #596157;
       font-size: 13px;
       line-height: 1.45;
     }
@@ -1049,38 +1151,62 @@
       }
       .grid { grid-template-columns: 1fr; }
       .section { margin-top: 24px; }
-      .pass-panel { gap: 16px; }
-      .pass-control { padding: 16px 16px 0; }
+      .pass-panel {
+        gap: 12px;
+        padding: 14px;
+        border-radius: 20px;
+      }
+      .pass-control {
+        padding: 16px;
+        border-radius: 16px;
+      }
       .pass-slider-head { display: grid; gap: 8px; }
       .pass-source { text-align: left; }
       .viz-controls button { min-height: 36px; }
-      .pass-output-grid { grid-template-columns: 1fr; }
-      .pass-output,
-      .pass-output:nth-child(2n) { border-right: 0; }
-      .pass-output:nth-child(n + 2) { border-top: 1px solid var(--line); }
-      .pass-output { padding: 14px 16px; }
-      .pass-output strong { font-size: 22px; }
-      .pass-band-wrap { padding: 0 16px; }
-      .pass-chain { grid-template-columns: 1fr; }
-      .pass-chain-step {
-        border-right: 0;
-        border-bottom: 1px solid rgba(217, 213, 202, .74);
-        padding: 14px 16px;
+      .pass-output-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
       }
-      .pass-chain-step:last-child { border-bottom: 0; }
+      .pass-output,
+      .pass-output:nth-child(2n) {
+        border-right: 1px solid rgba(36, 101, 84, .12);
+      }
+      .pass-output:nth-child(n + 2) { border-top: 1px solid rgba(36, 101, 84, .12); }
+      .pass-output {
+        border-radius: 14px;
+        padding: 14px 15px;
+      }
+      .pass-output strong { font-size: 22px; }
+      .pass-band-wrap {
+        padding: 14px;
+      }
+      .pass-chain {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .pass-chain-step {
+        border-right: 1px solid rgba(36, 101, 84, .14);
+        border-bottom: 1px solid rgba(36, 101, 84, .14);
+        border-radius: 14px;
+        padding: 14px 15px;
+      }
+      .pass-chain-step:last-child { border-bottom: 1px solid rgba(36, 101, 84, .14); }
       .pass-chain-step:not(:last-child)::after { display: none; }
-      .pass-subsection { padding: 16px 16px 0; }
+      .pass-subsection {
+        padding: 15px;
+        border-radius: 16px;
+      }
       .pass-subhead { display: grid; gap: 8px; }
       .pass-subhead strong { text-align: left; }
       .pain-row {
         grid-template-columns: 1fr;
         gap: 7px;
-        border-top: 1px solid rgba(217, 213, 202, .62);
-        padding-top: 10px;
+        border-top: 1px solid rgba(36, 101, 84, .1);
+        padding: 10px;
       }
       .pain-row:first-child {
-        border-top: 0;
-        padding-top: 0;
+        border-top: 1px solid rgba(36, 101, 84, .1);
+        padding-top: 10px;
       }
       .pain-value { text-align: left; }
       .regime-row {
@@ -1088,13 +1214,16 @@
         gap: 8px;
       }
       .regime-row span:first-child { grid-column: 1 / -1; }
-      .bond-grid { grid-template-columns: 1fr; }
-      .bond-cell {
-        border-right: 0;
-        border-bottom: 1px solid rgba(217, 213, 202, .88);
+      .bond-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
-      .bond-cell:last-child { border-bottom: 0; }
-      .pass-caveat { margin: -2px 16px 16px; }
+      .bond-cell {
+        border-right: 1px solid rgba(36, 101, 84, .12);
+        border-bottom: 1px solid rgba(36, 101, 84, .12);
+      }
+      .bond-cell:last-child { border-bottom: 1px solid rgba(36, 101, 84, .12); }
+      .pass-caveat { margin: 0; }
       .hidden-link-board { padding: 8px; border-radius: 20px; }
       .hidden-link-list { grid-template-columns: 1fr; }
       .hidden-link-card { min-height: 0; gap: 8px; padding: 15px 16px; border-left: 0; }
