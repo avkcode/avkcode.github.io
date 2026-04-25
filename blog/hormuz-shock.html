@@ -368,6 +368,53 @@
     .viz-controls button[aria-pressed="true"] { background: #246554; color: #fffdfa; }
     .viz-controls button:hover { border-color: rgba(36, 101, 84, .48); }
     .viz-controls input[type="range"] { min-width: 220px; accent-color: #246554; }
+    #sectorCubeControls {
+      width: fit-content;
+      max-width: 100%;
+      gap: 4px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(36, 101, 84, .16);
+      border-radius: 999px;
+      padding: 5px;
+      background:
+        linear-gradient(180deg, rgba(255, 254, 249, .92), rgba(236, 241, 232, .84)),
+        radial-gradient(circle at 0% 0%, rgba(36, 101, 84, .08), transparent 34%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .82),
+        0 12px 28px rgba(26, 30, 24, .08);
+    }
+    #sectorCubeControls button {
+      position: relative;
+      min-width: 48px;
+      min-height: 34px;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 13px;
+      background: transparent;
+      color: #4d584f;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      font-variant-numeric: tabular-nums;
+      transition:
+        background-color 160ms ease,
+        color 160ms ease,
+        box-shadow 160ms ease,
+        transform 160ms ease;
+    }
+    #sectorCubeControls button:hover {
+      color: #173f35;
+      background: rgba(36, 101, 84, .07);
+    }
+    #sectorCubeControls button[aria-pressed="true"] {
+      background:
+        linear-gradient(180deg, #2d7867, #1f5d4f);
+      color: #fffdfa;
+      box-shadow:
+        0 8px 18px rgba(36, 101, 84, .22),
+        inset 0 1px 0 rgba(255, 255, 255, .18);
+      transform: translateY(-1px);
+    }
     .pass-panel {
       position: relative;
       display: grid;
@@ -811,6 +858,8 @@
       padding: 16px 18px;
       border-top: 1px solid var(--board-line);
       background: transparent;
+      cursor: zoom-in;
+      user-select: none;
       transition:
         background-color 180ms ease,
         box-shadow 180ms ease;
@@ -824,6 +873,15 @@
     .hidden-link-card:hover {
       background-color: rgba(255, 255, 255, .045);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+    }
+    .hidden-link-card:focus-visible {
+      z-index: 2;
+      outline: 3px solid color-mix(in srgb, var(--thread), white 20%);
+      outline-offset: -3px;
+      background-color: rgba(255, 255, 255, .06);
+    }
+    .hidden-link-card:active {
+      background-color: rgba(255, 255, 255, .07);
     }
     .hidden-link-card.agent-industrial { --thread: #86b9a5; }
     .hidden-link-card.agent-commodity { --thread: #d4b56c; }
@@ -897,6 +955,131 @@
       content: "/";
       margin-right: 8px;
       color: rgba(244, 241, 232, .32);
+    }
+    .link-modal[hidden] { display: none; }
+    .link-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .link-modal__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 16, 13, .58);
+      backdrop-filter: blur(10px) saturate(.92);
+    }
+    .link-modal__panel {
+      position: relative;
+      width: min(760px, 100%);
+      max-height: min(82vh, 760px);
+      overflow: auto;
+      border: 1px solid rgba(245, 243, 237, .16);
+      border-radius: 26px;
+      padding: 26px;
+      color: var(--board-ink);
+      background:
+        linear-gradient(150deg, rgba(43, 46, 39, .98), rgba(23, 25, 21, .98)),
+        radial-gradient(circle at 12% 0%, rgba(212, 181, 108, .14), transparent 32%);
+      box-shadow:
+        0 32px 90px rgba(0, 0, 0, .38),
+        inset 0 1px 0 rgba(255, 255, 255, .08);
+    }
+    .link-modal__panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      border-radius: 26px 26px 0 0;
+      background: linear-gradient(90deg, var(--modal-thread, var(--gold)), rgba(212, 181, 108, .22), rgba(134, 185, 165, .82));
+    }
+    .link-modal__close {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(244, 241, 232, .18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      color: rgba(244, 241, 232, .9);
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .link-modal__close:hover {
+      background: rgba(255, 255, 255, .1);
+    }
+    .link-modal__eyebrow {
+      max-width: calc(100% - 46px);
+      color: color-mix(in srgb, var(--modal-thread, var(--gold)), white 16%);
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+    .link-modal__title {
+      margin: 10px 46px 10px 0;
+      color: var(--board-ink);
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .link-modal__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .link-modal__meta span {
+      border: 1px solid rgba(244, 241, 232, .14);
+      border-radius: 999px;
+      padding: 7px 9px;
+      background: rgba(255, 255, 255, .055);
+      color: rgba(244, 241, 232, .7);
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1.1;
+    }
+    .link-modal__summary {
+      margin: 0 0 18px;
+      max-width: 66ch;
+      color: rgba(244, 241, 232, .78);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .link-modal__content {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .link-modal__read {
+      border: 1px solid rgba(244, 241, 232, .12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .045);
+    }
+    .link-modal__read h4 {
+      margin: 0 0 8px;
+      color: color-mix(in srgb, var(--modal-thread, var(--gold)), white 20%);
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      line-height: 1.25;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .link-modal__read p {
+      margin: 0;
+      color: rgba(244, 241, 232, .72);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    body.modal-open {
+      overflow: hidden;
     }
     .projection-panel {
       min-height: auto;
@@ -998,17 +1181,83 @@
     }
     .table-shell {
       overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: var(--panel);
-      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(36, 101, 84, .16);
+      border-radius: 22px;
+      padding: 10px;
+      background:
+        linear-gradient(180deg, rgba(255, 254, 249, .98), rgba(243, 246, 239, .96)),
+        radial-gradient(circle at 0% 0%, rgba(36, 101, 84, .08), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(212, 181, 108, .11), transparent 34%);
+      box-shadow:
+        0 18px 46px rgba(26, 30, 24, .1),
+        inset 0 1px 0 rgba(255, 255, 255, .78);
     }
-    table { width: 100%; min-width: 860px; table-layout: fixed; border-collapse: collapse; background: var(--panel); overflow: hidden; }
-    th, td { padding: 16px; border-bottom: 1px solid rgba(42, 47, 38, .1); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
-    th { background: var(--panel-2); font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #4b5048; }
-    tbody tr:last-child td { border-bottom: 0; }
-    tbody tr:hover td { background: rgba(36, 101, 84, .035); }
-    td:first-child { font-weight: 800; white-space: nowrap; }
+    table {
+      width: 100%;
+      min-width: 860px;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      background: transparent;
+      overflow: hidden;
+    }
+    th,
+    td {
+      padding: 16px;
+      border-bottom: 0;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+    th {
+      background: transparent;
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: #536056;
+    }
+    td {
+      background: rgba(255, 255, 252, .78);
+      border-top: 1px solid rgba(36, 101, 84, .1);
+      border-bottom: 1px solid rgba(36, 101, 84, .1);
+      color: #30372f;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    td:first-child {
+      border-left: 1px solid rgba(36, 101, 84, .1);
+      border-radius: 14px 0 0 14px;
+      color: #17231f;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    td:last-child {
+      border-right: 1px solid rgba(36, 101, 84, .1);
+      border-radius: 0 14px 14px 0;
+    }
+    td:nth-child(2) {
+      color: #24584b;
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    td:nth-child(4) {
+      color: #3d453b;
+      background:
+        linear-gradient(180deg, rgba(248, 249, 243, .88), rgba(240, 244, 236, .82));
+    }
+    tbody tr:last-child td {
+      border-bottom: 1px solid rgba(36, 101, 84, .1);
+    }
+    tbody tr:hover td {
+      background: rgba(255, 253, 247, .94);
+      border-color: rgba(36, 101, 84, .2);
+    }
+    tbody tr:hover td:nth-child(4) {
+      background: rgba(238, 244, 236, .9);
+    }
     .source-panel { padding: 20px; }
     .source-list { columns: 2; padding-left: 20px; margin: 0; }
     .source-list li { break-inside: avoid; margin-bottom: 9px; line-height: 1.45; }
@@ -1232,6 +1481,24 @@
       .hidden-link-card h3 { font-size: 16px; }
       .hidden-link-meta { flex-direction: column; gap: 6px; }
       .hidden-link-meta span + span::before { content: none; }
+      .link-modal {
+        align-items: end;
+        padding: 12px;
+      }
+      .link-modal__panel {
+        max-height: 88vh;
+        border-radius: 22px;
+        padding: 22px;
+      }
+      .link-modal__panel::before {
+        border-radius: 22px 22px 0 0;
+      }
+      .link-modal__content {
+        grid-template-columns: 1fr;
+      }
+      .link-modal__title {
+        margin-right: 42px;
+      }
       .projection-panel { padding: 0 18px; background: transparent; border: 0; box-shadow: none; }
       .projection-head { display: none; }
       .projection-row {
@@ -1312,7 +1579,6 @@
   <section class="section" id="oil-pass" aria-labelledby="oil-pass-heading">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Consumer channel</div>
         <h2 id="oil-pass-heading">Oil Shock Pass-Through</h2>
       </div>
     </div>
@@ -1380,7 +1646,6 @@
   <section class="section" id="countries">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Country ranking</div>
         <h2>World And Top 25 Country Exposure</h2>
       </div>
     </div>
@@ -1392,7 +1657,6 @@
   <section class="section" id="sectors">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Sector migration</div>
         <h2>Country x Sector Exposure Cube</h2>
       </div>
     </div>
@@ -1406,77 +1670,76 @@
   <section class="section" id="hidden-links" aria-labelledby="hidden-link-board-heading">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Second-order effects</div>
         <h2 id="hidden-link-board-heading">Hidden Link Discovery Board</h2>
       </div>
     </div>
     <p class="viz-note">Built with a bespoke agentic framework: industrial-chain, commodity-input, crop-calendar, fiscal-stress, local-language, insurance, shipping-flow, and trade-finance agents each searched one failure channel. The multi-agent setup improves coverage and cross-checking, but it still needs expert review; agents can raise the odds of valid data and conclusions, not replace domain judgment or the finer insight an expert brings.</p>
     <div class="hidden-link-board">
       <ul class="hidden-link-list">
-        <li class="hidden-link-card agent-industrial">
+        <li class="hidden-link-card agent-industrial" data-link-id="ammonia-cold-chain" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for ammonia availability to cold-chain and chemicals">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>industrial-chain-agent</span></div>
           </div>
           <h3>Ammonia availability to cold-chain and chemicals</h3>
           <div class="hidden-link-meta"><span>1-4 months</span><span>India / cold chain and fertilizer</span></div>
         </li>
-        <li class="hidden-link-card agent-commodity">
+        <li class="hidden-link-card agent-commodity" data-link-id="ammonia-urea-food" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for ammonia to urea to food-price lag">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>commodity-input-agent</span></div>
           </div>
           <h3>Ammonia to urea to food-price lag</h3>
           <div class="hidden-link-meta"><span>3-9 months</span><span>India / rice and wheat</span></div>
         </li>
-        <li class="hidden-link-card agent-crop">
+        <li class="hidden-link-card agent-crop" data-link-id="fertilizer-planting-window" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for fertilizer delay to missed planting window">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>crop-calendar-agent</span></div>
           </div>
           <h3>Fertilizer delay to missed planting window</h3>
           <div class="hidden-link-meta"><span>Crop season, usually 3-9 months</span><span>Brazil / soybean and second-crop corn</span></div>
         </li>
-        <li class="hidden-link-card agent-fiscal">
+        <li class="hidden-link-card agent-fiscal" data-link-id="fiscal-subsidy-spread" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for fuel and food subsidies to sovereign-risk spread">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>fiscal-stress-agent</span></div>
           </div>
           <h3>Fuel and food subsidies to sovereign-risk spread</h3>
           <div class="hidden-link-meta"><span>1-6 months</span><span>Egypt / bread and fuel subsidies</span></div>
         </li>
-        <li class="hidden-link-card agent-industrial">
+        <li class="hidden-link-card agent-industrial" data-link-id="lng-industry-margins" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for LNG disruption to power-sensitive industry margins">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>industrial-chain-agent</span></div>
           </div>
           <h3>LNG disruption to power-sensitive industry margins</h3>
           <div class="hidden-link-meta"><span>2 weeks to 6 months</span><span>Germany / chemicals and data centers</span></div>
         </li>
-        <li class="hidden-link-card agent-local">
+        <li class="hidden-link-card agent-local" data-link-id="local-language-repricing" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for local-language notices before global market repricing">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>local-language-agent</span></div>
           </div>
           <h3>Local-language notices before global market repricing</h3>
           <div class="hidden-link-meta"><span>Days to 8 weeks</span><span>Egypt / wheat and bread subsidy</span></div>
         </li>
-        <li class="hidden-link-card agent-insurance">
+        <li class="hidden-link-card agent-insurance" data-link-id="insurance-practical-closure" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for officially open route becomes practically unusable">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>insurance-agent</span></div>
           </div>
           <h3>Officially open route becomes practically unusable</h3>
           <div class="hidden-link-meta"><span>Days to 2 months</span><span>Singapore / shipping and trade finance</span></div>
         </li>
-        <li class="hidden-link-card agent-shipping">
+        <li class="hidden-link-card agent-shipping" data-link-id="shipping-refrigerated-inflation" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for port congestion to refrigerated food inflation">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>shipping-flow-agent</span></div>
           </div>
           <h3>Port congestion to refrigerated food inflation</h3>
           <div class="hidden-link-meta"><span>2-8 weeks</span><span>Egypt / food imports</span></div>
         </li>
-        <li class="hidden-link-card agent-commodity">
+        <li class="hidden-link-card agent-commodity" data-link-id="sulfur-phosphate-food" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for sulfur to phosphate fertilizer to food prices">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>commodity-input-agent</span></div>
           </div>
           <h3>Sulfur to phosphate fertilizer to food prices</h3>
           <div class="hidden-link-meta"><span>One planting cycle</span><span>India / fertilizer subsidies</span></div>
         </li>
-        <li class="hidden-link-card agent-trade">
+        <li class="hidden-link-card agent-trade" data-link-id="trade-finance-lc" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open agent dossier for war-risk insurance to letter-of-credit friction">
           <div class="hidden-link-card-head">
             <div class="hidden-link-agent"><span>trade-finance-agent</span></div>
           </div>
@@ -1490,7 +1753,6 @@
   <section class="section" id="industry-projection">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Industry watchlist</div>
         <h2>Non-Obvious Industry Projection</h2>
       </div>
     </div>
@@ -1501,7 +1763,6 @@
   <section class="section" id="scenario-matrix">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Receipts</div>
         <h2>Scenario Matrix</h2>
       </div>
     </div>
@@ -1517,7 +1778,6 @@
   <section class="section">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Method</div>
         <h2>Model Notes</h2>
       </div>
     </div>
@@ -1533,7 +1793,6 @@
   <section class="section">
     <div class="section-head">
       <div>
-        <div class="label section-kicker">Evidence</div>
         <h2>Sources</h2>
       </div>
     </div>
@@ -1544,6 +1803,20 @@
     </div>
   </section>
 </main>
+<div class="link-modal" id="hiddenLinkModal" role="dialog" aria-modal="true" aria-labelledby="hiddenLinkModalTitle" hidden>
+  <div class="link-modal__backdrop" data-link-modal-close></div>
+  <div class="link-modal__panel" id="hiddenLinkModalPanel" role="document">
+    <button class="link-modal__close" type="button" aria-label="Close agent dossier" data-link-modal-close>&times;</button>
+    <div class="link-modal__eyebrow" id="hiddenLinkModalAgent"></div>
+    <h3 class="link-modal__title" id="hiddenLinkModalTitle"></h3>
+    <div class="link-modal__meta" aria-label="Agent dossier metadata">
+      <span id="hiddenLinkModalHorizon"></span>
+      <span id="hiddenLinkModalFocus"></span>
+    </div>
+    <p class="link-modal__summary" id="hiddenLinkModalSummary"></p>
+    <div class="link-modal__content" id="hiddenLinkModalContent"></div>
+  </div>
+</div>
 <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
 <script id="oil-pass-data" type="application/json">{
   "baselineOil": 91.06,
@@ -13029,6 +13302,206 @@
   const oilPassData = JSON.parse(document.getElementById("oil-pass-data").textContent);
   const riskColor = d3.scaleLinear().domain([35, 62, 85]).range(["#246554", "#b86b2b", "#8a341f"]).clamp(true);
   const tooltip = d3.select("#tooltip");
+  const hiddenLinkDetails = {
+    "ammonia-cold-chain": {
+      agent: "industrial-chain-agent",
+      title: "Ammonia availability to cold-chain and chemicals",
+      horizon: "1-4 months",
+      focus: "India / cold chain and fertilizer",
+      summary: "This path treats ammonia as both an industrial input and a refrigeration dependency. A gas-price shock can tighten ammonia economics, then show up in cold-storage reliability, fertilizer blending, and chemical intermediate margins before it is visible in headline food data.",
+      reads: [
+        ["Transmission", "Gas and LNG pressure raises ammonia production cost, import parity, and working-capital needs for downstream users."],
+        ["Why it matters", "Cold-chain stress can convert a commodity shock into spoilage, inventory loss, and regional food-price dispersion."],
+        ["Early signals", "Watch ammonia import quotes, fertilizer allocation notices, cold-storage operating updates, and port dwell time for temperature-controlled cargo."],
+        ["Failure mode", "The signal can look like a logistics problem even when the root cause is upstream input availability and financing."]
+      ]
+    },
+    "ammonia-urea-food": {
+      agent: "commodity-input-agent",
+      title: "Ammonia to urea to food-price lag",
+      horizon: "3-9 months",
+      focus: "India / rice and wheat",
+      summary: "The important delay is not the first commodity print. Ammonia moves into urea cost and availability, then into application rates, farmer purchase timing, crop condition, procurement prices, and finally consumer food inflation.",
+      reads: [
+        ["Transmission", "Higher ammonia and urea costs can force subsidy decisions or rationed allocation before retail food prices respond."],
+        ["Why it matters", "A stable rice or wheat price today can hide a future margin squeeze in fertilizer and public procurement budgets."],
+        ["Early signals", "Track urea tender volumes, subsidy arrears, dealer inventory, monsoon application windows, and minimum-support-price debates."],
+        ["Failure mode", "The lag can be mistaken for no impact until the planting and procurement calendar has already locked in the stress."]
+      ]
+    },
+    "fertilizer-planting-window": {
+      agent: "crop-calendar-agent",
+      title: "Fertilizer delay to missed planting window",
+      horizon: "Crop season, usually 3-9 months",
+      focus: "Brazil / soybean and second-crop corn",
+      summary: "Crop calendars create hard deadlines. A fertilizer cargo that arrives after the agronomic window is not simply late inventory; it can change application rates, yield risk, and acreage economics for the whole season.",
+      reads: [
+        ["Transmission", "Shipping delays, higher freight, and fertilizer financing stress can collide with narrow soybean and safrinha corn timing."],
+        ["Why it matters", "A one-month logistics problem can become a full-cycle crop problem if it hits the wrong application window."],
+        ["Early signals", "Monitor fertilizer import lineups, Paranagua congestion, barter-credit terms, planting progress, and distributor inventory."],
+        ["Failure mode", "Spot fertilizer prices can normalize after the damage is already embedded in crop condition and yield expectations."]
+      ]
+    },
+    "fiscal-subsidy-spread": {
+      agent: "fiscal-stress-agent",
+      title: "Fuel and food subsidies to sovereign-risk spread",
+      horizon: "1-6 months",
+      focus: "Egypt / bread and fuel subsidies",
+      summary: "This is the fiscal shadow of the consumer shock. Fuel and bread subsidies can mute visible household pass-through, but the cost often reappears as budget pressure, import-financing strain, arrears risk, and wider sovereign spreads.",
+      reads: [
+        ["Transmission", "Higher oil, wheat, freight, and insurance costs raise the bill for subsidized essentials while FX and reserve buffers are being tested."],
+        ["Why it matters", "Markets can reprice the sovereign before consumers see the full price signal because the state absorbs the first-round shock."],
+        ["Early signals", "Watch fuel-price committee decisions, bread-subsidy language, GASC wheat tenders, reserve data, IMF review timing, and Eurobond or CDS moves."],
+        ["Failure mode", "A calm retail price can be misread as stability when the stress has moved from household CPI into the sovereign balance sheet."]
+      ]
+    },
+    "lng-industry-margins": {
+      agent: "industrial-chain-agent",
+      title: "LNG disruption to power-sensitive industry margins",
+      horizon: "2 weeks to 6 months",
+      focus: "Germany / chemicals and data centers",
+      summary: "The channel is margin compression rather than simple energy shortage. LNG scarcity can lift gas and power costs, then force industrial users to choose between lower utilization, hedging losses, and customer price resets.",
+      reads: [
+        ["Transmission", "Spot gas, power balancing costs, and procurement uncertainty flow into chemicals, glass, metals, cold storage, and data-center power contracts."],
+        ["Why it matters", "Even without rationing, margin-sensitive plants can reduce output when energy volatility breaks working-capital and customer-pricing assumptions."],
+        ["Early signals", "Look for gas-storage draw, day-ahead power spikes, industrial curtailment notices, margin warnings, and changes in data-center power procurement."],
+        ["Failure mode", "A national supply buffer can coexist with firm-level stress if the issue is price volatility, not physical availability."]
+      ]
+    },
+    "local-language-repricing": {
+      agent: "local-language-agent",
+      title: "Local-language notices before global market repricing",
+      horizon: "Days to 8 weeks",
+      focus: "Egypt / wheat and bread subsidy",
+      summary: "Local notices often move before English-language market summaries. Procurement circulars, subsidy language, port instructions, and ministry comments can reveal operational stress while global coverage is still focused on crude benchmarks.",
+      reads: [
+        ["Transmission", "Arabic-language notices can surface rationing, tender delays, payment terms, or subsidy edits before they become international headlines."],
+        ["Why it matters", "The market reprices faster when local administrative language confirms that the shock has moved from prices into policy action."],
+        ["Early signals", "Track ministry statements, GASC tender details, port notices, bakery union comments, and local press references to bread or wheat allocation."],
+        ["Failure mode", "Machine translation can overstate signal quality, so notices need source ranking and cross-checking against actual tenders or decrees."]
+      ]
+    },
+    "insurance-practical-closure": {
+      agent: "insurance-agent",
+      title: "Officially open route becomes practically unusable",
+      horizon: "Days to 2 months",
+      focus: "Singapore / shipping and trade finance",
+      summary: "A route can remain legally open while becoming commercially closed. War-risk premiums, crew restrictions, charter-party clauses, lender conditions, and insurer exclusions can stop cargo flows without a formal blockade.",
+      reads: [
+        ["Transmission", "Insurance cost and coverage certainty feed directly into charter rates, letter-of-credit terms, and whether cargo owners accept the voyage."],
+        ["Why it matters", "Singapore is exposed through bunkering, trading desks, ship finance, marine insurance, and rerouted working capital."],
+        ["Early signals", "Watch war-risk premium quotes, P&I club circulars, charter-party deviations, fixture cancellations, and bank documentation requirements."],
+        ["Failure mode", "Counting open sea lanes can understate stress when the binding constraint is insurability and financeability."]
+      ]
+    },
+    "shipping-refrigerated-inflation": {
+      agent: "shipping-flow-agent",
+      title: "Port congestion to refrigerated food inflation",
+      horizon: "2-8 weeks",
+      focus: "Egypt / food imports",
+      summary: "Refrigerated food is sensitive to time, port power, and customs friction. Rerouting and congestion can push chilled cargo into demurrage, spoilage, and emergency replacement purchases that show up faster than broader goods inflation.",
+      reads: [
+        ["Transmission", "Longer routes and port queues raise reefer plug time, storage cost, demurrage, and working capital for importers."],
+        ["Why it matters", "Cold-chain disruption can make a logistics shock visible in household food baskets before the macro data catches up."],
+        ["Early signals", "Monitor reefer container availability, port dwell time, customs release speed, importer payment terms, and cold-storage utilization."],
+        ["Failure mode", "A small tonnage share can still carry a large price signal if the affected products are perishable and politically sensitive."]
+      ]
+    },
+    "sulfur-phosphate-food": {
+      agent: "commodity-input-agent",
+      title: "Sulfur to phosphate fertilizer to food prices",
+      horizon: "One planting cycle",
+      focus: "India / fertilizer subsidies",
+      summary: "Sulfur is a quiet upstream dependency for phosphate fertilizer through sulfuric acid. Refining, shipping, and regional allocation stress can raise phosphate costs, then move through subsidy budgets and planting decisions.",
+      reads: [
+        ["Transmission", "Sulfur availability and sulfuric-acid economics affect DAP and phosphate fertilizer cost, especially when freight and FX are also stressed."],
+        ["Why it matters", "The visible food-price channel can begin in an input most readers do not associate with crops or household inflation."],
+        ["Early signals", "Watch sulfur price spreads, DAP import tenders, subsidy-revision language, dealer stock, and farmer application timing."],
+        ["Failure mode", "If analysis only watches crude and wheat, it can miss fertilizer input stress that appears one crop cycle later."]
+      ]
+    },
+    "trade-finance-lc": {
+      agent: "trade-finance-agent",
+      title: "War-risk insurance to letter-of-credit friction",
+      horizon: "Days to 6 weeks",
+      focus: "Pakistan / fuel and fertilizer imports",
+      summary: "The constraint can move from ships to paperwork. Higher war-risk insurance and uncertain delivery windows make banks more cautious, raising confirmation costs and slowing letters of credit for essential imports.",
+      reads: [
+        ["Transmission", "Insurance, freight, FX liquidity, and bank risk appetite combine into tighter payment terms for fuel and fertilizer cargoes."],
+        ["Why it matters", "A country can find cargo but still struggle to finance it on usable terms during a fast-moving shipping shock."],
+        ["Early signals", "Track LC confirmation fees, tender cancellations, supplier credit terms, central-bank FX guidance, and refinery inventory cover."],
+        ["Failure mode", "Headline import volumes may look stable until one payment cycle fails and replacement cargoes require worse terms."]
+      ]
+    }
+  };
+  const hiddenLinkModal = document.getElementById("hiddenLinkModal");
+  const hiddenLinkModalPanel = document.getElementById("hiddenLinkModalPanel");
+  const hiddenLinkModalAgent = document.getElementById("hiddenLinkModalAgent");
+  const hiddenLinkModalTitle = document.getElementById("hiddenLinkModalTitle");
+  const hiddenLinkModalHorizon = document.getElementById("hiddenLinkModalHorizon");
+  const hiddenLinkModalFocus = document.getElementById("hiddenLinkModalFocus");
+  const hiddenLinkModalSummary = document.getElementById("hiddenLinkModalSummary");
+  const hiddenLinkModalContent = document.getElementById("hiddenLinkModalContent");
+  const hiddenLinkModalClose = hiddenLinkModal ? hiddenLinkModal.querySelector(".link-modal__close") : null;
+  let hiddenLinkLastFocus = null;
+  const setModalText = (element, value) => {
+    if (element) element.textContent = value;
+  };
+  const makeModalRead = (label, text) => {
+    const item = document.createElement("div");
+    item.className = "link-modal__read";
+    const title = document.createElement("h4");
+    title.textContent = label;
+    const body = document.createElement("p");
+    body.textContent = text;
+    item.appendChild(title);
+    item.appendChild(body);
+    return item;
+  };
+  const openHiddenLinkModal = (id, card) => {
+    if (!hiddenLinkModal || !hiddenLinkModalContent) return;
+    const detail = hiddenLinkDetails[id];
+    if (!detail) return;
+    hiddenLinkLastFocus = document.activeElement;
+    const thread = card ? getComputedStyle(card).getPropertyValue("--thread").trim() : "";
+    if (hiddenLinkModalPanel && thread) hiddenLinkModalPanel.style.setProperty("--modal-thread", thread);
+    setModalText(hiddenLinkModalAgent, detail.agent);
+    setModalText(hiddenLinkModalTitle, detail.title);
+    setModalText(hiddenLinkModalHorizon, detail.horizon);
+    setModalText(hiddenLinkModalFocus, detail.focus);
+    setModalText(hiddenLinkModalSummary, detail.summary);
+    hiddenLinkModalContent.textContent = "";
+    detail.reads.forEach(read => hiddenLinkModalContent.appendChild(makeModalRead(read[0], read[1])));
+    hiddenLinkModal.hidden = false;
+    document.body.classList.add("modal-open");
+    if (hiddenLinkModalClose) hiddenLinkModalClose.focus();
+  };
+  const closeHiddenLinkModal = () => {
+    if (!hiddenLinkModal || hiddenLinkModal.hidden) return;
+    hiddenLinkModal.hidden = true;
+    document.body.classList.remove("modal-open");
+    if (hiddenLinkLastFocus && typeof hiddenLinkLastFocus.focus === "function") hiddenLinkLastFocus.focus();
+  };
+  document.querySelectorAll(".hidden-link-card[data-link-id]").forEach(card => {
+    card.addEventListener("dblclick", event => {
+      event.preventDefault();
+      openHiddenLinkModal(card.dataset.linkId, card);
+    });
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openHiddenLinkModal(card.dataset.linkId, card);
+      }
+    });
+  });
+  if (hiddenLinkModal) {
+    hiddenLinkModal.addEventListener("click", event => {
+      if (event.target && event.target.hasAttribute("data-link-modal-close")) closeHiddenLinkModal();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeHiddenLinkModal();
+    });
+  }
   const oilPassSlider = document.getElementById("oilPassSlider");
   if (oilPassSlider) {
     const oilFormat = new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0});
