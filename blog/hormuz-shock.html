@@ -77,9 +77,8 @@
     header {
       position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(280px, .68fr);
-      gap: 28px;
-      align-items: end;
+      grid-template-columns: minmax(0, 1fr);
+      place-items: center;
       overflow: hidden;
       border: 1px solid rgba(245, 243, 237, .13);
       border-radius: var(--radius-lg);
@@ -108,6 +107,7 @@
       align-self: center;
       justify-self: center;
       text-align: center;
+      max-width: 760px;
     }
     .hero-back-link {
       position: absolute;
@@ -135,13 +135,28 @@
     }
     h1 {
       margin: 0;
-      max-width: 640px;
-      font-size: clamp(38px, 6vw, 76px);
-      line-height: .94;
+      max-width: 760px;
+      color: #f8f4e8;
+      font-size: 82px;
+      font-weight: 800;
+      line-height: .86;
       letter-spacing: 0;
       overflow-wrap: anywhere;
-      text-shadow: 0 2px 18px rgba(0, 0, 0, .62);
+      text-transform: uppercase;
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, .72),
+        0 18px 46px rgba(0, 0, 0, .48);
       text-wrap: balance;
+    }
+    h1::after {
+      content: "";
+      display: block;
+      width: 184px;
+      height: 2px;
+      margin: 22px auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(212, 181, 108, 0), var(--gold), rgba(134, 185, 165, .94), rgba(212, 181, 108, 0));
+      box-shadow: 0 0 24px rgba(212, 181, 108, .28);
     }
     h1 > span { display: block; }
     h1 .title-part { display: inline; }
@@ -162,38 +177,72 @@
       font-size: 18px;
       line-height: 1.55;
     }
-    .hero-panel {
-      min-width: 0;
-      border: 1px solid rgba(244, 241, 232, .22);
-      border-radius: 20px;
-      padding: 18px;
-      background: rgba(7, 12, 15, .58);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
-      backdrop-filter: blur(14px) saturate(1.1);
+    .hero-contact {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
     }
-    .hero-panel .label { color: rgba(244, 241, 232, .58); }
+    .hero-contact a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid rgba(244, 241, 232, .22);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(7, 12, 15, .52);
+      color: var(--board-ink);
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1;
+      text-decoration: none;
+      backdrop-filter: blur(12px) saturate(1.1);
+    }
+    .hero-contact a:hover {
+      background: rgba(7, 12, 15, .72);
+    }
+    .stress-frame {
+      display: grid;
+      grid-template-columns: minmax(210px, .48fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: stretch;
+      background: var(--board-surface);
+      color: var(--board-ink);
+      border-color: rgba(23, 25, 21, .2);
+    }
+    .stress-frame .label { color: rgba(244, 241, 232, .58); }
     .hero-stat {
       margin-top: 10px;
       font-size: 32px;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
-    .hero-panel p {
+    .stress-frame p {
       margin: 10px 0 0;
       color: rgba(244, 241, 232, .68);
       font-size: 14px;
     }
+    .stress-frame .tournament-note {
+      border-top: 1px solid rgba(244, 241, 232, .12);
+      padding-top: 10px;
+    }
+    .stress-frame .tournament-note strong {
+      color: var(--board-ink);
+    }
     .hero-rail {
       display: grid;
       gap: 10px;
-      margin-top: 18px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 0;
     }
     .hero-rail div {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      border-top: 1px solid rgba(244, 241, 232, .12);
-      padding-top: 10px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      border-left: 1px solid rgba(244, 241, 232, .12);
+      border-top: 0;
+      padding: 2px 0 2px 14px;
       color: rgba(244, 241, 232, .72);
       font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
@@ -205,7 +254,7 @@
     .hero-rail dd {
       color: var(--board-ink);
       font-weight: 700;
-      text-align: right;
+      text-align: left;
     }
     .grid {
       display: grid;
@@ -892,31 +941,44 @@
       h1 {
         max-width: 100%;
         margin-top: 36px;
-        font-size: 31px;
-        line-height: 1.02;
+        font-size: 40px;
+        line-height: .94;
         text-wrap: wrap;
         overflow-wrap: break-word;
         word-break: normal;
+      }
+      h1::after {
+        width: 126px;
+        margin-top: 16px;
       }
       h1 .title-part {
         display: block;
       }
       .dek { font-size: 16px; }
-      .hero-panel {
-        width: calc(100vw - 72px);
-        max-width: calc(100vw - 72px);
-        overflow: hidden;
+      .hero-contact a {
+        max-width: 100%;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
       }
-      .hero-panel * {
+      .stress-frame {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .stress-frame * {
         min-width: 0;
       }
-      .hero-panel p {
+      .stress-frame p {
         font-size: 13px;
         overflow-wrap: break-word;
       }
+      .hero-rail {
+        grid-template-columns: 1fr;
+      }
       .hero-rail div {
-        display: grid;
         gap: 4px;
+        border-left: 0;
+        border-top: 1px solid rgba(244, 241, 232, .12);
+        padding: 10px 0 0;
       }
       .hero-rail dd {
         text-align: left;
@@ -1015,20 +1077,30 @@
     <a class="hero-back-link" href="./index.html">Back to blog</a>
     <div class="hero-title-block">
       <h1>Hormuz Shock</h1>
+      <div class="hero-contact" aria-label="Author contact">
+        <a href="mailto:antonnvkrylov@gmail.com">antonnvkrylov@gmail.com</a>
+        <a href="https://t.me/akrylof">@akrylof</a>
+      </div>
     </div>
-    <aside class="hero-panel" aria-label="Scenario frame">
-      <div class="label">Stress frame</div>
-      <div class="hero-stat">1-12 months</div>
-      <p>Uses EIA, IEA, Dallas Fed, FRED/EIA, BLS, and IMF inputs to separate direct model paths from interpolated horizons.</p>
+  </header>
+
+  <section class="section report-legend" id="report-content" aria-labelledby="stress-frame-heading">
+    <aside class="panel stress-frame" aria-label="Scenario frame">
+      <div>
+        <div class="label" id="stress-frame-heading">Stress frame</div>
+        <div class="hero-stat">1-12 months</div>
+        <p>Uses EIA, IEA, Dallas Fed, FRED/EIA, BLS, and IMF inputs to separate direct model paths from interpolated horizons.</p>
+        <p class="tournament-note"><strong>Tournament pattern:</strong> specialist agents generated competing country, sector, and horizon reads, challenged each other against source evidence, then a judge pass selected the strongest thread for the final report.</p>
+      </div>
       <dl class="hero-rail">
         <div><dt>Primary channel</dt><dd>Oil and LNG</dd></div>
         <div><dt>Peak WTI path</dt><dd>$132/bbl</dd></div>
         <div><dt>Highest country stress</dt><dd>Singapore</dd></div>
       </dl>
     </aside>
-  </header>
+  </section>
 
-  <section class="grid" id="report-content" aria-label="Core exposure metrics">
+  <section class="grid" aria-label="Core exposure metrics">
     <article class="panel metric-card"><div class="label">Oil through Hormuz</div><div class="metric">20.9 mb/d</div><p>EIA 1H25 flow estimate, roughly one-fifth of global petroleum liquids consumption.</p></article><article class="panel metric-card"><div class="label">Bypass capacity</div><div class="metric">3.5-5.5 mb/d</div><p>IEA range for pipeline alternatives; EIA cites about 4.7 mb/d from Saudi and UAE lines.</p></article><article class="panel metric-card"><div class="label">LNG exposure</div><div class="metric">~20%</div><p>IEA and EIA show around one-fifth of global LNG supply or trade exposed through the Strait.</p></article>
   </section>
 
