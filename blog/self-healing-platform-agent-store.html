@@ -187,26 +187,31 @@
           <a class="back" href="./index.html">Back to Blog</a>
           <h1>The Self Healing Platform and the Agent Store</h1>
           <p class="deck">
-            A lot of AI work still stops at chat. The more interesting shape is a system that watches state,
-            remembers what matters, and acts inside bounded control surfaces. That is where infrastructure starts to
-            make sense for agents.
+            I think DevOps as a separate identity, and a lot of agile ceremony around it, are already a bit obsolete.
+            Engineers are doing development, operations, and lightweight management at the same time. The real
+            leverage point now is platform engineering, and cloud infrastructure is a very good substrate for it.
           </p>
         </header>
 
         <section class="content">
           <h2>The fit</h2>
           <p>
-            Agentic AI is a much better fit for infrastructure than for most consumer workflows because infrastructure
-            is already expressed as APIs, objects, policies, and state transitions. Kubernetes is the clearest
-            example. Pods, deployments, services, events, and rollout status are all available through a typed control
-            surface. The same is true for most cloud systems. DNS, load balancers, queues, storage, certificates, and
-            identity controls are exposed through APIs instead of hidden behind manual operator rituals.
+            The reason this matters is simple. A lot of what used to be split across dev, ops, and agile management is
+            now part of one engineering loop. The same person writes code, ships it, watches it, debugs it, and makes
+            prioritization calls while the system is live. That makes platform engineering more relevant, not less.
+            Somebody has to build the substrate where that loop stays legible, safe, and fast.
           </p>
           <p>
-            That matters because an agent can work against a real model of the system instead of screen scraping or
-            guessing from text alone. It can ask bounded questions. What pods belong to this workload. What changed in
-            this rollout. What is ready. What restarted. What event touched this object. Which action is allowed by
-            policy. That makes Kubernetes and cloud platforms a very strong substrate for serious agent work.
+            Kubernetes is the clearest example. Pods, deployments, services, events, rollout status, and permissions
+            are all available through a typed control surface. The same is true for most cloud systems. DNS, load
+            balancers, queues, storage, certificates, and identity controls are exposed through APIs instead of hidden
+            behind manual operator rituals. That makes cloud and Kubernetes close to a perfect fit for agentic work.
+          </p>
+          <p>
+            An agent can work against a real model of the system instead of screen scraping or guessing from text
+            alone. It can ask bounded questions. What pods belong to this workload. What changed in this rollout. What
+            is ready. What restarted. What event touched this object. Which action is allowed by policy. That is why
+            infrastructure feels much more native for agents than most consumer software.
           </p>
 
           <h2>The agent store</h2>
