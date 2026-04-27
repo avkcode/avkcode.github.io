@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Self Healing Platform and the Agent Store</title>
+    <meta
+      name="description"
+      content="Why agentic AI fits API driven infrastructure, what an agent store actually does, and how a self healing loop works in practice."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/self-healing-platform-agent-store.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The Self Healing Platform and the Agent Store" />
+    <meta
+      property="og:description"
+      content="A direct explanation of why API driven infrastructure is a strong fit for agents, how durable context works, and what a self healing loop looks like."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/self-healing-platform-agent-store.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <style>
+      :root {
+        --ink: #f7ecd3;
+        --text: #e0d2b8;
+        --muted: #ae9c7a;
+        --paper: #16101d;
+        --line: rgba(212, 169, 90, 0.22);
+        --line-strong: rgba(212, 169, 90, 0.42);
+        --accent: #d4a95a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(106, 63, 130, 0.28), transparent 34%),
+          radial-gradient(circle at 100% 100%, rgba(212, 169, 90, 0.12), transparent 42%),
+          linear-gradient(180deg, #0c0810 0%, var(--paper) 48%, #08060c 100%);
+        color: var(--text);
+      }
+
+      body {
+        font-family: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.72;
+        letter-spacing: 0.005em;
+      }
+
+      .frame {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 46px 24px 90px;
+      }
+
+      .article {
+        background: linear-gradient(180deg, rgba(41, 28, 52, 0.97), rgba(22, 16, 29, 0.98));
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        box-shadow:
+          0 30px 70px rgba(0, 0, 0, 0.48),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+      }
+
+      .hero {
+        position: relative;
+        padding: 42px 48px 34px;
+        border-bottom: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 18% 0%, rgba(106, 63, 130, 0.34), transparent 46%),
+          radial-gradient(circle at 82% 18%, rgba(212, 169, 90, 0.14), transparent 30%),
+          linear-gradient(165deg, rgba(58, 40, 74, 0.97) 0%, rgba(37, 26, 49, 0.95) 62%, rgba(23, 17, 31, 0.95) 100%);
+      }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 18px;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 0.86rem;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .back:hover {
+        color: var(--accent);
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--ink);
+        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+        font-weight: 500;
+        font-size: clamp(2.2rem, 6vw, 3.6rem);
+        line-height: 1.14;
+        letter-spacing: 0.01em;
+        max-width: 14ch;
+        text-wrap: balance;
+      }
+
+      .deck {
+        margin: 14px 0 0;
+        max-width: 61ch;
+        color: #cab894;
+        font-size: 1rem;
+      }
+
+      .content {
+        padding: 38px 48px 52px;
+      }
+
+      h2 {
+        margin: 52px 0 12px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+        font-family: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+        font-weight: 500;
+        font-size: 1.62rem;
+        line-height: 1.25;
+        color: var(--ink);
+      }
+
+      p {
+        margin: 0 0 16px;
+        font-size: 1.02rem;
+        max-width: 70ch;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      a:hover {
+        color: #f6ddb0;
+      }
+
+      code {
+        font-family: "SF Mono", "Menlo", "Consolas", monospace;
+        font-size: 0.93em;
+        background: rgba(106, 63, 130, 0.16);
+        color: #f6e8c8;
+        border: 1px solid rgba(212, 169, 90, 0.28);
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+
+      .media-shot {
+        margin: 18px 0 24px;
+        max-width: 84ch;
+      }
+
+      .media-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        border: 1px solid var(--line-strong);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+      }
+
+      .note {
+        margin-top: 20px;
+        padding: 12px 14px;
+        border: 1px solid var(--line-strong);
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(106, 63, 130, 0.14), rgba(212, 169, 90, 0.08));
+        color: #ecdfc4;
+        max-width: 84ch;
+      }
+
+      @media (max-width: 760px) {
+        .hero,
+        .content {
+          padding: 24px 20px;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+  </head>
+  <body class="article-page">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <h1>The Self Healing Platform and the Agent Store</h1>
+          <p class="deck">
+            A lot of AI work still stops at chat. The more interesting shape is a system that watches state,
+            remembers what matters, and acts inside bounded control surfaces. That is where infrastructure starts to
+            make sense for agents.
+          </p>
+        </header>
+
+        <section class="content">
+          <h2>The fit</h2>
+          <p>
+            Agentic AI is a much better fit for infrastructure than for most consumer workflows because infrastructure
+            is already expressed as APIs, objects, policies, and state transitions. Kubernetes is the clearest
+            example. Pods, deployments, services, events, and rollout status are all available through a typed control
+            surface. The same is true for most cloud systems. DNS, load balancers, queues, storage, certificates, and
+            identity controls are exposed through APIs instead of hidden behind manual operator rituals.
+          </p>
+          <p>
+            That matters because an agent can work against a real model of the system instead of screen scraping or
+            guessing from text alone. It can ask bounded questions. What pods belong to this workload. What changed in
+            this rollout. What is ready. What restarted. What event touched this object. Which action is allowed by
+            policy. That makes Kubernetes and cloud platforms a very strong substrate for serious agent work.
+          </p>
+
+          <h2>The agent store</h2>
+          <p>
+            The agent store is the durable context layer. It keeps operational facts between runs. It stores system
+            definitions, dependencies, policies, secret references, environment metadata, and accepted observations in
+            a structured form. It does not try to be a chat log. It is there so the next agent starts from current
+            context instead of starting from zero.
+          </p>
+          <p>
+            In practical terms this means records with stable keys, typed namespaces, revision history, and explicit
+            metadata. A service record can describe upstream dependencies, allowed environments, and ownership. A
+            policy record can describe what requires approval. A secret record should store a reference to a runtime
+            binding, not the secret value. The store also needs to stay exportable. Markdown with structured front
+            matter, JSON documents with stable schemas, or relational rows with explicit record kinds all work as long
+            as another process can read and update them deterministically.
+          </p>
+          <p>
+            The important split is evidence versus truth. Postgres holds current world facts, queue state, policy, and
+            case state. ClickHouse holds logs, events, traces, and other high volume telemetry. Agents read both.
+            Cloudflare was a good fit for the store because it provided a small authenticated API surface plus durable
+            storage with a clean export path. Workers, D1, and R2 were a practical package, but the concept does not
+            depend on Cloudflare. Any edge store with the same properties could work.
+          </p>
+
+          <h2>Portal in the loop</h2>
+          <p>
+            Part of the development loop around this work has been happening in Portal. The earlier note on
+            <a href="./portal-browser-tmux.html">Portal Browser Tmux at Web Scale</a> was mostly about layout and
+            control surfaces. This loop is smaller. A lot of useful progress starts before there is a clean branch, a
+            clean ticket, or even a clean problem statement. It starts as a rough note, a small code run, or a quick
+            test that should stay close to the original thought.
+          </p>
+
+          <figure class="media-shot">
+            <img
+              src="../assets/portal-canvas-dev-loop.gif"
+              alt="Portal canvas showing a note, a code cell, and a short run result inside one workspace."
+              loading="lazy"
+            />
+            <figcaption>One note turns into a code cell, then into a quick run, without leaving the workspace.</figcaption>
+          </figure>
+
+          <p>
+            That is the part that turned out to matter. Open a note. Drop in a small executable block. Run it in
+            place. Keep the result next to the text that motivated it. Delete it if it was a dead end. Keep it if it
+            turned into something useful. It is not trying to replace an editor, a shell, or a full notebook. It is a
+            lighter surface for the messy part that happens before the work deserves heavier structure.
+          </p>
+          <p>
+            The useful property is locality. The note, the command, the output, and the next revision stay together. A
+            rough command does not vanish into shell history. A half formed idea does not get copied across three other
+            tools before it is ready. That matters for infrastructure work because the same discipline that helps an
+            agent keep evidence close to truth also helps a person keep early reasoning close to the thing being
+            tested.
+          </p>
+
+          <h2>The self healing loop</h2>
+          <p>
+            Self healing does not mean giving a model broad write access and hoping for the best. It means running a
+            loop with clear boundaries. Deterministic monitors watch the environment continuously. A trigger opens a
+            durable case. An agent enters that case with the right scope, policies, and prior state. It reads
+            Kubernetes directly, reads recent evidence from ClickHouse, compares that with current truth in Postgres,
+            and writes back a structured finding.
+          </p>
+          <p>
+            The next step depends on policy. Some actions are safe enough to run directly, such as restarting a
+            stateless worker, marking a case degraded, or asking for more evidence. Some actions need approval. Some
+            cases should stop at diagnosis. The point is that the loop is structured, bounded, and inspectable.
+          </p>
+
+          <h2>Kubernetes example</h2>
+          <p>
+            A concrete example is a worker rollout that leaves stale runtime registrations behind. The public route can
+            still be healthy. The new pod can still be healthy. Kubernetes can show that the deployment is ready and
+            that there are no current warning events. But Postgres can still show old worker entries that have not
+            aged out, and recent case history can still show failures from the earlier period. ClickHouse can show
+            that logs quieted down after the new pod came up.
+          </p>
+          <p>
+            That combination matters. Logs alone can make the system look healthy too early. Control state alone can
+            make it look broken for too long. An agent that reads Kubernetes, ClickHouse, and Postgres in one loop can
+            mark the case degraded instead of failed. That is a better result. Service stays live. The stale state is
+            surfaced. A noisy or risky remediation path is avoided.
+          </p>
+
+          <h2>Why Kubernetes fits agents so well</h2>
+          <p>
+            Kubernetes is already an API driven operating system. Objects are typed, namespaced, labeled, and
+            permissioned. Desired state and observed state are explicit. RBAC provides a clean safety boundary.
+            Namespaces and labels provide a clean working set. An agent can work with small scoped reads and small
+            scoped writes instead of broad shell access. That is unusually well matched to agentic systems.
+          </p>
+          <p>
+            That same pattern extends cleanly to the rest of cloud infrastructure. DNS, certificates, identity
+            objects, queues, object storage, and network configuration are all API driven. That makes the cloud a very
+            good environment for agents as long as the runtime keeps a clear split between evidence, truth, and allowed
+            actions.
+          </p>
+
+          <div class="note">
+            The useful line is not chat versus automation. The useful line is whether the system can observe real state,
+            keep durable context, and take bounded action without losing track of what happened.
+          </div>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
