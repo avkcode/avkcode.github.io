@@ -1194,7 +1194,7 @@ body.resume-page .resume-header h1 {
     linear-gradient(180deg, #1b2028 0%, #080a0e 48%, #181d24 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  font-size: 5.6rem;
+  font-size: 4.75rem;
   font-weight: 760;
   line-height: 0.94;
   letter-spacing: 0;
@@ -1547,7 +1547,7 @@ body.resume-page .resume-project-links a {
   }
 
   body.resume-page .resume-header h1 {
-    font-size: 4.35rem;
+    font-size: 3.75rem;
   }
 
   body.resume-page .resume-mark {
@@ -1573,7 +1573,7 @@ body.resume-page .resume-project-links a {
   }
 
   body.resume-page .resume-header h1 {
-    font-size: 3.15rem;
+    font-size: 2.7rem;
   }
 
   body.resume-page .resume-mark {
@@ -1653,7 +1653,7 @@ body.resume-page .resume-project-links a {
   }
 
   body.resume-page .resume-header h1 {
-    font-size: 36pt;
+    font-size: 32pt;
     background: none;
     -webkit-text-fill-color: #111827;
     filter: none;
