@@ -1165,7 +1165,7 @@ body.resume-page .resume-header {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 2rem;
   align-items: start;
-  padding-bottom: 1.55rem;
+  padding-bottom: 1.8rem;
   border-bottom: 1px solid var(--resume-line);
 }
 
@@ -1183,7 +1183,7 @@ body.resume-page .resume-title-lockup {
 body.resume-page .resume-name-block {
   display: grid;
   flex: 1 1 auto;
-  gap: 0.62rem;
+  gap: 1rem;
   min-width: 0;
 }
 
@@ -1208,13 +1208,13 @@ body.resume-page .resume-header h1 {
   background-clip: text;
   font-size: 4.75rem;
   font-weight: 760;
-  line-height: 0.94;
+  line-height: 1.04;
   letter-spacing: 0;
   white-space: nowrap;
   -webkit-text-fill-color: transparent;
   filter:
     drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5))
-    drop-shadow(0 18px 26px rgba(0, 0, 0, 0.18));
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
 }
 
 body.resume-page .resume-role {
