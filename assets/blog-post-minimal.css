@@ -1144,26 +1144,50 @@ body.resume-page .resume-wrap {
 }
 
 body.resume-page .resume-document {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: grid;
-  gap: 1.35rem;
+  gap: 1.25rem;
   min-height: calc(100vh - 4rem);
   padding: 2.85rem;
-  border: 1px solid rgba(246, 248, 249, 0.62);
+  border: 1px solid rgba(246, 248, 249, 0.68);
   border-radius: 8px;
   background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.46), transparent 16%, rgba(8, 10, 14, 0.035) 38%, transparent 64%, rgba(255, 255, 255, 0.32)),
+    repeating-linear-gradient(132deg, rgba(255, 255, 255, 0.055) 0 1px, rgba(12, 15, 19, 0.008) 1px 2px, transparent 2px 10px),
     linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(226, 230, 233, 0.94) 54%, rgba(250, 251, 252, 0.98) 100%),
     var(--resume-paper);
   box-shadow:
-    0 34px 96px rgba(0, 0, 0, 0.34),
-    0 0 0 1px rgba(12, 14, 17, 0.16),
+    0 30px 82px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(12, 14, 17, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.32),
     inset 0 -1px 0 rgba(12, 14, 17, 0.08);
+}
+
+body.resume-page .resume-document::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 8px),
+    radial-gradient(circle at 20% 8%, rgba(255, 255, 255, 0.52), transparent 26%),
+    radial-gradient(circle at 86% 0%, rgba(18, 22, 28, 0.08), transparent 30%);
+  opacity: 0.28;
+}
+
+body.resume-page .resume-document > * {
+  position: relative;
+  z-index: 1;
 }
 
 body.resume-page .resume-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2rem;
+  gap: 1.8rem;
   align-items: start;
   padding-bottom: 1.8rem;
   border-bottom: 1px solid var(--resume-line);
@@ -1176,8 +1200,9 @@ body.resume-page .resume-identity {
 body.resume-page .resume-title-lockup {
   display: flex;
   align-items: center;
-  gap: 1.15rem;
+  gap: 1.05rem;
   min-width: 0;
+  filter: drop-shadow(0 12px 18px rgba(16, 20, 26, 0.08));
 }
 
 body.resume-page .resume-name-block {
@@ -1235,7 +1260,7 @@ body.resume-page .resume-role {
   max-width: 48rem;
   color: var(--resume-muted);
   font-size: 0.92rem;
-  font-weight: 660;
+  font-weight: 640;
   line-height: 1.38;
 }
 
@@ -1250,14 +1275,14 @@ body.resume-page .resume-mark {
   flex: none;
   width: 5rem;
   height: 5rem;
-  border: 1px solid rgba(246, 248, 249, 0.52);
+  border: 1px solid rgba(246, 248, 249, 0.5);
   border-radius: 16px;
   background:
     radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0) 36%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(9, 11, 15, 0.22) 62%, rgba(255, 255, 255, 0.08)),
     #101319;
   box-shadow:
-    0 26px 58px rgba(8, 10, 14, 0.3),
+    0 18px 34px rgba(8, 10, 14, 0.26),
     0 0 0 1px rgba(8, 10, 14, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.26),
     inset 0 -14px 26px rgba(0, 0, 0, 0.28);
@@ -1285,15 +1310,16 @@ body.resume-page .resume-action-row {
 
 body.resume-page .resume-lang-switch {
   display: inline-flex;
-  padding: 0.18rem;
-  border: 1px solid rgba(24, 29, 35, 0.16);
+  padding: 0.2rem;
+  border: 1px solid rgba(18, 22, 28, 0.2);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(212, 218, 222, 0.48)),
-    #edf0f2;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(196, 203, 209, 0.5)),
+    #dfe4e8;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.88),
-    0 10px 24px rgba(24, 29, 35, 0.08);
+    inset 0 -1px 0 rgba(20, 24, 30, 0.12),
+    0 10px 22px rgba(24, 29, 35, 0.1);
 }
 
 body.resume-page .resume-lang-switch button {
@@ -1310,11 +1336,13 @@ body.resume-page .resume-lang-switch button {
 }
 
 body.resume-page .resume-lang-switch button.is-active {
-  background: linear-gradient(180deg, #ffffff, #eef1f3);
+  background:
+    linear-gradient(180deg, #ffffff, #e8edf0);
   color: var(--resume-ink);
   box-shadow:
-    0 6px 18px rgba(15, 23, 42, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 5px 10px rgba(15, 23, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(15, 18, 23, 0.1);
 }
 
 body.resume-page .resume-pdf-button {
@@ -1324,10 +1352,10 @@ body.resume-page .resume-pdf-button {
   gap: 0.42rem;
   min-height: 2.16rem;
   padding: 0 0.72rem;
-  border: 1px solid rgba(246, 248, 249, 0.2);
+  border: 1px solid rgba(246, 248, 249, 0.24);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.03) 42%, rgba(0, 0, 0, 0.18)),
     #11161d;
   color: #ffffff;
   cursor: pointer;
@@ -1337,8 +1365,9 @@ body.resume-page .resume-pdf-button {
   letter-spacing: 0;
   text-transform: uppercase;
   box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 12px 24px rgba(15, 23, 42, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42);
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -1352,12 +1381,13 @@ body.resume-page .resume-pdf-button svg {
 
 body.resume-page .resume-pdf-button:hover {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.13), transparent),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 44%, rgba(0, 0, 0, 0.14)),
     #171d25;
   transform: translateY(-1px);
   box-shadow:
-    0 20px 42px rgba(15, 23, 42, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    0 16px 30px rgba(15, 23, 42, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
 }
 
 body.resume-page .resume-pdf-button:focus-visible {
@@ -1387,7 +1417,7 @@ body.resume-page .resume-contact-line {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem 1.2rem;
-  padding-bottom: 1.45rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--resume-line);
   color: var(--resume-muted);
   font-family: inherit;
@@ -1398,20 +1428,20 @@ body.resume-page .resume-contact-line {
 body.resume-page .resume-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
-  gap: 2.15rem;
+  gap: 1.9rem;
   align-items: start;
 }
 
 body.resume-page .resume-main,
 body.resume-page .resume-side {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.05rem;
   min-width: 0;
 }
 
 body.resume-page .resume-block {
   display: grid;
-  gap: 0.7rem;
+  gap: 0.62rem;
 }
 
 body.resume-page .resume-block h2 {
@@ -1426,7 +1456,7 @@ body.resume-page .resume-block h2 {
 body.resume-page .resume-block p {
   color: var(--resume-ink);
   font-size: 1rem;
-  line-height: 1.72;
+  line-height: 1.66;
 }
 
 body.resume-page .resume-side {
@@ -1438,14 +1468,16 @@ body.resume-page .resume-current-card {
   display: grid;
   gap: 0.55rem;
   padding: 0.9rem 1rem;
-  border: 1px solid rgba(24, 29, 35, 0.14);
+  border: 1px solid rgba(24, 29, 35, 0.16);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(216, 222, 226, 0.3)),
-    #f4f6f7;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(214, 220, 224, 0.34)),
+    repeating-linear-gradient(132deg, rgba(255, 255, 255, 0.13) 0 1px, transparent 1px 7px),
+    #f1f4f6;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.86),
-    0 14px 32px rgba(24, 29, 35, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(15, 18, 23, 0.06),
+    0 12px 24px rgba(24, 29, 35, 0.055);
 }
 
 body.resume-page .resume-current-card > a {
@@ -1480,10 +1512,10 @@ body.resume-page .resume-list li {
 
 body.resume-page .resume-tags li {
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(24, 29, 35, 0.14);
+  border: 1px solid rgba(24, 29, 35, 0.16);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(210, 216, 220, 0.42)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(205, 212, 217, 0.48)),
     var(--resume-accent-soft);
   color: var(--resume-accent-dark);
   font-family: inherit;
@@ -1539,24 +1571,30 @@ body.resume-page .resume-writing a::after {
 
 body.resume-page .resume-project-links {
   display: grid;
-  border-top: 1px solid var(--resume-line);
+  border-top: 1px solid rgba(18, 22, 28, 0.22);
 }
 
 body.resume-page .resume-project-links a {
   display: grid;
-  gap: 0.18rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid var(--resume-line);
+  gap: 0.22rem;
+  padding: 0.62rem 0.05rem 0.62rem 0;
+  border-bottom: 1px solid rgba(18, 22, 28, 0.16);
   color: var(--resume-ink);
   font-size: 0.94rem;
-  font-weight: 680;
+  font-weight: 720;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+body.resume-page .resume-project-links a:hover {
+  color: var(--resume-accent-dark);
+  border-bottom-color: rgba(18, 22, 28, 0.26);
 }
 
 body.resume-page .resume-project-links small {
   color: var(--resume-muted);
-  font-size: 0.78rem;
-  font-weight: 520;
-  line-height: 1.35;
+  font-size: 0.76rem;
+  font-weight: 560;
+  line-height: 1.32;
 }
 
 @media (max-width: 900px) {
@@ -1728,6 +1766,10 @@ body.resume-page .resume-project-links small {
     border: 0;
     background: #ffffff;
     box-shadow: none;
+  }
+
+  body.resume-page .resume-document::before {
+    display: none;
   }
 
   body.resume-page .resume-pdf-button,
