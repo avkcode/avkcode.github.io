@@ -176,26 +176,56 @@ body.article-page .post-meta {
 body.article-page .back {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  position: relative;
+  width: 44px;
+  height: 36px;
   margin: 0 0 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(237, 241, 245, 0.045);
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0;
   text-transform: uppercase;
   border-bottom: 0;
+  transition:
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease,
+    background-color 0.22s ease;
 }
 
 body.article-page .back::before {
   content: "";
-  width: 28px;
+  position: absolute;
+  left: 14px;
+  top: 17px;
+  width: 17px;
   height: 1px;
   background: currentColor;
-  opacity: 0.6;
+  opacity: 0.9;
+}
+
+body.article-page .back::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  width: 8px;
+  height: 8px;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
 }
 
 body.article-page .back:hover {
+  border-color: var(--border-strong);
+  background: rgba(237, 241, 245, 0.08);
   color: var(--accent-strong);
+  transform: translateX(-2px);
 }
 
 body.article-page h1 {
