@@ -631,6 +631,10 @@ body.listing-page .hero-compact {
   padding-bottom: clamp(36px, 6vw, 64px);
 }
 
+body.listing-page .archive-nav {
+  padding: 40px 0 26px;
+}
+
 body.listing-page .hero-actions,
 body.home-page .hero-actions {
   display: flex;
@@ -774,6 +778,10 @@ body.listing-page .content,
 body.home-page .content {
   padding: clamp(36px, 6vw, 64px) 0 0;
   background: transparent;
+}
+
+body.listing-page .archive-nav + .content {
+  padding-top: 28px;
 }
 
 body.listing-page .section-kicker,
@@ -956,6 +964,10 @@ body.home-page .post-meta {
   body.listing-page .hero,
   body.home-page .hero {
     padding: 54px 0 38px;
+  }
+
+  body.listing-page .archive-nav {
+    padding: 26px 0 18px;
   }
 
   body.listing-page h1,
