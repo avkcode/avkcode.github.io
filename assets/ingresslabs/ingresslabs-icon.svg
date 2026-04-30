@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">IngressLabs app icon</title>
+  <desc id="desc">A rounded graphite app icon containing the silver radial IngressLabs ingress mark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="64" y1="32" x2="448" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a1c20"/>
+      <stop offset="0.55" stop-color="#050505"/>
+      <stop offset="1" stop-color="#11141a"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="132" y1="92" x2="384" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.18" stop-color="#a8afb8"/>
+      <stop offset="0.36" stop-color="#f7f9fb"/>
+      <stop offset="0.58" stop-color="#737b85"/>
+      <stop offset="0.82" stop-color="#d9dfe6"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="route" x1="132" y1="256" x2="380" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9098a2"/>
+      <stop offset="0.5" stop-color="#f4f6f8"/>
+      <stop offset="1" stop-color="#8f98a3"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bg)"/>
+  <rect x="32.5" y="32.5" width="447" height="447" rx="111.5" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+  <g fill="none" stroke-linecap="round">
+    <circle cx="256" cy="256" r="142" stroke="url(#silver)" stroke-width="7"/>
+    <circle cx="256" cy="256" r="122" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2.5"/>
+    <g stroke="url(#route)">
+      <path d="M256 146v78M256 288v78" stroke-width="9"/>
+      <path d="M146 256h78M288 256h78" stroke-width="9"/>
+      <path d="M190 190l44 44M278 278l44 44" stroke-width="6"/>
+      <path d="M322 190l-44 44M234 278l-44 44" stroke-width="6"/>
+    </g>
+    <circle cx="256" cy="256" r="11" fill="#050505" stroke="url(#silver)" stroke-width="4"/>
+    <circle cx="256" cy="256" r="3.4" fill="#f7f9fb" stroke="none"/>
+  </g>
+</svg>
