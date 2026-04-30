@@ -1486,15 +1486,6 @@ body.resume-page .resume-list li {
   line-height: 1.55;
 }
 
-body.resume-page .resume-evidence {
-  gap: 0.42rem;
-}
-
-body.resume-page .resume-evidence li {
-  color: var(--resume-ink);
-  font-size: 0.94rem;
-}
-
 body.resume-page .resume-list li::before {
   content: "";
   position: absolute;
