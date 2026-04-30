@@ -1182,6 +1182,7 @@ body.resume-page .resume-title-lockup {
 
 body.resume-page .resume-name-block {
   display: grid;
+  flex: 1 1 auto;
   gap: 0.45rem;
   min-width: 0;
 }
@@ -1209,6 +1210,7 @@ body.resume-page .resume-header h1 {
   font-weight: 760;
   line-height: 0.94;
   letter-spacing: 0;
+  white-space: nowrap;
   -webkit-text-fill-color: transparent;
   filter:
     drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5))
@@ -1649,6 +1651,29 @@ body.resume-page .resume-project-links small {
     max-width: none;
     min-width: 0;
     width: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  body.resume-page .resume-title-lockup {
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  body.resume-page .resume-header h1 {
+    font-size: 2.05rem;
+    line-height: 1;
+  }
+
+  body.resume-page .resume-role {
+    font-size: 0.78rem;
+    line-height: 1.32;
+  }
+
+  body.resume-page .resume-mark {
+    width: 3rem;
+    height: 3rem;
+    margin-top: 0;
   }
 }
 
