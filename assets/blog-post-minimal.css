@@ -1228,16 +1228,42 @@ body.resume-page .resume-header h1 {
   position: relative;
   max-width: 12ch;
   color: var(--resume-ink);
-  background:
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.9) 0,
+      rgba(255, 255, 255, 0.9) 1px,
+      rgba(43, 52, 59, 0.32) 1px,
+      rgba(43, 52, 59, 0.32) 2px,
+      rgba(202, 211, 215, 0.5) 2px,
+      rgba(202, 211, 215, 0.5) 4px
+    ),
+    linear-gradient(
+      92deg,
+      #5b666e 0%,
+      #f9fdfc 10%,
+      #8f9aa1 19%,
+      #2f3941 28%,
+      #eef4f3 40%,
+      #6f7c84 51%,
+      #ffffff 61%,
+      #4f5b64 72%,
+      #d6dddf 84%,
+      #343e47 100%
+    ),
     linear-gradient(
       180deg,
-      #1a2029 0%,
-      #05070b 24%,
-      #000102 46%,
-      #080d14 63%,
-      #010205 84%,
-      #0f131a 100%
+      #ffffff 0%,
+      #cdd6d9 15%,
+      #6c7881 31%,
+      #f9fcfb 47%,
+      #9ca8ae 59%,
+      #39434c 73%,
+      #edf2f1 88%,
+      #66717a 100%
     );
+  background-size: 100% 4px, 100% 100%, 100% 100%;
+  background-blend-mode: hard-light, normal, normal;
   -webkit-background-clip: text;
   background-clip: text;
   font-size: 4.75rem;
@@ -1245,15 +1271,16 @@ body.resume-page .resume-header h1 {
   line-height: 1.04;
   letter-spacing: 0;
   white-space: nowrap;
-  -webkit-text-stroke: 0.003em rgba(255, 255, 255, 0.08);
+  -webkit-text-stroke: 0.012em rgba(31, 39, 47, 0.52);
   -webkit-text-fill-color: transparent;
   text-shadow:
-    0 -1px 0 rgba(255, 255, 255, 0.1),
-    0 1px 0 rgba(0, 0, 0, 0.96);
+    0 -1px 0 rgba(255, 255, 255, 0.94),
+    0 1px 0 rgba(35, 43, 50, 0.72),
+    0 3px 6px rgba(67, 76, 84, 0.28);
   filter:
-    drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.18))
-    drop-shadow(0 2px 0 rgba(0, 0, 0, 0.46))
-    drop-shadow(0 9px 14px rgba(0, 0, 0, 0.18));
+    drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.76))
+    drop-shadow(0 2px 1px rgba(35, 43, 50, 0.58))
+    drop-shadow(0 12px 18px rgba(19, 24, 29, 0.2));
 }
 
 body.resume-page .resume-role {
@@ -1631,9 +1658,9 @@ body.resume-page .resume-project-links small {
   body.resume-page .resume-header h1 {
     font-size: 3.75rem;
     filter:
-      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.25))
-      drop-shadow(0 2px 0 rgba(0, 0, 0, 0.28))
-      drop-shadow(0 7px 10px rgba(0, 0, 0, 0.1));
+      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.68))
+      drop-shadow(0 2px 1px rgba(35, 43, 50, 0.44))
+      drop-shadow(0 8px 12px rgba(19, 24, 29, 0.14));
   }
 
   body.resume-page .resume-role {
@@ -1673,8 +1700,8 @@ body.resume-page .resume-project-links small {
     font-size: 2.38rem;
     line-height: 1.04;
     filter:
-      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.2))
-      drop-shadow(0 1px 0 rgba(0, 0, 0, 0.22));
+      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.64))
+      drop-shadow(0 1px 1px rgba(35, 43, 50, 0.42));
   }
 
   body.resume-page .resume-role {
