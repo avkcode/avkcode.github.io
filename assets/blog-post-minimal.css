@@ -1200,10 +1200,19 @@ body.resume-page .resume-home {
 }
 
 body.resume-page .resume-header h1 {
+  position: relative;
   max-width: 12ch;
   color: var(--resume-ink);
   background:
-    linear-gradient(180deg, #1b2028 0%, #080a0e 48%, #181d24 100%);
+    linear-gradient(
+      180deg,
+      #1a2029 0%,
+      #05070b 24%,
+      #000102 46%,
+      #080d14 63%,
+      #010205 84%,
+      #0f131a 100%
+    );
   -webkit-background-clip: text;
   background-clip: text;
   font-size: 4.75rem;
@@ -1211,10 +1220,15 @@ body.resume-page .resume-header h1 {
   line-height: 1.04;
   letter-spacing: 0;
   white-space: nowrap;
+  -webkit-text-stroke: 0.003em rgba(255, 255, 255, 0.08);
   -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 0 rgba(0, 0, 0, 0.96);
   filter:
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5))
-    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+    drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.18))
+    drop-shadow(0 2px 0 rgba(0, 0, 0, 0.46))
+    drop-shadow(0 9px 14px rgba(0, 0, 0, 0.18));
 }
 
 body.resume-page .resume-role {
@@ -1579,8 +1593,9 @@ body.resume-page .resume-project-links small {
   body.resume-page .resume-header h1 {
     font-size: 3.75rem;
     filter:
-      drop-shadow(0 1px 0 rgba(255, 255, 255, 0.45))
-      drop-shadow(0 8px 14px rgba(0, 0, 0, 0.1));
+      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.25))
+      drop-shadow(0 2px 0 rgba(0, 0, 0, 0.28))
+      drop-shadow(0 7px 10px rgba(0, 0, 0, 0.1));
   }
 
   body.resume-page .resume-role {
@@ -1619,7 +1634,9 @@ body.resume-page .resume-project-links small {
     grid-column: 2;
     font-size: 2.38rem;
     line-height: 1.04;
-    filter: none;
+    filter:
+      drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.2))
+      drop-shadow(0 1px 0 rgba(0, 0, 0, 0.22));
   }
 
   body.resume-page .resume-role {
@@ -1733,6 +1750,8 @@ body.resume-page .resume-project-links small {
     font-size: 28pt;
     background: none;
     -webkit-text-fill-color: #111827;
+    -webkit-text-stroke: 0;
+    text-shadow: none;
     filter: none;
   }
 
