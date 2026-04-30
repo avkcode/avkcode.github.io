@@ -1599,35 +1599,41 @@ body.resume-page .resume-project-links small {
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 620px) {
   body.resume-page .resume-document {
     padding: 1.05rem;
   }
 
   body.resume-page .resume-title-lockup {
-    align-items: flex-start;
-    gap: 0.75rem;
+    display: grid;
+    grid-template-columns: 3.35rem minmax(0, 1fr);
+    gap: 0.7rem 0.75rem;
+    align-items: center;
   }
 
   body.resume-page .resume-name-block {
-    gap: 0.72rem;
+    display: contents;
   }
 
   body.resume-page .resume-header h1 {
-    font-size: 2.7rem;
-    filter:
-      drop-shadow(0 1px 0 rgba(255, 255, 255, 0.4))
-      drop-shadow(0 5px 9px rgba(0, 0, 0, 0.08));
+    grid-column: 2;
+    font-size: 2.38rem;
+    line-height: 1.04;
+    filter: none;
   }
 
   body.resume-page .resume-role {
-    font-size: 0.84rem;
+    grid-column: 1 / -1;
+    max-width: none;
+    font-size: 0.86rem;
+    line-height: 1.42;
   }
 
   body.resume-page .resume-mark {
+    grid-column: 1;
     width: 3.35rem;
     height: 3.35rem;
-    margin-top: 0.18rem;
+    margin-top: 0;
     border-radius: 12px;
   }
 
@@ -1657,14 +1663,13 @@ body.resume-page .resume-project-links small {
 
 @media (max-width: 380px) {
   body.resume-page .resume-title-lockup {
-    align-items: center;
-    gap: 0.65rem;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.62rem 0.65rem;
   }
 
   body.resume-page .resume-header h1 {
     font-size: 2.05rem;
-    line-height: 1;
-    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.38));
+    line-height: 1.04;
   }
 
   body.resume-page .resume-role {
