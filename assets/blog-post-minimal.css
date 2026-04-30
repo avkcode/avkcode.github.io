@@ -1027,21 +1027,21 @@ body.home-page .post-meta {
 /* Resume: simple document layout */
 
 body.resume-page {
-  --resume-bg: #eef3f4;
-  --resume-paper: #ffffff;
-  --resume-ink: #0f172a;
-  --resume-muted: #536070;
-  --resume-faint: #778394;
-  --resume-line: #d8e0e8;
-  --resume-accent: #0f766e;
-  --resume-accent-soft: #e8f3f1;
-  --resume-accent-dark: #0a5d57;
+  --resume-bg: #15171a;
+  --resume-paper: #eef0f1;
+  --resume-ink: #11141a;
+  --resume-muted: #56606b;
+  --resume-faint: #737d88;
+  --resume-line: rgba(24, 29, 35, 0.16);
+  --resume-accent: #222832;
+  --resume-accent-soft: #dfe3e6;
+  --resume-accent-dark: #0d1015;
   min-height: 100vh;
   margin: 0;
   color: var(--resume-ink);
   background:
-    linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 30%),
-    linear-gradient(180deg, #f7f9fb 0%, var(--resume-bg) 100%);
+    repeating-linear-gradient(102deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 12px),
+    linear-gradient(145deg, #0c0e11 0%, #191d22 46%, #4f565d 100%);
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -1059,18 +1059,32 @@ body.resume-page {
 
 body.resume-page::before,
 body.resume-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body.resume-page::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 24%, rgba(0, 0, 0, 0.24)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 24px);
+  opacity: 0.72;
+}
+
+body.resume-page::after {
   display: none;
 }
 
 body.resume-page a {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid rgba(15, 118, 110, 0.26);
+  border-bottom: 1px solid rgba(51, 65, 85, 0.24);
 }
 
 body.resume-page a:hover {
   color: var(--resume-accent-dark);
-  border-bottom-color: rgba(15, 118, 110, 0.6);
+  border-bottom-color: rgba(51, 65, 85, 0.56);
 }
 
 body.resume-page p,
@@ -1102,6 +1116,8 @@ body.resume-page[data-resume-lang="ru"] ul[data-lang="ru"] {
 }
 
 body.resume-page .resume-wrap {
+  position: relative;
+  z-index: 1;
   width: min(calc(100% - 2rem), 1080px);
   margin: 0 auto;
   padding: 2rem 0;
@@ -1112,12 +1128,17 @@ body.resume-page .resume-document {
   gap: 1.55rem;
   min-height: calc(100vh - 4rem);
   padding: 3rem;
-  border: 1px solid var(--resume-line);
+  border: 1px solid rgba(246, 248, 249, 0.62);
   border-radius: 8px;
-  background: var(--resume-paper);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(224, 228, 231, 0.94) 52%, rgba(250, 251, 252, 0.98) 100%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 18px),
+    var(--resume-paper);
   box-shadow:
-    0 30px 90px rgba(17, 24, 39, 0.12),
-    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    0 44px 120px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(12, 14, 17, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -1px 0 rgba(12, 14, 17, 0.08);
 }
 
 body.resume-page .resume-header {
@@ -1152,53 +1173,36 @@ body.resume-page .resume-header h1 {
   font-weight: 760;
   line-height: 0.94;
   letter-spacing: 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.48);
 }
 
 body.resume-page .resume-current-work {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
   margin-top: 1.25rem;
-  padding: 0.36rem 0.42rem 0.36rem 0.7rem;
-  border: 1px solid rgba(15, 118, 110, 0.22);
+  padding: 0.26rem;
+  border: 1px solid rgba(24, 29, 35, 0.14);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(212, 218, 222, 0.52)),
     var(--resume-accent-soft);
   color: var(--resume-accent-dark);
   font-size: 0.86rem;
   font-weight: 700;
   box-shadow:
-    0 12px 28px rgba(15, 118, 110, 0.08),
+    0 12px 28px rgba(24, 29, 35, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
-body.resume-page .resume-current-work span {
-  color: var(--resume-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 body.resume-page .resume-current-work a {
-  padding: 0.28rem 0.48rem;
-  border: 1px solid rgba(15, 118, 110, 0.12);
+  padding: 0.32rem 0.56rem;
+  border: 1px solid rgba(24, 29, 35, 0.12);
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.76);
+  background: linear-gradient(180deg, #ffffff, #e9edef);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
   color: var(--resume-accent-dark);
   font-weight: 780;
   white-space: nowrap;
-}
-
-body.resume-page .resume-current-work a::after {
-  content: "";
-  display: inline-block;
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-left: 0.45rem;
-  border-radius: 50%;
-  background: var(--resume-accent);
-  vertical-align: middle;
 }
 
 body.resume-page .resume-actions {
@@ -1217,9 +1221,14 @@ body.resume-page .resume-action-row {
 body.resume-page .resume-lang-switch {
   display: inline-flex;
   padding: 0.18rem;
-  border: 1px solid var(--resume-line);
+  border: 1px solid rgba(24, 29, 35, 0.16);
   border-radius: 8px;
-  background: #f8fafc;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(212, 218, 222, 0.48)),
+    #edf0f2;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 10px 24px rgba(24, 29, 35, 0.08);
 }
 
 body.resume-page .resume-lang-switch button {
@@ -1236,33 +1245,35 @@ body.resume-page .resume-lang-switch button {
 }
 
 body.resume-page .resume-lang-switch button.is-active {
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff, #eef1f3);
   color: var(--resume-ink);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  box-shadow:
+    0 6px 18px rgba(15, 23, 42, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 body.resume-page .resume-pdf-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  min-height: 2.54rem;
-  padding: 0 1rem;
-  border: 1px solid rgba(15, 23, 42, 0.9);
+  gap: 0.42rem;
+  min-height: 2.16rem;
+  padding: 0 0.72rem;
+  border: 1px solid rgba(246, 248, 249, 0.2);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent),
-    #0f172a;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent),
+    #11161d;
   color: #ffffff;
   cursor: pointer;
   font-family: inherit;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 760;
   letter-spacing: 0;
   text-transform: uppercase;
   box-shadow:
     0 16px 34px rgba(15, 23, 42, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -1270,14 +1281,14 @@ body.resume-page .resume-pdf-button {
 }
 
 body.resume-page .resume-pdf-button svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.82rem;
+  height: 0.82rem;
 }
 
 body.resume-page .resume-pdf-button:hover {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.13), transparent),
-    #111c31;
+    #171d25;
   transform: translateY(-1px);
   box-shadow:
     0 20px 42px rgba(15, 23, 42, 0.24),
@@ -1285,7 +1296,7 @@ body.resume-page .resume-pdf-button:hover {
 }
 
 body.resume-page .resume-pdf-button:focus-visible {
-  outline: 3px solid rgba(15, 118, 110, 0.3);
+  outline: 3px solid rgba(126, 137, 148, 0.28);
   outline-offset: 3px;
 }
 
@@ -1362,17 +1373,20 @@ body.resume-page .resume-current-card {
   display: grid;
   gap: 0.65rem;
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(15, 118, 110, 0.2);
+  border: 1px solid rgba(24, 29, 35, 0.14);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(15, 118, 110, 0.07), rgba(15, 118, 110, 0.025)),
-    #ffffff;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(216, 222, 226, 0.3)),
+    #f4f6f7;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 14px 32px rgba(24, 29, 35, 0.06);
 }
 
 body.resume-page .resume-current-card > a {
   width: fit-content;
   color: var(--resume-accent-dark);
-  border-bottom-color: rgba(15, 118, 110, 0.34);
+  border-bottom-color: rgba(24, 29, 35, 0.26);
   font-size: 1.15rem;
   font-weight: 780;
 }
@@ -1401,9 +1415,11 @@ body.resume-page .resume-list li {
 
 body.resume-page .resume-tags li {
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(15, 118, 110, 0.18);
+  border: 1px solid rgba(24, 29, 35, 0.14);
   border-radius: 8px;
-  background: var(--resume-accent-soft);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(210, 216, 220, 0.42)),
+    var(--resume-accent-soft);
   color: var(--resume-accent-dark);
   font-family: inherit;
   font-size: 1rem;
@@ -1519,6 +1535,11 @@ body.resume-page .resume-writing a::after {
     font-size: 10.5pt;
   }
 
+  body.resume-page::before,
+  body.resume-page::after {
+    display: none !important;
+  }
+
   body.resume-page .resume-wrap {
     width: auto;
     padding: 0;
@@ -1528,6 +1549,7 @@ body.resume-page .resume-writing a::after {
     min-height: auto;
     padding: 0.08in 0.1in;
     border: 0;
+    background: #ffffff;
     box-shadow: none;
   }
 
@@ -1574,5 +1596,12 @@ body.resume-page .resume-writing a::after {
   body.resume-page .resume-block {
     break-inside: avoid;
     gap: 5pt;
+  }
+
+  body.resume-page .resume-current-work,
+  body.resume-page .resume-current-card,
+  body.resume-page .resume-tags li {
+    box-shadow: none;
+    background: #ffffff;
   }
 }
