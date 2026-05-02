@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">IngressLabs system map</title>
+  <desc id="desc">A sparse graphite and silver architecture map showing a controlled path from an operator surface through the control plane, runtime fleet, and customer boundary.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101014"/>
+      <stop offset="0.54" stop-color="#050505"/>
+      <stop offset="1" stop-color="#0d1015"/>
+    </linearGradient>
+    <linearGradient id="rail" x1="210" y1="455" x2="1380" y2="455" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#737b85" stop-opacity="0.15"/>
+      <stop offset="0.48" stop-color="#edf1f5" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#737b85" stop-opacity="0.15"/>
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(800 450) rotate(90) scale(360 560)">
+      <stop offset="0" stop-color="#edf1f5" stop-opacity="0.18"/>
+      <stop offset="0.58" stop-color="#b8bdc4" stop-opacity="0.045"/>
+      <stop offset="1" stop-color="#050505" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#16161a"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-30%" width="140%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="28" stdDeviation="30" flood-color="#000000" flood-opacity="0.42"/>
+    </filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.032"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)" opacity="0.78"/>
+  <rect width="1600" height="900" fill="url(#centerGlow)"/>
+
+  <g transform="translate(80 74)" opacity="0.9">
+    <image href="ingresslabs-logo-mark.svg" width="92" height="92" preserveAspectRatio="xMinYMid meet"/>
+  </g>
+  <g transform="translate(1236 84)" opacity="0.16">
+    <image href="ingresslabs-logo-mark.svg" width="260" height="260"/>
+  </g>
+
+  <path d="M208 455H1392" stroke="url(#rail)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M208 455H1392" stroke="#ffffff" stroke-opacity="0.08" stroke-width="28" stroke-linecap="round"/>
+  <path d="M208 455C340 365 468 364 598 455S858 546 990 455S1252 364 1392 455" fill="none" stroke="#edf1f5" stroke-opacity="0.12" stroke-width="2"/>
+
+  <g filter="url(#softShadow)">
+    <g transform="translate(126 360)">
+      <rect width="250" height="190" rx="14" fill="url(#card)" stroke="#b8bdc4" stroke-opacity="0.2"/>
+      <circle cx="125" cy="96" r="48" fill="none" stroke="#edf1f5" stroke-opacity="0.28" stroke-width="2"/>
+      <path d="M92 96H158M125 63V129" stroke="#edf1f5" stroke-opacity="0.56" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="125" cy="96" r="10" fill="#edf1f5"/>
+    </g>
+
+    <g transform="translate(486 318)">
+      <rect width="308" height="274" rx="16" fill="#101014" stroke="#edf1f5" stroke-opacity="0.32"/>
+      <rect x="44" y="58" width="220" height="158" rx="12" fill="#edf1f5" fill-opacity="0.035" stroke="#b8bdc4" stroke-opacity="0.22"/>
+      <path d="M95 101H213M95 137H213M95 173H213" stroke="#edf1f5" stroke-opacity="0.34" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="70" cy="101" r="7" fill="#edf1f5"/>
+      <circle cx="70" cy="137" r="7" fill="#b8bdc4"/>
+      <circle cx="70" cy="173" r="7" fill="#737b85"/>
+      <path d="M154 58V216" stroke="#ffffff" stroke-opacity="0.07"/>
+    </g>
+
+    <g transform="translate(888 360)">
+      <rect width="250" height="190" rx="14" fill="url(#card)" stroke="#b8bdc4" stroke-opacity="0.2"/>
+      <g fill="#edf1f5">
+        <circle cx="84" cy="86" r="14" opacity="0.9"/>
+        <circle cx="126" cy="86" r="14" opacity="0.58"/>
+        <circle cx="168" cy="86" r="14" opacity="0.34"/>
+        <circle cx="105" cy="124" r="14" opacity="0.7"/>
+        <circle cx="147" cy="124" r="14" opacity="0.46"/>
+      </g>
+      <path d="M84 86H168M105 124H147M96 96L116 115M156 96L138 115" stroke="#edf1f5" stroke-opacity="0.28" stroke-width="2"/>
+    </g>
+
+    <g transform="translate(1240 360)">
+      <rect width="250" height="190" rx="14" fill="url(#card)" stroke="#b8bdc4" stroke-opacity="0.2"/>
+      <rect x="64" y="46" width="122" height="98" rx="14" fill="#edf1f5" fill-opacity="0.035" stroke="#edf1f5" stroke-opacity="0.32"/>
+      <rect x="88" y="70" width="74" height="50" rx="9" fill="#0a0a0c" stroke="#b8bdc4" stroke-opacity="0.32"/>
+      <path d="M125 54V36M125 154V136M53 95H35M215 95H197" stroke="#edf1f5" stroke-opacity="0.42" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="125" cy="95" r="8" fill="#edf1f5"/>
+    </g>
+  </g>
+
+  <g fill="#edf1f5">
+    <circle cx="422" cy="455" r="5"/>
+    <circle cx="840" cy="455" r="5"/>
+    <circle cx="1186" cy="455" r="5"/>
+  </g>
+
+  <g opacity="0.22" stroke="#edf1f5" stroke-width="1.5" fill="none">
+    <path d="M92 722H1508"/>
+    <path d="M92 756H1508"/>
+    <path d="M92 790H1508"/>
+    <path d="M280 696V816M540 696V816M800 696V816M1060 696V816M1320 696V816"/>
+  </g>
+</svg>

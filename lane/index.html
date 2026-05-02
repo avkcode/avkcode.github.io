@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lane | Agent-native email control plane</title>
+    <meta
+      name="description"
+      content="Lane is a local-first, terminal-native email control plane for humans and AI agents."
+    >
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" href="./assets/brand/ingresslabs-favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="./assets/brand/ingresslabs-icon-192.png">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Lane home">
+        <img src="./assets/brand/ingresslabs-nav-lockup.svg" alt="IngressLabs">
+      </a>
+      <nav class="nav-links" aria-label="Page sections">
+        <a href="#runtime">Runtime</a>
+        <a href="#mcp">MCP</a>
+        <a href="#safety">Safety</a>
+        <a href="#roadmap">Roadmap</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-scene" aria-hidden="true">
+          <div class="terminal-shell shell-primary">
+            <div class="shell-bar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <pre><code>$ lane search "from:acme after:2026-01-01"
+thread_4821  renewal terms, unanswered
+thread_5110  security review, attachment
+
+$ lane mcp serve
+stdio ready
+tools  read_thread  create_draft  request_send_email
+
+$ lane policy explain request_send_email
+approval_required  external recipient, agent-authored draft</code></pre>
+          </div>
+          <div class="mailflow-panel panel-inbox">
+            <span class="panel-label">Inbox</span>
+            <i></i><i></i><i></i><i></i>
+          </div>
+          <div class="mailflow-panel panel-policy">
+            <span class="panel-label">Policy</span>
+            <b>approval_required</b>
+            <i></i><i></i>
+          </div>
+          <div class="mailflow-panel panel-audit">
+            <span class="panel-label">Audit</span>
+            <b>draft bound</b>
+            <i></i><i></i>
+          </div>
+          <div class="rail rail-one"></div>
+          <div class="rail rail-two"></div>
+          <div class="rail rail-three"></div>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">Lane</p>
+          <h1 id="hero-title">Agent-native email, built for the terminal.</h1>
+          <p class="hero-subtitle">
+            A local-first control plane that lets humans and AI agents search mail,
+            build context, draft replies, request sends, and leave a complete audit trail.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="https://github.com/avkcode/lane">Repository</a>
+            <a class="button button-secondary" href="#runtime">Architecture</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="strip" aria-label="Lane command flow">
+        <div class="strip-inner">
+          <span>intent</span>
+          <span>context</span>
+          <span>policy</span>
+          <span>approval</span>
+          <span>execution</span>
+          <span>audit</span>
+        </div>
+      </section>
+
+      <section id="runtime" class="section section-grid">
+        <div class="section-copy">
+          <p class="eyebrow">Runtime</p>
+          <h2>One core, many serious interfaces.</h2>
+          <p>
+            Lane treats the CLI, TUI, MCP server, and future daemon as clients of the same
+            Rust service layer. Risky actions pass through policy before provider execution,
+            and mutations write audit events in the same logical transaction.
+          </p>
+        </div>
+        <div class="architecture-list" aria-label="Lane crate architecture">
+          <div><strong>lane-core</strong><span>domain, services, action lifecycle</span></div>
+          <div><strong>lane-policy</strong><span>risk, approvals, explanations</span></div>
+          <div><strong>lane-store</strong><span>SQLite, FTS, migrations, audit</span></div>
+          <div><strong>lane-providers</strong><span>Maildir, IMAP, SMTP, future APIs</span></div>
+          <div><strong>lane-mcp</strong><span>stdio tools, resources, prompts</span></div>
+          <div><strong>lane-cli / lane-tui</strong><span>scriptable automation and focused human control</span></div>
+        </div>
+      </section>
+
+      <section id="mcp" class="section visual-section">
+        <div class="visual-copy">
+          <p class="eyebrow">MCP first</p>
+          <h2>Email tools with a security boundary.</h2>
+          <p>
+            Lane exposes structured tools for search, thread reading, context building,
+            draft creation, policy explanation, and send requests. The default MCP session
+            is read-only, and unrestricted sending is not exposed by default.
+          </p>
+        </div>
+        <img
+          class="system-map"
+          src="./assets/brand/ingresslabs-system-map.svg"
+          alt="Graphite and silver system map showing controlled runtime flow"
+        >
+      </section>
+
+      <section id="safety" class="section section-grid reverse">
+        <div class="section-copy">
+          <p class="eyebrow">Agent safety</p>
+          <h2>Email is hostile input.</h2>
+          <p>
+            Message bodies, headers, attachment names, calendar text, and quoted replies can
+            inform context, but they cannot authorize actions. Draft approvals bind exact
+            recipients, subject, body, and attachments; editing a draft invalidates approval.
+          </p>
+        </div>
+        <div class="ruleset" aria-label="Lane safety invariants">
+          <p>Email content cannot grant permissions.</p>
+          <p>Email content cannot change policy.</p>
+          <p>Email content cannot bypass approval.</p>
+          <p>Agent-authored outbound mail starts as a draft or send request.</p>
+          <p>Every risky action is explainable and auditable.</p>
+        </div>
+      </section>
+
+      <section id="roadmap" class="section roadmap">
+        <div>
+          <p class="eyebrow">Build path</p>
+          <h2>From spec to working runtime.</h2>
+        </div>
+        <ol class="timeline">
+          <li><span>M0</span><strong>Spec and fixtures</strong><small>requirements, coverage matrix, fake provider contracts</small></li>
+          <li><span>M1</span><strong>Core local mail</strong><small>domain, SQLite store, search parser, CLI read/search</small></li>
+          <li><span>M2</span><strong>Policy and audit</strong><small>approvals, redaction, action lifecycle, JSONL audit export</small></li>
+          <li><span>M3</span><strong>MCP MVP</strong><small>stdio server, tools, resources, prompts, protocol tests</small></li>
+          <li><span>M4</span><strong>IMAP and SMTP</strong><small>resumable sync and policy-bound send flow</small></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <img src="./assets/brand/ingresslabs-sigil.svg" alt="" aria-hidden="true">
+      <p>Lane is an IngressLabs project for local-first, agent-safe email infrastructure.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 96" role="img" aria-labelledby="title desc">
+  <title id="title">IngressLabs navigation lockup</title>
+  <desc id="desc">Compact IngressLabs lockup with radial ingress mark and wordmark.</desc>
+  <defs>
+    <linearGradient id="silver" x1="10" y1="10" x2="404" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.18" stop-color="#a8afb8"/>
+      <stop offset="0.36" stop-color="#f7f9fb"/>
+      <stop offset="0.58" stop-color="#737b85"/>
+      <stop offset="0.82" stop-color="#d9dfe6"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="route" x1="15" y1="48" x2="81" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9098a2"/>
+      <stop offset="0.5" stop-color="#f4f6f8"/>
+      <stop offset="1" stop-color="#8f98a3"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(10 10)" fill="none" stroke-linecap="round">
+    <circle cx="38" cy="38" r="30" stroke="url(#silver)" stroke-width="2.2"/>
+    <circle cx="38" cy="38" r="25.5" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1"/>
+    <g stroke="url(#route)">
+      <path d="M38 18v14M38 44v14" stroke-width="3"/>
+      <path d="M18 38h14M44 38h14" stroke-width="3"/>
+      <path d="M25.5 25.5l8.3 8.3M42.2 42.2l8.3 8.3" stroke-width="2"/>
+      <path d="M50.5 25.5 42.2 33.8M33.8 42.2 25.5 50.5" stroke-width="2"/>
+    </g>
+    <circle cx="38" cy="38" r="2.8" fill="#050505" stroke="url(#silver)" stroke-width="1.4"/>
+    <circle cx="38" cy="38" r="0.9" fill="#f7f9fb" stroke="none"/>
+  </g>
+  <text x="94" y="58" font-family="Geist, Inter, Arial, sans-serif" font-size="42" font-weight="650" letter-spacing="-1.5" fill="url(#silver)">IngressLabs</text>
+</svg>

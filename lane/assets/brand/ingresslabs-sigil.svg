@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">IngressLabs navigation sigil</title>
+  <desc id="desc">A silver circular seal derived from the IngressLabs radial route mark, with a simplified compass-gate glyph and central ingress node.</desc>
+  <defs>
+    <linearGradient id="seal-silver" x1="42" y1="34" x2="214" y2="222" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.2" stop-color="#aeb5be"/>
+      <stop offset="0.38" stop-color="#f8fafc"/>
+      <stop offset="0.58" stop-color="#767f8a"/>
+      <stop offset="0.82" stop-color="#dce2e9"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="seal-route" x1="78" y1="128" x2="178" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8f98a3"/>
+      <stop offset="0.5" stop-color="#f5f7fa"/>
+      <stop offset="1" stop-color="#9aa3ae"/>
+    </linearGradient>
+    <radialGradient id="seal-field" cx="50%" cy="42%" r="58%">
+      <stop offset="0" stop-color="#15171c"/>
+      <stop offset="0.62" stop-color="#090a0d"/>
+      <stop offset="1" stop-color="#050505"/>
+    </radialGradient>
+    <filter id="seal-shadow" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+  <g filter="url(#seal-shadow)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="128" cy="128" r="99" fill="url(#seal-field)" stroke="url(#seal-silver)" stroke-width="3.4"/>
+    <circle cx="128" cy="128" r="88" stroke="#ffffff" stroke-opacity="0.28" stroke-width="1.4"/>
+    <path d="M128 55 150 106 201 128 150 150 128 201 106 150 55 128 106 106Z" fill="#101014" fill-opacity="0.34" stroke="url(#seal-silver)" stroke-width="3.4"/>
+    <path d="M128 74v44M128 138v44" stroke="url(#seal-route)" stroke-width="4"/>
+    <path d="M74 128h44M138 128h44" stroke="url(#seal-route)" stroke-width="4"/>
+    <path d="M106 106 150 150M150 106 106 150" stroke="url(#seal-route)" stroke-opacity="0.7" stroke-width="2.6"/>
+    <circle cx="128" cy="128" r="8.2" fill="#050505" stroke="url(#seal-silver)" stroke-width="2.4"/>
+    <circle cx="128" cy="128" r="2.8" fill="#f7f9fb" stroke="none"/>
+  </g>
+</svg>

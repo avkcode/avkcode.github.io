@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">IngressLabs graphite routing pattern</title>
+  <desc id="desc">A neutral graphite and silver routing pattern for IngressLabs backgrounds.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#101014"/>
+      <stop offset="0.6" stop-color="#050505"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </linearGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+      <circle cx="0" cy="0" r="1.5" fill="#b8bdc4" fill-opacity="0.16"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#grid)" opacity="0.9"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M120 172H360V320H560V230H780V410H1080" stroke="#edf1f5" stroke-opacity="0.22" stroke-width="2"/>
+    <path d="M90 560H300V468H515V610H820V510H1110" stroke="#b8bdc4" stroke-opacity="0.18" stroke-width="2"/>
+    <path d="M180 680V610H390V382H610V300H936" stroke="#ffffff" stroke-opacity="0.11" stroke-width="1.4"/>
+    <path d="M250 92V238H450V392H700V620" stroke="#edf1f5" stroke-opacity="0.14" stroke-width="1.4"/>
+  </g>
+  <g fill="#edf1f5">
+    <circle cx="120" cy="172" r="4" opacity="0.52"/>
+    <circle cx="360" cy="320" r="4" opacity="0.34"/>
+    <circle cx="560" cy="230" r="4" opacity="0.44"/>
+    <circle cx="780" cy="410" r="4" opacity="0.38"/>
+    <circle cx="1080" cy="410" r="4" opacity="0.52"/>
+    <circle cx="300" cy="468" r="4" opacity="0.3"/>
+    <circle cx="515" cy="610" r="4" opacity="0.38"/>
+    <circle cx="820" cy="510" r="4" opacity="0.32"/>
+    <circle cx="1110" cy="510" r="4" opacity="0.48"/>
+    <circle cx="936" cy="300" r="4" opacity="0.3"/>
+  </g>
+  <g transform="translate(502 282)" fill="none" stroke-linecap="round" opacity="0.18">
+    <circle cx="100" cy="100" r="74" stroke="#edf1f5" stroke-width="3"/>
+    <circle cx="100" cy="100" r="63" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.2"/>
+    <path d="M100 44v41M100 115v41M44 100h41M115 100h41" stroke="#edf1f5" stroke-width="4"/>
+    <path d="M64 64l25 25M111 111l25 25M136 64l-25 25M89 111l-25 25" stroke="#b8bdc4" stroke-width="2.8"/>
+    <circle cx="100" cy="100" r="5.5" fill="#050505" stroke="#edf1f5" stroke-width="2"/>
+  </g>
+</svg>
