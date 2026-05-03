@@ -1,0 +1,2072 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>vLLM Real-World Lab Report</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --panel: #101014;
+      --panel-2: #0d1015;
+      --border: rgba(237, 241, 245, 0.11);
+      --hairline: rgba(237, 241, 245, 0.07);
+      --text: #ffffff;
+      --muted: #a0a0aa;
+      --blue: #edf1f5;
+      --green: #b8bdc4;
+      --yellow: #d8dde3;
+      --red: #8f98a3;
+      --purple: #c5cad0;
+      --orange: #a8afb8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.034) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.034) 1px, transparent 1px),
+        var(--bg);
+      background-size: 80px 80px, 80px 80px, auto;
+      color: var(--text);
+      font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--blue); }
+    .page { max-width: 1180px; margin: 0 auto; padding: 28px 18px 48px; }
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(42px, 8vw, 86px) clamp(18px, 5vw, 64px);
+      margin-bottom: 22px;
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(237,241,245,.10), transparent 34%),
+        linear-gradient(180deg, rgba(16,16,20,.96), rgba(10,10,12,.78));
+      box-shadow: 0 24px 70px rgba(0,0,0,.34);
+    }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 88% 10%, rgba(237,241,245,.12), transparent 24%),
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: auto, 56px 56px, 56px 56px;
+      opacity: .72;
+      pointer-events: none;
+    }
+    header > * { position: relative; z-index: 1; }
+    h1, h2, h3 { letter-spacing: 0; margin: 0; }
+    h1 { max-width: 780px; font-size: clamp(48px, 8vw, 104px); line-height: .95; font-weight: 500; }
+    h2 { font-size: 24px; margin-bottom: 10px; }
+    h3 { font-size: 17px; margin-bottom: 8px; }
+    p { margin: 0 0 14px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre {
+      overflow: auto;
+      margin: 0;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #080c11;
+      color: #dbe8f4;
+    }
+    .lede { max-width: 820px; color: var(--muted); font-size: 18px; margin-top: 16px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #d7e6f5;
+      background: #101923;
+      white-space: nowrap;
+    }
+    .band {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 22px 0 28px;
+    }
+    .metric {
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(16,16,20,.96), rgba(10,10,12,.9)), var(--panel);
+      padding: 14px;
+      min-height: 116px;
+    }
+    .metric b { display: block; font-size: 26px; line-height: 1.1; margin: 5px 0; }
+    .metric span { color: var(--muted); font-size: 13px; }
+    .section {
+      border-top: 1px solid var(--hairline);
+      padding: 34px 0;
+    }
+    .two {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .panel {
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(16,16,20,.72), rgba(10,10,12,.54)), rgba(16,16,20,.52);
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045), 0 18px 48px rgba(0,0,0,.18);
+    }
+    .article-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 760px) minmax(280px, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .article {
+      max-width: 760px;
+    }
+    .article p { color: #dbe5ef; }
+    .article strong { color: #fff; }
+    .article a {
+      color: #fff;
+      text-decoration-color: rgba(255,255,255,.34);
+      text-underline-offset: 3px;
+    }
+    .lab-side {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+    .side-module {
+      border-radius: 8px;
+      padding: 16px;
+      background:
+        linear-gradient(180deg, rgba(237,241,245,.055), rgba(237,241,245,.018)),
+        rgba(10,10,12,.78);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 18px 42px rgba(0,0,0,.16);
+    }
+    .side-module h2 {
+      margin: 8px 0 0;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 520;
+    }
+    .side-module h3 {
+      margin-bottom: 12px;
+      color: #f6f8fa;
+    }
+    .side-kicker {
+      color: #8f98a3;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .mix-row {
+      display: grid;
+      grid-template-columns: 112px 1fr 42px;
+      gap: 9px;
+      align-items: center;
+      margin: 9px 0;
+      color: #dfe6ee;
+      font-size: 12px;
+    }
+    .mix-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(237,241,245,.08);
+      overflow: hidden;
+    }
+    .mix-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f4f6f8, #8f98a3);
+    }
+    .mix-row b {
+      color: #aeb7c1;
+      font-weight: 600;
+      text-align: right;
+    }
+    .lane-grid {
+      display: grid;
+      gap: 7px;
+    }
+    .lane-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 34px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(237,241,245,.055);
+      color: #edf1f5;
+      font-size: 12px;
+    }
+    .lane-pill span { color: #8f98a3; }
+    .span-card {
+      display: grid;
+      gap: 9px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(5,5,5,.52);
+    }
+    .span-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #c9d1da;
+      font-size: 12px;
+    }
+    .span-line code { color: #fff; }
+    .block-strip {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .block-strip span {
+      height: 28px;
+      border-radius: 4px;
+      background: rgba(237,241,245,.18);
+    }
+    .block-strip span:nth-child(-n+7) { background: rgba(237,241,245,.74); }
+    .block-strip span:nth-child(3),
+    .block-strip span:nth-child(4),
+    .block-strip span:nth-child(5) { background: rgba(143,152,163,.92); }
+    .side-note {
+      margin: 0;
+      color: #9da6b0;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .chart {
+      width: 100%;
+      height: 360px;
+      display: block;
+      border-radius: 8px;
+      background: var(--panel-2);
+      border: 0;
+    }
+    .topology {
+      width: 100%;
+      height: 430px;
+      display: block;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px),
+        radial-gradient(circle at 18% 14%, rgba(237,241,245,.075), transparent 24%),
+        linear-gradient(180deg, rgba(13,16,21,.95), rgba(5,5,5,.97));
+      background-size: 46px 46px, 46px 46px, auto, auto;
+      border: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045), inset 0 -1px 0 rgba(255,255,255,.035);
+    }
+    .interactive-panel {
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(237,241,245,.045), transparent 42%),
+        rgba(10,10,12,.72);
+    }
+    .interactive-panel h2 { margin: 2px 4px 12px; }
+    .diagram-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .diagram-head h2 { margin: 2px 0 0; }
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      max-width: 410px;
+    }
+    .source-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(237,241,245,.07);
+      color: #e9edf2;
+      text-decoration: none;
+      font-size: 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+    }
+    .source-links a:hover { background: rgba(237,241,245,.14); }
+    .diagram-frame {
+      position: relative;
+    }
+    .expand-diagram {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      color: #f5f7f9;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.055)),
+        rgba(5,5,5,.66);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 10px 28px rgba(0,0,0,.34);
+      backdrop-filter: blur(10px);
+    }
+    .expand-diagram:hover { background: rgba(237,241,245,.18); }
+    .expand-diagram svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .diagram-modal[hidden] { display: none; }
+    .diagram-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0,0,0,.78);
+      backdrop-filter: blur(14px);
+    }
+    .modal-panel {
+      width: min(1120px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: hidden;
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(237,241,245,.065), transparent 34%),
+        rgba(8,9,12,.96);
+      box-shadow: 0 34px 90px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 16px 12px;
+    }
+    .modal-head h3 {
+      margin: 1px 0 8px;
+      font-size: 18px;
+    }
+    .modal-controls {
+      margin: 10px 0 0;
+    }
+    .modal-caption {
+      margin: 10px 0 0;
+    }
+    .timeline-controls input[type="range"] {
+      flex: 1 1 220px;
+      min-width: 180px;
+      accent-color: #edf1f5;
+    }
+    .modal-body {
+      padding: 0 16px 16px;
+    }
+    .modal-body .topology {
+      height: min(68vh, 680px);
+      min-height: 520px;
+    }
+    .modal-close {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      font-size: 20px;
+      line-height: 1;
+    }
+    body.modal-open { overflow: hidden; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+    button {
+      border: 0;
+      color: #f4f6f8;
+      background:
+        linear-gradient(180deg, rgba(237,241,245,.13), rgba(184,189,196,.045)),
+        rgba(12,15,20,.88);
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 7px 13px;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    button.active {
+      color: #050505;
+      background: linear-gradient(180deg, #f5f7f9, #a8afb8);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 6px; border-bottom: 1px solid var(--hairline); text-align: left; }
+    th { color: var(--muted); font-weight: 600; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .finding { margin: 0 0 14px; padding: 14px 0; border: 0; border-bottom: 1px solid var(--hairline); background: transparent; }
+    .finding p { color: var(--muted); }
+    .advice { margin: 0; padding-left: 18px; color: #dfeaf5; }
+    .advice li { margin: 6px 0; }
+    .model-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #dbe5ef;
+    }
+    .model-list li { margin: 8px 0; }
+    .build-steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    details.build-step {
+      border-radius: 8px;
+      background: rgba(237,241,245,.045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+      overflow: hidden;
+    }
+    details.build-step summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      color: #f5f7f9;
+      font-weight: 650;
+    }
+    details.build-step p {
+      margin: 0;
+      padding: 0 14px 12px;
+      color: #aab3bd;
+    }
+    details.build-step pre {
+      margin: 0 14px 14px;
+      background: rgba(5,5,5,.64);
+    }
+    .caption {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin: 10px 4px 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(237,241,245,.055);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 0;
+      border-radius: 8px;
+      background: var(--hairline);
+    }
+    .source-list a {
+      display: flex;
+      align-items: center;
+      min-height: 58px;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(16,16,20,.98), rgba(10,10,12,.92));
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .source-list a:hover { background: #171a20; }
+    @media (max-width: 850px) {
+      .band, .two, .source-list, .article-shell { grid-template-columns: 1fr; }
+      .page { padding: 20px 14px 36px; }
+      .chart, .topology { height: 330px; }
+      .lab-side { position: static; }
+      .diagram-head { display: block; }
+      .source-links { justify-content: flex-start; margin-bottom: 10px; }
+      .modal-head { display: block; }
+      .modal-close { position: absolute; top: 28px; right: 28px; }
+      .modal-body .topology { min-height: 390px; height: 64vh; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>vLLM routing and KV</h1>
+    </header>
+
+    <section class="section">
+      <div class="article-shell">
+      <article class="article">
+        <p>The vLLM real-world lab models mixed production traffic instead of a single throughput number. <a href="https://ingresslabs.net/fck">FCK</a> generated the request mixes, ran the scheduler and routing profiles, captured build outcomes, and emitted the evidence used for the charts below. The lab covers six request classes: interactive chat, RAG with repeated prefixes, long-prefill requests, agent tool loops, batch summarization, and slow streaming clients.</p>
+        <p>The adapter matrix compares vLLM V1, SGLang, llama.cpp, and TGI through the same OpenAI-compatible contract. The serving sweep covers the profiles operators actually tune: one balanced pool, a large-token pool, a small interactive pool, prefix-cache routing, slow-client isolation, and class-aware routing.</p>
+        <p><strong>Main result: one global vLLM pool is a poor default for mixed traffic.</strong> The best profile was <code>vllm-v1/class-aware-router</code>, which gave the strongest combined tradeoff across first-token latency, token cadence, slow-reader isolation, and useful throughput.</p>
+        <p>The practical advice is to split lanes before changing kernels. Keep interactive traffic on a smaller <code>max_num_batched_tokens</code> budget with moderate <code>max_num_seqs</code>, then move long-context and batch work to a separate pool with a larger token budget.</p>
+        <p>Chunked prefill needs the same treatment. Keep <code>max_long_partial_prefills</code> below <code>max_num_partial_prefills</code> so short prompts can still enter the scheduler while long prompts are being processed. Treat token budget, sequence count, partial-prefill limits, and stream interval as workload controls.</p>
+        <p>The scale run made the routing result clearer. The single shared pool failed the TTFT/ITL gate under the larger workload, while class-aware routing accepted nearly all requests. Prefix-cache-only and slow-client-only profiles helped their own lanes, but neither worked as a whole-system strategy.</p>
+        <p>The source-build run added useful deployment checks. Debian needed a larger rootfs and then hit a GCC version gate. Fedora 44 with GCC 16, Python 3.14, <code>VLLM_TARGET_DEVICE=cpu</code>, <code>MAX_JOBS=4</code>, and <code>numactl-devel</code> built the extension modules successfully. The build also surfaced a deployment note worth keeping: install tcmalloc for better runtime performance.</p>
+        <p>The hybrid KV lab covers the PagedAttention rewrite path. It keeps vLLM's block ownership, prefix sharing, refcounts, partial blocks, eviction, and copy-on-write semantics, then exposes compact logical spans to future kernels instead of a long per-token block table.</p>
+        <p>The correctness oracle compares each layout against a plain reference across odd lengths, MQA/GQA, ALiBI, sliding windows, prefix reuse, copy-on-write, partial final blocks, and FP8-style scaling. The first run passed 30/30 cases and ranked <code>virtual-contiguous</code> and <code>hybrid-prefix-shared</code> as the first layouts to profile on hardware.</p>
+      </article>
+      <aside class="lab-side" aria-label="Opening lab summary">
+        <section class="side-module">
+          <span class="side-kicker">routing shape</span>
+          <h2>Six request classes, separate serving lanes, one scheduler budget problem.</h2>
+        </section>
+        <section class="side-module">
+          <h3>Request Mix</h3>
+          <div class="mix-row"><span>interactive</span><div class="mix-track"><span class="mix-fill" style="width:30%"></span></div><b>30%</b></div>
+          <div class="mix-row"><span>RAG prefix</span><div class="mix-track"><span class="mix-fill" style="width:28%"></span></div><b>28%</b></div>
+          <div class="mix-row"><span>agent loop</span><div class="mix-track"><span class="mix-fill" style="width:12%"></span></div><b>12%</b></div>
+          <div class="mix-row"><span>long prefill</span><div class="mix-track"><span class="mix-fill" style="width:10%"></span></div><b>10%</b></div>
+          <div class="mix-row"><span>batch</span><div class="mix-track"><span class="mix-fill" style="width:10%"></span></div><b>10%</b></div>
+          <div class="mix-row"><span>slow stream</span><div class="mix-track"><span class="mix-fill" style="width:10%"></span></div><b>10%</b></div>
+        </section>
+        <section class="side-module">
+          <h3>Router Policy</h3>
+          <div class="lane-grid">
+            <div class="lane-pill"><strong>short prompts</strong><span>small token budget</span></div>
+            <div class="lane-pill"><strong>shared prefixes</strong><span>cache-aware lane</span></div>
+            <div class="lane-pill"><strong>long context</strong><span>partial prefill</span></div>
+            <div class="lane-pill"><strong>slow readers</strong><span>edge isolation</span></div>
+          </div>
+        </section>
+        <section class="side-module">
+          <h3>KV Span Sketch</h3>
+          <div class="span-card">
+            <div class="span-line"><span>logical</span><code>8192..12287</code></div>
+            <div class="span-line"><span>physical run</span><code>44..75</code></div>
+            <div class="span-line"><span>prefix</span><code>shared + refcounted</code></div>
+            <div class="block-strip" aria-label="KV block run sketch">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <p class="side-note">The kernel-facing idea is a compact span table, while the allocator still owns fragmented paged blocks.</p>
+        </section>
+      </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Profile Stress Result</h2>
+      <div class="two">
+        <div class="panel">
+          <h3>600k Request Stress Result</h3>
+          <svg id="profile-chart" class="chart" viewBox="0 0 760 360" role="img" aria-label="Large-scale vLLM profile comparison"></svg>
+        </div>
+        <div class="panel">
+          <h3>Profile Matrix</h3>
+          <table id="profile-table">
+            <thead><tr><th>Profile</th><th class="num">Goodput</th><th class="num">TTFT</th><th class="num">ITL</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <h3>Tuning Read</h3>
+        <ul class="advice">
+          <li>One global pool is not a safe production default for mixed traffic. Under the 600k-request stress, it produced zero gated goodput.</li>
+          <li>A larger global token budget is not a router. It improved the single-pool control but still missed the gate with p99 TTFT over one second.</li>
+          <li>Prefix-cache routing is valuable but incomplete. It protected RAG and agent-tool-loop requests while starving ordinary interactive, batch, long-prefill, and slow-client classes.</li>
+          <li>Slow-client isolation fixed slow-reader penalty but did not solve long-prefill queueing. Use it as an edge/proxy lane inside a broader router.</li>
+          <li>The winning shape is class-aware: short interactive, prefix-heavy, long-prefill, batch, and slow-stream lanes with different token budgets and sequence limits.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Source Build Lab</h2>
+      <div class="panel">
+        <h3>Build Outcomes</h3>
+        <svg id="build-chart" class="chart" viewBox="0 0 760 360" role="img" aria-label="vLLM source build outcomes"></svg>
+        <div class="build-steps">
+          <details class="build-step">
+            <summary>Fedora source-build recipe</summary>
+            <p>This was the passing path in the lab: Fedora 44, GCC 16, Python 3.14, 12 GiB rootfs, <code>numactl-devel</code>, and limited parallelism.</p>
+            <pre><code>dnf install -y git gcc gcc-c++ cmake ninja-build python3.14 python3.14-devel numactl-devel
+git clone https://github.com/vllm-project/vllm.git
+cd vllm
+git checkout 1c607d7b2cd4fb572b919c6053f19d0577203495
+python3.14 -m venv .venv
+. .venv/bin/activate
+python -m pip install -U pip setuptools wheel
+VLLM_TARGET_DEVICE=cpu MAX_JOBS=4 python -m pip install -v -e .</code></pre>
+          </details>
+          <details class="build-step">
+            <summary>Debian source-build preflight</summary>
+            <p>Debian 12 exposed two checks before a successful build: disk space for the PyTorch wheel and GCC/G++ version. Use a larger rootfs and a compiler at or above the x86 backend gate.</p>
+            <pre><code>apt-get update
+apt-get install -y git cmake ninja-build python3 python3-venv python3-dev libnuma-dev
+# Debian 12 GCC/G++ 12.2 failed the current x86 backend gate.
+# Install a newer GCC/G++ toolchain first, then set CC/CXX.
+git clone https://github.com/vllm-project/vllm.git
+cd vllm
+git checkout 1c607d7b2cd4fb572b919c6053f19d0577203495
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -U pip setuptools wheel
+CC=gcc-13 CXX=g++-13 VLLM_TARGET_DEVICE=cpu MAX_JOBS=4 python -m pip install -v -e .</code></pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Hybrid KV Rewrite Lab</h2>
+      <div class="two">
+        <div class="panel">
+          <h3>Paged Blocks To Virtual Spans</h3>
+          <svg id="hybrid-chart" class="chart" viewBox="0 0 760 360" role="img" aria-label="Hybrid KV layout comparison"></svg>
+        </div>
+        <div class="panel">
+          <h3>Layout Metrics</h3>
+          <table id="hybrid-table">
+            <thead><tr><th>Layout</th><th class="num">Read Amp</th><th class="num">Waste</th><th class="num">Cost</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="two">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>KV Block Allocator Animation</h2>
+            <nav class="source-links" aria-label="vLLM KV allocator source links">
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/kv_cache_manager.py">KV manager</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/block_pool.py">block pool</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/attention/ops/paged_attn.py">PagedAttention op</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/docs/design/hybrid_kv_cache_manager.md">hybrid KV design</a>
+            </nav>
+          </div>
+          <div class="diagram-frame">
+            <svg id="kv-allocator-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="KV block allocator animation"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand KV Block Allocator Animation" data-expand-target="kv-allocator-viz" data-expand-title="KV Block Allocator Animation" data-expand-links="vLLM KV allocator source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="kv-allocator-controls"></div>
+          <p id="kv-allocator-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h3>Allocator Model</h3>
+          <ul class="model-list">
+            <li>KV memory is split into fixed-size physical blocks instead of one contiguous allocation per request.</li>
+            <li>Requests with token-identical prefixes can point at the same prefix blocks and raise refcounts.</li>
+            <li>When a shared sequence diverges, copy-on-write gives the diverging request private blocks without corrupting the shared prefix.</li>
+            <li>The hybrid path keeps those allocator semantics but emits compact logical spans so kernels can read longer runs.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="two">
+        <div class="panel">
+          <h2>Performance Chart</h2>
+          <svg id="bar-chart" class="chart" viewBox="0 0 760 360" role="img" aria-label="Performance comparison chart"></svg>
+          <div class="controls" id="metric-controls" aria-label="Metric controls"></div>
+        </div>
+        <div class="panel">
+          <h2>Top Profiles</h2>
+          <table id="rank-table">
+            <thead><tr><th>Profile</th><th class="num">TTFT</th><th class="num">ITL</th><th class="num">Goodput</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="two">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Interactive Request Router</h2>
+            <nav class="source-links" aria-label="vLLM router source links">
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/entrypoints/openai/api_server.py">API server</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/entrypoints/openai/chat_completion/serving.py">chat serving</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/sched/scheduler.py">scheduler</a>
+              <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/sched/request_queue.py">request queue</a>
+            </nav>
+          </div>
+          <div class="diagram-frame">
+            <svg id="topology" class="topology" viewBox="0 0 920 430" role="img" aria-label="Request flow through vLLM router lanes"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Interactive Request Router" data-expand-target="topology" data-expand-title="Interactive Request Router" data-expand-links="vLLM router source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls"><button id="replay-flow" type="button">Replay Flow</button></div>
+          <p id="flow-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h2>Workload Mix</h2>
+          <svg id="workload-chart" class="chart" viewBox="0 0 560 360" role="img" aria-label="Workload mix bubble chart"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="diagram-head">
+        <h2>How vLLM Works</h2>
+        <nav class="source-links" aria-label="vLLM lifecycle source links">
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/engine/async_llm.py">async engine</a>
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/sched/scheduler.py">scheduler</a>
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/kv_cache_manager.py">KV manager</a>
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/core/block_pool.py">block pool</a>
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/attention/ops/paged_attn.py">PagedAttention op</a>
+          <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/vllm/v1/worker/gpu_model_runner.py">model runner</a>
+        </nav>
+      </div>
+      <div class="two">
+        <div class="panel interactive-panel">
+          <div class="diagram-frame">
+            <svg id="mechanics" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM request lifecycle mechanics"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand How vLLM Works" data-expand-target="mechanics" data-expand-title="How vLLM Works" data-expand-links="vLLM lifecycle source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="mechanics-controls"></div>
+          <p id="mechanics-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h3 id="mechanics-title">1. API admission</h3>
+          <p id="mechanics-copy">The OpenAI-compatible server accepts a request, parses sampling parameters, tokenizes or receives token IDs, and hands work to the async engine.</p>
+          <table>
+            <tbody>
+              <tr><th>TTFT pressure</th><td id="mechanics-ttft">queueing, tokenization, long prefill</td></tr>
+              <tr><th>ITL pressure</th><td id="mechanics-itl">decode cadence, stream interval, slow clients</td></tr>
+              <tr><th>Tuning surface</th><td id="mechanics-tuning">router lanes, max_num_batched_tokens, max_num_seqs</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="two" style="margin-top:16px">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Restaurant Kitchen Analogy</h2>
+          </div>
+          <div class="diagram-frame">
+            <svg id="kitchen-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM restaurant kitchen analogy"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Restaurant Kitchen Analogy" data-expand-target="kitchen-viz" data-expand-title="Restaurant Kitchen Analogy" data-expand-links="vLLM lifecycle source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="kitchen-controls"></div>
+          <p id="kitchen-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h3>Plain-English Mapping</h3>
+          <ul class="model-list">
+            <li><strong>Order tickets</strong> are user requests waiting for the scheduler.</li>
+            <li><strong>Prep work</strong> is prefill: reading the prompt before any answer appears.</li>
+            <li><strong>The first plated item</strong> is TTFT: the first token the user can see.</li>
+            <li><strong>Plating one item at a time</strong> is decode: repeated next-token work.</li>
+            <li><strong>The prep table</strong> is KV cache: stored context that avoids redoing work.</li>
+            <li><strong>Servers carrying plates</strong> are streaming clients; slow tables can back up service.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="two" style="margin-top:16px">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Traffic Intersection View</h2>
+          </div>
+          <div class="diagram-frame">
+            <svg id="traffic-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM scheduler traffic intersection view"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Traffic Intersection View" data-expand-target="traffic-viz" data-expand-title="Traffic Intersection View" data-expand-links="vLLM lifecycle source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="traffic-controls"></div>
+          <p id="traffic-caption" class="caption"></p>
+        </div>
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Memory Hotel Map</h2>
+          </div>
+          <div class="diagram-frame">
+            <svg id="hotel-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM KV cache memory hotel map"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Memory Hotel Map" data-expand-target="hotel-viz" data-expand-title="Memory Hotel Map" data-expand-links="vLLM KV allocator source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="hotel-controls"></div>
+          <p id="hotel-caption" class="caption"></p>
+        </div>
+      </div>
+      <div class="two" style="margin-top:16px">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Token Timeline Scrubber</h2>
+          </div>
+          <div class="diagram-frame">
+            <svg id="timeline-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM token timeline scrubber"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Token Timeline Scrubber" data-expand-target="timeline-viz" data-expand-title="Token Timeline Scrubber" data-expand-links="vLLM lifecycle source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls timeline-controls" id="timeline-controls">
+            <input id="timeline-range" type="range" min="0" max="100" value="0" aria-label="Scrub request timeline">
+            <button id="timeline-play" type="button">Play</button>
+          </div>
+          <p id="timeline-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h3>Latency Read</h3>
+          <ul class="model-list">
+            <li><strong>Queue</strong> is time before the scheduler admits the request into an engine step.</li>
+            <li><strong>Prefill</strong> processes prompt tokens and usually dominates TTFT for long contexts.</li>
+            <li><strong>First token</strong> is the user-visible TTFT boundary.</li>
+            <li><strong>Decode</strong> advances active requests token by token; this is where ITL shows up.</li>
+            <li><strong>Streaming</strong> can stretch visible cadence even when the engine is healthy.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="two" style="margin-top:16px">
+        <div class="panel interactive-panel">
+          <div class="diagram-head">
+            <h2>Scheduler Budget Explorer</h2>
+          </div>
+          <div class="diagram-frame">
+            <svg id="budget-viz" class="topology" viewBox="0 0 920 430" role="img" aria-label="vLLM scheduler budget explorer"></svg>
+            <button class="expand-diagram" type="button" aria-label="Expand Scheduler Budget Explorer" data-expand-target="budget-viz" data-expand-title="Scheduler Budget Explorer" data-expand-links="vLLM lifecycle source links">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5"/><path d="M3 3l7 7"/><path d="M16 21h5v-5"/><path d="M21 21l-7-7"/></svg>
+            </button>
+          </div>
+          <div class="controls" id="budget-controls"></div>
+          <p id="budget-caption" class="caption"></p>
+        </div>
+        <div class="panel">
+          <h3>High-Level Model</h3>
+          <ul class="model-list">
+            <li>Requests enter the OpenAI-compatible API and wait for an engine step.</li>
+            <li>The scheduler spends each step's token budget on prefill and decode work.</li>
+            <li>Prefill is prompt processing; long prompts need chunking so decode is not starved.</li>
+            <li>Decode advances many active requests by the next token through continuous batching.</li>
+            <li>KV cache blocks are the memory constraint; prefix reuse helps only when tokens match.</li>
+            <li>Streaming turns engine cadence into client-visible TTFT and inter-token gaps.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Findings</h2>
+      <div id="findings"></div>
+    </section>
+
+    <section class="section">
+      <div>
+        <details class="build-step">
+          <summary>GPU Deploy Template</summary>
+          <p>This is the deployment shape used by FCK for the lab: vLLM runs behind a small router, chunked prefill is enabled, and the scheduler limits are explicit so each serving lane can be changed and measured independently.</p>
+          <pre><code>services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    command:
+      - --model=&lt;your-model&gt;
+      - --host=0.0.0.0
+      - --port=8000
+      - --enable-chunked-prefill
+      - --max-num-batched-tokens=4096
+      - --max-num-seqs=128
+      - --max-num-partial-prefills=2
+      - --max-long-partial-prefills=1
+      - --long-prefill-token-threshold=4096
+    ports: ["8000:8000"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+
+  router:
+    image: nginx:stable
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports: ["8080:8080"]
+    depends_on: [vllm]</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>References</h2>
+      <div class="source-list">
+        <a href="https://docs.vllm.ai/en/latest/configuration/optimization/">vLLM optimization and tuning</a>
+        <a href="https://docs.vllm.ai/en/latest/configuration/engine_args/">vLLM scheduler and engine arguments</a>
+        <a href="https://docs.vllm.ai/en/latest/cli/bench/serve/">vLLM bench serve</a>
+        <a href="https://arxiv.org/abs/2309.06180">PagedAttention paper</a>
+        <a href="https://arxiv.org/abs/2405.04437">vAttention paper</a>
+        <a href="https://github.com/vllm-project/vllm/tree/1c607d7b2cd4fb572b919c6053f19d0577203495">vLLM source commit used in builds</a>
+        <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/cmake/cpu_extension.cmake">vLLM CPU extension CMake</a>
+        <a href="https://github.com/vllm-project/vllm/blob/1c607d7b2cd4fb572b919c6053f19d0577203495/setup.py">vLLM setup.py build surface</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="diagram-modal" class="diagram-modal" hidden role="dialog" aria-modal="true" aria-labelledby="diagram-modal-title">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <div>
+          <h3 id="diagram-modal-title">Diagram</h3>
+          <nav id="diagram-modal-links" class="source-links" aria-label="Expanded diagram source links"></nav>
+          <div id="diagram-modal-controls" class="controls modal-controls" aria-label="Expanded diagram controls"></div>
+          <p id="diagram-modal-caption" class="caption modal-caption"></p>
+        </div>
+        <button id="diagram-modal-close" class="modal-close" type="button" aria-label="Close expanded diagram">&#215;</button>
+      </div>
+      <div id="diagram-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    const report = {
+      winner: {strategy:"class-aware-router", project:"vllm-v1", goodputRps:22.32, interactiveTtftP99Ms:254.59, interTokenGapP99Ms:33.29, longPrefillTtftP99Ms:408.62, prefixCacheHitRate:0.46, kvPressureP99:0.55, slowClientPenaltyPct:2.43, recommendationScore:385.3},
+      baseline: {strategy:"single-pool-balanced", project:"vllm-v1", goodputRps:18.91, interactiveTtftP99Ms:465.35, interTokenGapP99Ms:52.04, longPrefillTtftP99Ms:767.83, prefixCacheHitRate:0.44, kvPressureP99:0.64, slowClientPenaltyPct:10.12, recommendationScore:315.65},
+      improvements: {interactiveTtftReductionPct:45.29, interTokenGapReductionPct:36.03, goodputIncreasePct:18.03, slowClientPenaltyReductionPct:75.99},
+      workloads: [
+        {name:"agent-tool-loop", share:0.12, requestRate:2.0, promptP99Tokens:4200, sharedPrefixRate:0.45, slowClientRate:0.03, latencyClass:"interactive"},
+        {name:"batch-summary", share:0.10, requestRate:1.0, promptP99Tokens:12000, sharedPrefixRate:0.20, slowClientRate:0.00, latencyClass:"batch"},
+        {name:"interactive-chat", share:0.30, requestRate:7.0, promptP99Tokens:1800, sharedPrefixRate:0.25, slowClientRate:0.02, latencyClass:"interactive"},
+        {name:"long-prefill", share:0.10, requestRate:1.2, promptP99Tokens:24000, sharedPrefixRate:0.12, slowClientRate:0.01, latencyClass:"long"},
+        {name:"rag-shared-prefix", share:0.28, requestRate:5.0, promptP99Tokens:6800, sharedPrefixRate:0.72, slowClientRate:0.02, latencyClass:"interactive"},
+        {name:"slow-stream-client", share:0.10, requestRate:1.5, promptP99Tokens:2200, sharedPrefixRate:0.18, slowClientRate:0.85, latencyClass:"interactive"}
+      ],
+      metrics: [
+        {profile:"vllm-v1/class-aware-router", project:"vllm-v1", strategy:"class-aware-router", ttft:254.59, itl:33.29, goodput:22.32, score:385.3},
+        {profile:"sglang/class-aware-router", project:"sglang", strategy:"class-aware-router", ttft:234.22, itl:30.63, goodput:20.98, score:361.98},
+        {profile:"vllm-v1/prefix-cache-rag", project:"vllm-v1", strategy:"prefix-cache-rag", ttft:359.94, itl:45.80, goodput:20.80, score:352.81},
+        {profile:"vllm-v1/global-large-token-budget", project:"vllm-v1", strategy:"global-large-token-budget", ttft:614.27, itl:48.40, goodput:20.61, score:342.71},
+        {profile:"sglang/prefix-cache-rag", project:"sglang", strategy:"prefix-cache-rag", ttft:331.14, itl:42.13, goodput:19.56, score:331.44},
+        {profile:"sglang/global-large-token-budget", project:"sglang", strategy:"global-large-token-budget", ttft:565.13, itl:44.53, goodput:19.38, score:322.02},
+        {profile:"vllm-v1/single-pool-balanced", project:"vllm-v1", strategy:"single-pool-balanced", ttft:465.35, itl:52.04, goodput:18.91, score:315.65},
+        {profile:"vllm-v1/slow-client-isolation", project:"vllm-v1", strategy:"slow-client-isolation", ttft:353.67, itl:34.78, goodput:18.53, score:314.44}
+      ],
+      findings: [
+        {title:"Class-aware routing beats one global vLLM pool for mixed traffic", impact:"Best profile vllm-v1/class-aware-router cut p99 TTFT by 45.29% and p99 inter-token gap by 36.03% versus baseline.", advice:["Use one small-token-budget interactive pool and one long/batch pool before tuning kernels.","Treat max_num_batched_tokens as a per-lane control, not a cluster-wide constant."]},
+        {title:"A larger token budget improves long-prefill capacity but hurts interactive TTFT", impact:"The global-large-token-budget strategy keeps long prompts moving but is dominated by the routed profile for user-facing latency.", advice:["Use max_num_batched_tokens=8192 or higher only in long-context lanes."]},
+        {title:"Slow streaming clients should be isolated from engine cadence", impact:"The best profile reduced slow-client penalty by 75.99% versus baseline.", advice:["Put slow SSE readers behind a proxy or worker lane with explicit write deadlines.","Do not interpret socket backpressure as a scheduler or kernel regression without this test."]},
+        {title:"Large profile stress punishes narrow fixes", impact:"Across 600,000 requests, class-aware routing was the only profile that kept the whole workload inside the TTFT/ITL gates.", advice:["Promote class-aware routing to the first accelerator experiment.","Keep prefix-cache and slow-client isolation as lanes inside the router, not standalone serving strategies."]},
+        {title:"Hybrid KV is now a testable kernel-rewrite candidate", impact:"The lab preserved PagedAttention semantics while changing the kernel-facing view. It simulated classic paged blocks, packed tables, hot-tail contiguous allocation, virtual-contiguous spans, and hybrid prefix sharing, then checked each layout against the same reference attention path before ranking virtual-contiguous and hybrid-prefix-shared first.", advice:["Keep block ownership, refcounts, prefix sharing, eviction, and copy-on-write in the KV manager.","Emit compact span-table records to kernels: logical start, length, physical run, sharing state, and quantization scale metadata.","Measure read amplification, memory waste, locality, and estimated decode-read cost before writing a hardware kernel.","Validate with real L2/DRAM counters, occupancy, CUDA graph behavior, TTFT, and ITL before claiming speed."]}
+      ],
+      profileScale: [
+        {profile:"class-aware-router", requests:120000, acceptedPct:99.72, goodput:66.483, ttft:387.94, itl:47.33, queue:310.07, slowPenalty:16.19},
+        {profile:"prefix-cache-rag", requests:120000, acceptedPct:40.34, goodput:26.89, ttft:1766.03, itl:105.07, queue:1475.72, slowPenalty:52.79},
+        {profile:"slow-client-isolation", requests:120000, acceptedPct:10.56, goodput:7.043, ttft:2293.08, itl:85.29, queue:2001.69, slowPenalty:0.0},
+        {profile:"global-large-token-budget", requests:120000, acceptedPct:6.46, goodput:4.309, ttft:1071.02, itl:97.34, queue:888.14, slowPenalty:59.43},
+        {profile:"single-pool-balanced", requests:120000, acceptedPct:0.0, goodput:0.0, ttft:2455.03, itl:120.47, queue:2203.19, slowPenalty:41.65}
+      ],
+      sourceBuilds: [
+        {env:"Debian 12 default rootfs", result:"failed: no space during PyTorch wheel", status:"fail", seconds:0, detail:"1.5 GiB catalog rootfs exhausted at 150.5/190.2 MB of torch-2.11.0+cpu."},
+        {env:"Debian 12 + diskGiB 12", result:"failed: GCC 12.2 below 12.3 gate", status:"fail", seconds:3, detail:"CMake reached the x86 backend and rejected GCC/G++ 12.2."},
+        {env:"Fedora 44, no NUMA headers", result:"failed: missing numa.h", status:"fail", seconds:712, detail:"Compiled 428 targets before csrc/cpu/utils.cpp needed numactl-devel."},
+        {env:"Fedora 44 + numactl-devel", result:"passed: extensions built", status:"pass", seconds:853, detail:"Built _C, _C_AVX512, and _C_AVX2 shared modules with MAX_JOBS=4."},
+        {env:"Fedora CUDA negative control", result:"failed fast: no CUDA runtime env", status:"warn", seconds:1.26, detail:"VLLM_TARGET_DEVICE=cuda without CUDA runtime metadata failed with Unknown runtime environment."}
+      ],
+      hybridKV: [
+        {layout:"virtual-contiguous", readAmplification:1.08, memoryWastePct:1.56, localityScore:90.43, estimatedDecodeCost:2649.08, prefixReusePct:15.63, status:"passed"},
+        {layout:"hybrid-prefix-shared", readAmplification:1.12, memoryWastePct:1.58, localityScore:86.41, estimatedDecodeCost:3173.11, prefixReusePct:16.99, status:"passed"},
+        {layout:"hot-tail-contiguous", readAmplification:1.28, memoryWastePct:1.49, localityScore:71.89, estimatedDecodeCost:5493.56, prefixReusePct:14.27, status:"passed"},
+        {layout:"packed-block-table", readAmplification:1.42, memoryWastePct:1.49, localityScore:62.02, estimatedDecodeCost:7215.82, prefixReusePct:14.27, status:"passed"},
+        {layout:"classic-paged", readAmplification:1.70, memoryWastePct:1.49, localityScore:46.82, estimatedDecodeCost:10368.30, prefixReusePct:14.27, status:"passed"}
+      ]
+    };
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const colors = ["#58a6ff", "#7ee787", "#f2cc60", "#ff7b72", "#d2a8ff", "#ffa657"];
+    const diagramInk = ["#f5f7f9", "#d9dee4", "#b9c0c8", "#8f98a3", "#c8cfd7", "#a6aeb8"];
+    function svgEl(parent, name, attrs) {
+      const node = document.createElementNS(svgNS, name);
+      for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, value);
+      parent.appendChild(node);
+      return node;
+    }
+    function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+    function fmt(value, suffix) { return Number(value).toFixed(2) + (suffix || ""); }
+    function diagramDefs(svg, prefix) {
+      const defs = svgEl(svg, "defs", {});
+      const node = svgEl(defs, "linearGradient", {id: `${prefix}-node`, x1: "0", y1: "0", x2: "0", y2: "1"});
+      svgEl(node, "stop", {offset: "0%", "stop-color": "#171a20"});
+      svgEl(node, "stop", {offset: "100%", "stop-color": "#0a0c10"});
+      const active = svgEl(defs, "linearGradient", {id: `${prefix}-active`, x1: "0", y1: "0", x2: "1", y2: "1"});
+      svgEl(active, "stop", {offset: "0%", "stop-color": "#fbfcfd"});
+      svgEl(active, "stop", {offset: "100%", "stop-color": "#929aa4"});
+      const route = svgEl(defs, "linearGradient", {id: `${prefix}-route`, x1: "0", y1: "0", x2: "1", y2: "0"});
+      svgEl(route, "stop", {offset: "0%", "stop-color": "#5f6873", "stop-opacity": ".2"});
+      svgEl(route, "stop", {offset: "50%", "stop-color": "#edf1f5", "stop-opacity": ".58"});
+      svgEl(route, "stop", {offset: "100%", "stop-color": "#5f6873", "stop-opacity": ".2"});
+      const glow = svgEl(defs, "filter", {id: `${prefix}-glow`, x: "-40%", y: "-40%", width: "180%", height: "180%"});
+      svgEl(glow, "feGaussianBlur", {stdDeviation: "5", result: "blur"});
+      const merge = svgEl(glow, "feMerge", {});
+      svgEl(merge, "feMergeNode", {"in": "blur"});
+      svgEl(merge, "feMergeNode", {"in": "SourceGraphic"});
+      return {node: `url(#${prefix}-node)`, active: `url(#${prefix}-active)`, route: `url(#${prefix}-route)`, glow: `url(#${prefix}-glow)`};
+    }
+    function curveBetween(a, b, width) {
+      const half = width / 2;
+      const x1 = a.x + half, y1 = a.y;
+      const x2 = b.x - half, y2 = b.y;
+      const bend = Math.max(58, Math.abs(x2 - x1) * .52);
+      return `M${x1} ${y1} C${x1 + bend} ${y1} ${x2 - bend} ${y2} ${x2} ${y2}`;
+    }
+    function multiCurve(points) {
+      let d = `M${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1], b = points[i];
+        const bend = Math.max(56, Math.abs(b.x - a.x) * .48);
+        d += ` C${a.x + bend} ${a.y} ${b.x - bend} ${b.y} ${b.x} ${b.y}`;
+      }
+      return d;
+    }
+    function drawNode(svg, node, defs, opts = {}) {
+      const width = opts.width || 142, height = opts.height || 62;
+      const fill = opts.active ? defs.active : defs.node;
+      const stroke = opts.active ? "rgba(255,255,255,.72)" : "rgba(237,241,245,.16)";
+      const text = opts.active ? "#050505" : "#f3f6f8";
+      const sub = opts.active ? "rgba(5,5,5,.64)" : "#8e98a4";
+      if (opts.active) {
+        svgEl(svg, "rect", {x: node.x - width / 2 - 8, y: node.y - height / 2 - 8, width: width + 16, height: height + 16, rx: 16, fill: "none", stroke: "rgba(237,241,245,.18)", "stroke-width": 1});
+      }
+      svgEl(svg, "rect", {x: node.x - width / 2, y: node.y - height / 2, width, height, rx: 12, fill, stroke, "stroke-width": opts.active ? 1.2 : .8});
+      svgEl(svg, "circle", {cx: node.x - width / 2 + 18, cy: node.y - height / 2 + 18, r: 4.5, fill: opts.active ? "#050505" : "#d7dde4", opacity: opts.active ? .7 : .46});
+      svgEl(svg, "text", {x: node.x - width / 2 + 31, y: node.y - 2, fill: text, "font-size": 13, "font-weight": 650}).textContent = node.label;
+      if (node.sub) svgEl(svg, "text", {x: node.x - width / 2 + 31, y: node.y + 17, fill: sub, "font-size": 11}).textContent = node.sub;
+    }
+
+    function renderBars(metric) {
+      const svg = document.getElementById("bar-chart");
+      clear(svg);
+      const data = report.metrics.slice(0, 8);
+      const width = 760, height = 360, left = 250, top = 28, row = 34, max = Math.max(...data.map(d => d[metric]));
+      svgEl(svg, "text", {x: 18, y: 24, fill: "#aab8c7", "font-size": 13}).textContent = metric === "goodput" ? "Higher is better" : "Lower is better";
+      data.forEach((d, i) => {
+        const y = top + i * row + 18;
+        const bar = (d[metric] / max) * 420;
+        svgEl(svg, "text", {x: 18, y, fill: "#dbe8f4", "font-size": 12}).textContent = d.profile;
+        svgEl(svg, "rect", {x: left, y: y - 13, width: 420, height: 18, rx: 4, fill: "#172230"});
+        svgEl(svg, "rect", {x: left, y: y - 13, width: bar, height: 18, rx: 4, fill: colors[i % colors.length]});
+        svgEl(svg, "text", {x: left + bar + 8, y: y + 1, fill: "#edf4fb", "font-size": 12}).textContent = fmt(d[metric], metric === "goodput" ? " rps" : " ms");
+      });
+    }
+
+    function renderControls() {
+      const metrics = [
+        ["ttft", "p99 TTFT"],
+        ["itl", "p99 ITL"],
+        ["goodput", "Goodput"]
+      ];
+      const root = document.getElementById("metric-controls");
+      metrics.forEach(([key, label], i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = label;
+        btn.className = i === 0 ? "active" : "";
+        btn.onclick = () => {
+          [...root.querySelectorAll("button")].forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+          renderBars(key);
+        };
+        root.appendChild(btn);
+      });
+      renderBars("ttft");
+    }
+
+    function renderTable() {
+      const body = document.querySelector("#rank-table tbody");
+      body.innerHTML = report.metrics.map(row => `<tr><td>${row.profile}</td><td class="num">${fmt(row.ttft)}</td><td class="num">${fmt(row.itl)}</td><td class="num">${fmt(row.goodput)}</td></tr>`).join("");
+    }
+
+    function drawTopology(targetId = "topology", captionId = "flow-caption", prefix = "router") {
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const run = String((Number(svg.dataset.run) || 0) + 1);
+      svg.dataset.run = run;
+      const defs = diagramDefs(svg, prefix);
+      const lanes = [
+        {id:"ingress", x:82, y:215, label:"OpenAI API", sub:"request ingress"},
+        {id:"router", x:242, y:215, label:"class router", sub:"shape traffic"},
+        {id:"interactive", x:455, y:96, label:"interactive", sub:"small token budget"},
+        {id:"long", x:455, y:215, label:"long and batch", sub:"large prefill lane"},
+        {id:"prefix", x:455, y:334, label:"prefix reuse", sub:"shared prompts"},
+        {id:"kv", x:682, y:215, label:"KV pressure", sub:"cache blocks"},
+        {id:"stream", x:838, y:215, label:"SSE stream", sub:"client cadence"}
+      ];
+      const edges = [["ingress","router"],["router","interactive"],["router","long"],["router","prefix"],["interactive","kv"],["long","kv"],["prefix","kv"],["kv","stream"]];
+      svgEl(svg, "text", {x: 24, y: 34, fill: "#8f98a3", "font-size": 12, "letter-spacing": 0}).textContent = "mixed production traffic, routed before scheduler pressure";
+      svgEl(svg, "text", {x: 760, y: 34, fill: "#6f7882", "font-size": 11, "text-anchor": "end"}).textContent = "pinned source links above";
+      for (const [a, b] of edges) {
+        const A = lanes.find(x => x.id === a), B = lanes.find(x => x.id === b);
+        svgEl(svg, "path", {d: curveBetween(A, B, 142), fill: "none", stroke: "rgba(237,241,245,.12)", "stroke-width": 7, "stroke-linecap": "round"});
+        svgEl(svg, "path", {d: curveBetween(A, B, 142), fill: "none", stroke: defs.route, "stroke-width": 1.2, "stroke-linecap": "round"});
+      }
+      lanes.forEach(lane => drawNode(svg, lane, defs, {active: lane.id === "router"}));
+      function routeFor(workload) {
+        if (workload.name.includes("long") || workload.name.includes("batch")) return ["ingress","router","long","kv","stream"];
+        if (workload.name.includes("rag") || workload.name.includes("agent")) return ["ingress","router","prefix","kv","stream"];
+        return ["ingress","router","interactive","kv","stream"];
+      }
+      report.workloads.forEach((workload, i) => {
+        const route = routeFor(workload).map(id => lanes.find(x => x.id === id));
+        const path = svgEl(svg, "path", {d: multiCurve(route), fill: "none", stroke: "transparent", "stroke-width": 1});
+        const packet = svgEl(svg, "g", {opacity: "0"});
+        svgEl(packet, "circle", {r: 10, fill: "rgba(255,255,255,.10)", filter: defs.glow});
+        svgEl(packet, "circle", {r: 5.6, fill: diagramInk[i % diagramInk.length]});
+        svgEl(packet, "circle", {r: 2, fill: "#050505", opacity: .85});
+        const duration = 3300 + i * 120;
+        const delay = i * 260;
+        window.setTimeout(() => {
+          if (run !== svg.dataset.run) return;
+          packet.setAttribute("opacity", ".96");
+          const caption = document.getElementById(captionId);
+          if (caption) caption.textContent = `${workload.name} -> ${route[1].label} | prefix reuse ${Math.round(workload.sharedPrefixRate * 100)}% | p99 prompt ${workload.promptP99Tokens} tokens`;
+          const length = path.getTotalLength();
+          let start = null;
+          const animate = now => {
+            if (run !== svg.dataset.run) return;
+            if (start === null) start = now;
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const point = path.getPointAtLength(length * eased);
+            packet.setAttribute("transform", `translate(${point.x} ${point.y + (i - 2.5) * 4})`);
+            if (t < 1) window.requestAnimationFrame(animate);
+            else packet.setAttribute("opacity", ".34");
+          };
+          window.requestAnimationFrame(animate);
+        }, delay);
+      });
+    }
+
+    function renderWorkloads() {
+      const svg = document.getElementById("workload-chart");
+      clear(svg);
+      const width = 560, height = 360;
+      svgEl(svg, "text", {x: 18, y: 26, fill: "#aab8c7", "font-size": 13}).textContent = "Bubble size = request share, x = p99 prompt tokens, y = shared prefix rate";
+      const maxPrompt = Math.max(...report.workloads.map(w => w.promptP99Tokens));
+      const labelOffset = {
+        "agent-tool-loop": {dx: 18, dy: 4, anchor: "start"},
+        "batch-summary": {dx: 0, dy: 30, anchor: "middle"},
+        "interactive-chat": {dx: 12, dy: 38, anchor: "start"},
+        "long-prefill": {dx: 0, dy: 30, anchor: "middle"},
+        "rag-shared-prefix": {dx: 0, dy: 33, anchor: "middle"},
+        "slow-stream-client": {dx: 22, dy: 46, anchor: "start"}
+      };
+      report.workloads.forEach((w, i) => {
+        const x = 50 + (w.promptP99Tokens / maxPrompt) * 460;
+        const y = 310 - w.sharedPrefixRate * 250;
+        const r = 10 + w.share * 58;
+        svgEl(svg, "circle", {cx: x, cy: y, r, fill: colors[i % colors.length], opacity: 0.82});
+        const o = labelOffset[w.name] || {dx: 0, dy: r + 16, anchor: "middle"};
+        const lx = Math.max(34, Math.min(526, x + o.dx));
+        const ly = Math.max(40, Math.min(338, y + o.dy));
+        svgEl(svg, "text", {x: lx, y: ly, "text-anchor": o.anchor, fill: "#dbe8f4", "font-size": 11}).textContent = w.name;
+      });
+      svgEl(svg, "line", {x1: 44, y1: 315, x2: 530, y2: 315, stroke: "#31495f"});
+      svgEl(svg, "line", {x1: 44, y1: 60, x2: 44, y2: 315, stroke: "#31495f"});
+    }
+
+    function renderProfileScale() {
+      const svg = document.getElementById("profile-chart");
+      clear(svg);
+      const data = report.profileScale;
+      const maxGoodput = Math.max(...data.map(d => d.goodput));
+      svgEl(svg, "text", {x: 18, y: 26, fill: "#aab8c7", "font-size": 13}).textContent = "120k requests/profile, 30-minute simulated production window";
+      data.forEach((d, i) => {
+        const y = 62 + i * 54;
+        const goodBar = maxGoodput ? (d.goodput / maxGoodput) * 260 : 0;
+        const gateColor = d.acceptedPct >= 95 ? "#7ee787" : d.acceptedPct >= 25 ? "#f2cc60" : "#ff7b72";
+        svgEl(svg, "text", {x: 18, y: y - 10, fill: "#dbe8f4", "font-size": 12}).textContent = d.profile;
+        svgEl(svg, "rect", {x: 250, y: y - 24, width: 280, height: 18, rx: 4, fill: "#172230"});
+        svgEl(svg, "rect", {x: 250, y: y - 24, width: Math.max(3, goodBar), height: 18, rx: 4, fill: gateColor});
+        svgEl(svg, "text", {x: 545, y: y - 10, fill: "#edf4fb", "font-size": 12}).textContent = fmt(d.goodput, " good rps");
+        svgEl(svg, "text", {x: 250, y: y + 12, fill: "#aab8c7", "font-size": 11}).textContent = `accepted ${fmt(d.acceptedPct, "%")} | p99 TTFT ${fmt(d.ttft, " ms")} | p99 queue ${fmt(d.queue, " ms")}`;
+      });
+      const body = document.querySelector("#profile-table tbody");
+      body.innerHTML = data.map(row => `<tr><td>${row.profile}</td><td class="num">${fmt(row.goodput)}</td><td class="num">${fmt(row.ttft)}</td><td class="num">${fmt(row.itl)}</td></tr>`).join("");
+    }
+
+    function renderBuilds() {
+      const svg = document.getElementById("build-chart");
+      clear(svg);
+      const data = report.sourceBuilds;
+      const max = Math.max(...data.map(d => d.seconds || 1));
+      svgEl(svg, "text", {x: 18, y: 26, fill: "#aab8c7", "font-size": 13}).textContent = "Bar length = build command wall time; failed setup cases are shown as diagnostic runs";
+      data.forEach((d, i) => {
+        const y = 62 + i * 54;
+        const bar = Math.max(6, ((d.seconds || 1) / max) * 360);
+        const color = d.status === "pass" ? "#7ee787" : d.status === "warn" ? "#f2cc60" : "#ff7b72";
+        svgEl(svg, "text", {x: 18, y: y - 10, fill: "#dbe8f4", "font-size": 12}).textContent = d.env;
+        svgEl(svg, "rect", {x: 285, y: y - 24, width: 390, height: 18, rx: 4, fill: "#172230"});
+        svgEl(svg, "rect", {x: 285, y: y - 24, width: bar, height: 18, rx: 4, fill: color});
+        svgEl(svg, "text", {x: 285, y: y + 12, fill: "#aab8c7", "font-size": 11}).textContent = d.detail;
+        svgEl(svg, "text", {x: 690, y: y - 10, fill: "#edf4fb", "font-size": 12, "text-anchor":"end"}).textContent = d.seconds ? fmt(d.seconds, "s") : "setup";
+      });
+    }
+
+    function renderHybridKV() {
+      const svg = document.getElementById("hybrid-chart");
+      clear(svg);
+      const data = report.hybridKV;
+      const maxCost = Math.max(...data.map(d => d.estimatedDecodeCost));
+      svgEl(svg, "text", {x: 18, y: 26, fill: "#aab8c7", "font-size": 13}).textContent = "Lower estimated decode-read cost is better; all rows are simulator/reference evidence";
+      data.forEach((d, i) => {
+        const y = 62 + i * 54;
+        const bar = maxCost ? (d.estimatedDecodeCost / maxCost) * 360 : 0;
+        const color = i === 0 ? "#7ee787" : i === 1 ? "#58a6ff" : "#f2cc60";
+        svgEl(svg, "text", {x: 18, y: y - 10, fill: "#dbe8f4", "font-size": 12}).textContent = d.layout;
+        svgEl(svg, "rect", {x: 255, y: y - 24, width: 390, height: 18, rx: 4, fill: "#172230"});
+        svgEl(svg, "rect", {x: 255, y: y - 24, width: Math.max(4, bar), height: 18, rx: 4, fill: color});
+        svgEl(svg, "text", {x: 255, y: y + 12, fill: "#aab8c7", "font-size": 11}).textContent = `read amp ${fmt(d.readAmplification)} | locality ${fmt(d.localityScore)} | prefix reuse ${fmt(d.prefixReusePct, "%")}`;
+        svgEl(svg, "text", {x: 690, y: y - 10, fill: "#edf4fb", "font-size": 12, "text-anchor":"end"}).textContent = fmt(d.estimatedDecodeCost);
+      });
+      const body = document.querySelector("#hybrid-table tbody");
+      body.innerHTML = data.map(row => `<tr><td>${row.layout}</td><td class="num">${fmt(row.readAmplification)}</td><td class="num">${fmt(row.memoryWastePct, "%")}</td><td class="num">${fmt(row.estimatedDecodeCost)}</td></tr>`).join("");
+    }
+
+    const timeline = {
+      total: 920,
+      queueEnd: 170,
+      prefillEnd: 430,
+      firstToken: 430,
+      decodeEnd: 810,
+      streamEnd: 920,
+      itl: 64
+    };
+    let currentTimelinePct = 0;
+    let timelineTimer = null;
+
+    function timelineState(pct) {
+      const time = Math.round(timeline.total * pct / 100);
+      const phase = time < timeline.queueEnd ? "queue"
+        : time < timeline.prefillEnd ? "prefill"
+        : time < timeline.decodeEnd ? "decode"
+        : "stream";
+      const decoded = time < timeline.firstToken ? 0 : Math.max(1, Math.floor((Math.min(time, timeline.decodeEnd) - timeline.firstToken) / timeline.itl) + 1);
+      const kv = Math.min(100, Math.round(18 + (time / timeline.total) * 70));
+      const ttft = time >= timeline.firstToken ? `${timeline.firstToken} ms` : "waiting";
+      const itl = time >= timeline.firstToken ? `${timeline.itl} ms` : "not active";
+      return {time, phase, decoded, kv, ttft, itl};
+    }
+
+    function renderTimeline(pct, targetId = "timeline-viz", captionId = "timeline-caption", rangeId = "timeline-range", prefix = "timeline") {
+      currentTimelinePct = Number(pct);
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      const state = timelineState(currentTimelinePct);
+      const range = document.getElementById(rangeId);
+      if (range) range.value = String(currentTimelinePct);
+
+      const x0 = 74, y = 172, width = 772;
+      const scale = value => x0 + (value / timeline.total) * width;
+      const segments = [
+        ["queue", 0, timeline.queueEnd, "rgba(237,241,245,.24)"],
+        ["prefill", timeline.queueEnd, timeline.prefillEnd, "#edf1f5"],
+        ["decode", timeline.prefillEnd, timeline.decodeEnd, "#8f98a3"],
+        ["stream", timeline.decodeEnd, timeline.streamEnd, "#b8bdc4"]
+      ];
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "scrub one request from queue to prefill, first token, decode, and stream";
+      segments.forEach(([label, start, end, color]) => {
+        const x = scale(start), w = scale(end) - x;
+        svgEl(svg, "rect", {x, y, width: w, height: 30, rx: 15, fill: color, opacity: label === "queue" ? .72 : .88});
+        svgEl(svg, "text", {x: x + w / 2, y: y - 12, fill: "#dbe5ef", "font-size": 11, "text-anchor": "middle"}).textContent = label;
+      });
+      const markerX = scale(state.time);
+      svgEl(svg, "line", {x1: markerX, y1: y - 54, x2: markerX, y2: y + 80, stroke: defs.route, "stroke-width": 2});
+      svgEl(svg, "circle", {cx: markerX, cy: y + 15, r: 10, fill: "#050505", stroke: "#edf1f5", "stroke-width": 2, filter: defs.glow});
+      svgEl(svg, "text", {x: markerX, y: y + 112, fill: "#edf1f5", "font-size": 12, "text-anchor": "middle"}).textContent = `${state.time} ms`;
+      svgEl(svg, "text", {x: scale(timeline.firstToken), y: y + 62, fill: "#edf1f5", "font-size": 11, "text-anchor": "middle"}).textContent = "first token";
+
+      const cards = [
+        ["queue delay", `${Math.min(state.time, timeline.queueEnd)} ms`],
+        ["TTFT", state.ttft],
+        ["decoded tokens", String(state.decoded)],
+        ["ITL", state.itl],
+        ["KV growth", `${state.kv}%`]
+      ];
+      cards.forEach(([label, value], i) => {
+        const x = 72 + i * 158;
+        svgEl(svg, "rect", {x, y: 268, width: 136, height: 62, rx: 10, fill: i === 1 && state.time >= timeline.firstToken ? defs.active : defs.node, stroke: "rgba(237,241,245,.12)"});
+        svgEl(svg, "text", {x: x + 14, y: 292, fill: i === 1 && state.time >= timeline.firstToken ? "#050505" : "#8f98a3", "font-size": 11}).textContent = label;
+        svgEl(svg, "text", {x: x + 14, y: 316, fill: i === 1 && state.time >= timeline.firstToken ? "#050505" : "#f5f7f9", "font-size": 18, "font-weight": 700}).textContent = value;
+      });
+      for (let i = 0; i < 18; i++) {
+        svgEl(svg, "rect", {x: 72 + i * 18, y: 368, width: 12, height: 26, rx: 3, fill: i < Math.round(state.kv / 5.6) ? "rgba(237,241,245,.72)" : "rgba(237,241,245,.14)"});
+      }
+      svgEl(svg, "text", {x: 420, y: 386, fill: "#9da6b0", "font-size": 12}).textContent = `phase: ${state.phase}`;
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = `At ${state.time} ms: ${state.phase}; TTFT ${state.ttft}; ITL ${state.itl}; decoded tokens ${state.decoded}; KV ${state.kv}%.`;
+    }
+
+    function playTimeline(targetId = "timeline-viz", captionId = "timeline-caption", rangeId = "timeline-range", prefix = "timeline") {
+      if (timelineTimer) window.clearInterval(timelineTimer);
+      let pct = 0;
+      renderTimeline(pct, targetId, captionId, rangeId, prefix);
+      timelineTimer = window.setInterval(() => {
+        pct += 4;
+        renderTimeline(Math.min(100, pct), targetId, captionId, rangeId, prefix);
+        if (pct >= 100) window.clearInterval(timelineTimer);
+      }, 95);
+    }
+
+    function setupTimelineControls() {
+      const range = document.getElementById("timeline-range");
+      const play = document.getElementById("timeline-play");
+      range.addEventListener("input", () => renderTimeline(Number(range.value)));
+      play.addEventListener("click", () => playTimeline());
+      renderTimeline(0);
+    }
+
+    const kvAllocatorStages = [
+      {
+        label: "Shared prefix",
+        note: "Two requests reuse the same token-identical prefix. The physical blocks are shared and refcounted.",
+        a: ["P0","P1","P2","P3"],
+        b: ["P0","P1","P2","P3"],
+        pool: ["P0","P1","P2","P3"],
+        shared: ["P0","P1","P2","P3"],
+        privateA: [],
+        privateB: [],
+        spans: []
+      },
+      {
+        label: "Divergent suffix",
+        note: "The prefix stays shared; each request gets private suffix blocks when generation diverges.",
+        a: ["P0","P1","P2","P3","A4","A5"],
+        b: ["P0","P1","P2","P3","B4"],
+        pool: ["P0","P1","P2","P3","A4","A5","B4"],
+        shared: ["P0","P1","P2","P3"],
+        privateA: ["A4","A5"],
+        privateB: ["B4"],
+        spans: []
+      },
+      {
+        label: "Copy-on-write",
+        note: "If a shared tail must diverge, copy-on-write splits ownership while the stable prefix remains shared.",
+        a: ["P0","P1","P2","A3","A4","A5"],
+        b: ["P0","P1","P2","B3","B4"],
+        pool: ["P0","P1","P2","A3","B3","A4","A5","B4"],
+        shared: ["P0","P1","P2"],
+        privateA: ["A3","A4","A5"],
+        privateB: ["B3","B4"],
+        spans: []
+      },
+      {
+        label: "Virtual spans",
+        note: "The allocator can keep fragmented blocks while exposing compact logical spans to a kernel.",
+        a: ["P0","P1","P2","A3","A4","A5"],
+        b: ["P0","P1","P2","B3","B4"],
+        pool: ["P0","P1","P2","A3","B3","A4","A5","B4"],
+        shared: ["P0","P1","P2"],
+        privateA: ["A3","A4","A5"],
+        privateB: ["B3","B4"],
+        spans: [
+          ["A", "0..2", "P0..P2", "shared"],
+          ["A", "3..5", "A3..A5", "private"],
+          ["B", "0..2", "P0..P2", "shared"],
+          ["B", "3..4", "B3..B4", "private"]
+        ]
+      }
+    ];
+    let currentKVAllocatorStage = 0;
+
+    function renderKVAllocator(index, targetId = "kv-allocator-viz", captionId = "kv-allocator-caption", controlsSelector = "#kv-allocator-controls button", prefix = "kvalloc") {
+      currentKVAllocatorStage = index;
+      const stage = kvAllocatorStages[index];
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      const poolX = 98, poolY = 282, blockW = 50, blockH = 40, gap = 9;
+      const poolPos = new Map(stage.pool.map((id, i) => [id, {x: poolX + i * (blockW + gap), y: poolY}]));
+
+      function blockKind(id) {
+        if (stage.shared.includes(id)) return "shared";
+        if (stage.privateA.includes(id)) return "private-a";
+        if (stage.privateB.includes(id)) return "private-b";
+        return "empty";
+      }
+      function blockFill(id) {
+        const kind = blockKind(id);
+        if (kind === "shared") return "#edf1f5";
+        if (kind === "private-a") return "#8f98a3";
+        if (kind === "private-b") return "#b8bdc4";
+        return "rgba(237,241,245,.16)";
+      }
+      function labelColor(id) {
+        return blockKind(id) === "shared" ? "#050505" : "#050505";
+      }
+      function drawTokenRow(name, blocks, y, fillOpacity) {
+        svgEl(svg, "text", {x: 72, y: y + 18, fill: "#dbe5ef", "font-size": 12, "font-weight": 650}).textContent = name;
+        blocks.forEach((id, i) => {
+          const x = 134 + i * 43;
+          svgEl(svg, "rect", {x, y, width: 34, height: 30, rx: 6, fill: blockFill(id), opacity: fillOpacity});
+          svgEl(svg, "text", {x: x + 17, y: y + 19, fill: labelColor(id), "font-size": 10, "text-anchor": "middle", "font-weight": 700}).textContent = id;
+          const pool = poolPos.get(id);
+          if (pool) {
+            svgEl(svg, "path", {d: `M${x + 17} ${y + 32} C${x + 17} ${y + 82} ${pool.x + blockW / 2} ${pool.y - 44} ${pool.x + blockW / 2} ${pool.y}`, fill: "none", stroke: "rgba(237,241,245,.12)", "stroke-width": 1});
+          }
+        });
+      }
+
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "paged KV allocation: shared prefix, private suffix, copy-on-write, virtual spans";
+      svgEl(svg, "text", {x: 72, y: 82, fill: "#f5f7f9", "font-size": 16, "font-weight": 650}).textContent = stage.label;
+      svgEl(svg, "text", {x: 72, y: 106, fill: "#9da6b0", "font-size": 12}).textContent = stage.note;
+      drawTokenRow("request A", stage.a, 138, .94);
+      drawTokenRow("request B", stage.b, 196, .82);
+
+      svgEl(svg, "text", {x: poolX, y: poolY - 18, fill: "#8f98a3", "font-size": 12}).textContent = "physical KV block pool";
+      stage.pool.forEach(id => {
+        const pos = poolPos.get(id);
+        svgEl(svg, "rect", {x: pos.x, y: pos.y, width: blockW, height: blockH, rx: 8, fill: blockFill(id), opacity: .88});
+        svgEl(svg, "text", {x: pos.x + blockW / 2, y: pos.y + 24, fill: labelColor(id), "font-size": 12, "font-weight": 750, "text-anchor": "middle"}).textContent = id;
+        const refcount = stage.shared.includes(id) ? "ref 2" : "ref 1";
+        svgEl(svg, "text", {x: pos.x + blockW / 2, y: pos.y + 58, fill: "#8f98a3", "font-size": 10, "text-anchor": "middle"}).textContent = refcount;
+      });
+
+      if (stage.spans.length) {
+        const x = 612, y = 132;
+        svgEl(svg, "rect", {x: x - 16, y: y - 30, width: 250, height: 164, rx: 10, fill: "rgba(5,5,5,.48)", stroke: "rgba(237,241,245,.08)"});
+        svgEl(svg, "text", {x, y: y - 8, fill: "#f5f7f9", "font-size": 13, "font-weight": 650}).textContent = "kernel-facing span table";
+        stage.spans.forEach((span, i) => {
+          const rowY = y + 22 + i * 27;
+          svgEl(svg, "text", {x, y: rowY, fill: "#dbe5ef", "font-size": 11}).textContent = `${span[0]} logical ${span[1]}`;
+          svgEl(svg, "text", {x: x + 112, y: rowY, fill: "#edf1f5", "font-size": 11}).textContent = span[2];
+          svgEl(svg, "text", {x: x + 192, y: rowY, fill: "#8f98a3", "font-size": 11}).textContent = span[3];
+        });
+      } else {
+        svgEl(svg, "rect", {x: 640, y: 143, width: 154, height: 74, rx: 10, fill: "rgba(5,5,5,.36)", stroke: "rgba(237,241,245,.08)"});
+        svgEl(svg, "text", {x: 717, y: 174, fill: "#8f98a3", "font-size": 11, "text-anchor": "middle"}).textContent = "span table appears";
+        svgEl(svg, "text", {x: 717, y: 194, fill: "#8f98a3", "font-size": 11, "text-anchor": "middle"}).textContent = "after layout compaction";
+      }
+
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = stage.note;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.kvstage !== undefined) button.classList.toggle("active", Number(button.dataset.kvstage) === index);
+      });
+    }
+
+    function renderKVAllocatorControls() {
+      const root = document.getElementById("kv-allocator-controls");
+      kvAllocatorStages.forEach((stage, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = stage.label;
+        button.dataset.kvstage = String(i);
+        button.onclick = () => renderKVAllocator(i);
+        root.appendChild(button);
+      });
+      renderKVAllocator(0);
+    }
+
+    const mechanicsSteps = [
+      {
+        title: "1. API admission",
+        copy: "The OpenAI-compatible server accepts a request, parses sampling parameters, tokenizes or receives token IDs, and hands work to the async engine.",
+        ttft: "queueing, tokenization, long prefill",
+        itl: "not active yet",
+        tuning: "route by workload class before the engine",
+        active: "api"
+      },
+      {
+        title: "2. Scheduler builds an engine step",
+        copy: "The scheduler chooses waiting and running requests under max_num_batched_tokens, max_num_seqs, partial prefill limits, and fairness constraints.",
+        ttft: "waiting queue plus prefill admission",
+        itl: "decode requests can be delayed by long prefill",
+        tuning: "max_num_batched_tokens, max_num_seqs, max_num_partial_prefills",
+        active: "scheduler"
+      },
+      {
+        title: "3. Chunked prefill spends prompt tokens",
+        copy: "Long prompts are split into chunks so they do not monopolize the token budget. This is where max_long_partial_prefills matters.",
+        ttft: "dominant for long-context requests",
+        itl: "can starve decode if chunks are too large",
+        tuning: "max_long_partial_prefills below max_num_partial_prefills",
+        active: "prefill"
+      },
+      {
+        title: "4. Decode advances active requests",
+        copy: "The engine repeatedly decodes output tokens for many running requests. Continuous batching lets new requests join between steps.",
+        ttft: "first decode token completes TTFT",
+        itl: "controlled by decode cadence and stream interval",
+        tuning: "stream_interval and lane-specific token budgets",
+        active: "decode"
+      },
+      {
+        title: "5. KV cache holds context blocks",
+        copy: "Prompt and generated tokens reserve KV blocks. Prefix caching helps when system prompts, tools, and RAG prefixes are token-identical.",
+        ttft: "cache misses increase prefill cost",
+        itl: "high pressure can trigger eviction or lower concurrency",
+        tuning: "canonicalize prefixes, monitor KV pressure",
+        active: "kv"
+      },
+      {
+        title: "6. Streaming exposes token cadence",
+        copy: "Tokens leave the engine as SSE chunks. Slow clients can create socket backpressure, which should be isolated from engine scheduling.",
+        ttft: "client-visible first event",
+        itl: "client-visible inter-token gap",
+        tuning: "proxy buffering off, write deadlines, slow-client lane",
+        active: "stream"
+      }
+    ];
+
+    const budgetScenarios = [
+      {label:"Chat spike", prefill:24, decode:54, kv:42, stream:18, waiting:8, running:82, note:"Decode owns most of the step. Keep the interactive token budget small and predictable."},
+      {label:"Long prefill", prefill:68, decode:20, kv:70, stream:10, waiting:34, running:58, note:"Prompt work dominates. Chunked prefill keeps decode from disappearing behind one long context."},
+      {label:"RAG prefix reuse", prefill:36, decode:42, kv:48, stream:14, waiting:16, running:76, note:"Prefix hits reduce repeated prefill, but only when upstream prompts are token-identical."},
+      {label:"Slow stream", prefill:22, decode:38, kv:46, stream:56, waiting:20, running:62, note:"The model may be healthy while slow clients stretch visible token cadence. Isolate them at the edge."}
+    ];
+    let currentBudgetScenario = 0;
+
+    function renderBudgetExplorer(index, targetId = "budget-viz", captionId = "budget-caption", controlsSelector = "#budget-controls button", prefix = "budget") {
+      currentBudgetScenario = index;
+      const scenario = budgetScenarios[index];
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "engine step budget under different request mixes";
+
+      const barX = 70, barY = 78, barW = 780, barH = 30;
+      svgEl(svg, "rect", {x: barX, y: barY, width: barW, height: barH, rx: 15, fill: "rgba(237,241,245,.07)"});
+      const prefillW = barW * scenario.prefill / 100;
+      const decodeW = barW * scenario.decode / 100;
+      svgEl(svg, "rect", {x: barX, y: barY, width: prefillW, height: barH, rx: 15, fill: "#edf1f5", opacity: .9});
+      svgEl(svg, "rect", {x: barX + prefillW, y: barY, width: Math.min(decodeW, barW - prefillW), height: barH, rx: 15, fill: "#8f98a3", opacity: .86});
+      svgEl(svg, "text", {x: barX, y: barY - 12, fill: "#dbe5ef", "font-size": 13, "font-weight": 650}).textContent = scenario.label;
+      svgEl(svg, "text", {x: barX + barW, y: barY - 12, fill: "#8f98a3", "font-size": 12, "text-anchor": "end"}).textContent = `prefill ${scenario.prefill}% | decode ${scenario.decode}%`;
+
+      const queueNode = {x:132, y:232, label:"waiting", sub:`queue ${scenario.waiting}`};
+      const schedulerNode = {x:342, y:232, label:"scheduler", sub:"choose work"};
+      const engineNode = {x:552, y:232, label:"engine step", sub:`running ${scenario.running}`};
+      const streamNode = {x:762, y:232, label:"stream", sub:`pressure ${scenario.stream}%`};
+      [[queueNode, schedulerNode], [schedulerNode, engineNode], [engineNode, streamNode]].forEach(([a, b]) => {
+        svgEl(svg, "path", {d: curveBetween(a, b, 142), fill: "none", stroke: "rgba(237,241,245,.12)", "stroke-width": 7, "stroke-linecap": "round"});
+        svgEl(svg, "path", {d: curveBetween(a, b, 142), fill: "none", stroke: defs.route, "stroke-width": 1.2, "stroke-linecap": "round"});
+      });
+      drawNode(svg, queueNode, defs);
+      drawNode(svg, schedulerNode, defs, {active: true});
+      drawNode(svg, engineNode, defs);
+      drawNode(svg, streamNode, defs);
+
+      const tokenCount = Math.max(6, Math.round((scenario.prefill + scenario.decode) / 9));
+      for (let i = 0; i < tokenCount; i++) {
+        const x = 252 + i * 22;
+        const y = 306 + (i % 2) * 16;
+        svgEl(svg, "circle", {cx: x, cy: y, r: 5, fill: i < tokenCount * scenario.prefill / (scenario.prefill + scenario.decode) ? "#edf1f5" : "#8f98a3", opacity: .9});
+      }
+
+      const kvX = 520, kvY = 320;
+      svgEl(svg, "text", {x: kvX, y: kvY - 18, fill: "#8f98a3", "font-size": 11}).textContent = `KV pressure ${scenario.kv}%`;
+      svgEl(svg, "rect", {x: kvX, y: kvY, width: 220, height: 12, rx: 6, fill: "rgba(237,241,245,.08)"});
+      svgEl(svg, "rect", {x: kvX, y: kvY, width: 220 * scenario.kv / 100, height: 12, rx: 6, fill: "#edf1f5", opacity: .78});
+      for (let i = 0; i < 12; i++) {
+        svgEl(svg, "rect", {x: kvX + i * 18, y: kvY + 30, width: 12, height: 26, rx: 3, fill: i < Math.round(scenario.kv / 8.4) ? "rgba(237,241,245,.68)" : "rgba(237,241,245,.14)"});
+      }
+
+      svgEl(svg, "text", {x: 70, y: 388, fill: "#dbe5ef", "font-size": 13}).textContent = scenario.note;
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = scenario.note;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.budget !== undefined) button.classList.toggle("active", Number(button.dataset.budget) === index);
+      });
+    }
+
+    function renderBudgetControls() {
+      const root = document.getElementById("budget-controls");
+      budgetScenarios.forEach((scenario, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = scenario.label;
+        button.dataset.budget = String(i);
+        button.onclick = () => renderBudgetExplorer(i);
+        root.appendChild(button);
+      });
+      renderBudgetExplorer(0);
+    }
+
+    const kitchenStages = [
+      {label:"Orders arrive", active:"orders", tickets:5, prep:12, plates:0, table:16, server:8, note:"Requests enter like order tickets. Nothing is visible to the diner yet; the system is deciding what work enters the next step."},
+      {label:"Prep the order", active:"prep", tickets:3, prep:74, plates:0, table:44, server:10, note:"Prefill is kitchen prep. Long prompts take more prep time before the first visible token can leave the kitchen."},
+      {label:"First plate", active:"pass", tickets:2, prep:48, plates:1, table:56, server:18, note:"The first plated item is TTFT. The user finally sees the first token, even though the full answer is still being prepared."},
+      {label:"Plate cadence", active:"plating", tickets:2, prep:28, plates:6, table:68, server:32, note:"Decode is repeated plating. Each engine step adds the next token for many active requests, which the user experiences as token cadence."},
+      {label:"Slow table", active:"server", tickets:4, prep:28, plates:8, table:72, server:74, note:"Streaming is service to the table. A slow client can make delivery look bad even if the kitchen is producing tokens on time."}
+    ];
+    let currentKitchenStage = 0;
+
+    function renderKitchen(index, targetId = "kitchen-viz", captionId = "kitchen-caption", controlsSelector = "#kitchen-controls button", prefix = "kitchen") {
+      currentKitchenStage = index;
+      const stage = kitchenStages[index];
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "vLLM as a kitchen: orders, prep, first plate, plating cadence, and table service";
+
+      const nodes = [
+        {id:"orders", x:106, y:216, label:"order tickets", sub:"requests"},
+        {id:"prep", x:292, y:144, label:"prep station", sub:"prefill"},
+        {id:"pass", x:486, y:216, label:"first plate", sub:"TTFT"},
+        {id:"plating", x:292, y:306, label:"plating line", sub:"decode loop"},
+        {id:"table", x:666, y:144, label:"prep table", sub:"KV cache"},
+        {id:"server", x:806, y:216, label:"server", sub:"streaming"}
+      ];
+      [["orders","prep"],["prep","pass"],["pass","plating"],["plating","server"],["prep","table"],["table","plating"],["pass","server"]].forEach(([a,b]) => {
+        const A = nodes.find(n => n.id === a), B = nodes.find(n => n.id === b);
+        const active = a === stage.active || b === stage.active;
+        svgEl(svg, "path", {d: curveBetween(A, B, 142), fill: "none", stroke: active ? "rgba(237,241,245,.20)" : "rgba(237,241,245,.10)", "stroke-width": active ? 7 : 5, "stroke-linecap": "round"});
+        svgEl(svg, "path", {d: curveBetween(A, B, 142), fill: "none", stroke: active ? defs.route : "rgba(237,241,245,.12)", "stroke-width": active ? 1.5 : 1, "stroke-linecap": "round"});
+      });
+      nodes.forEach(node => drawNode(svg, node, defs, {active: node.id === stage.active}));
+
+      for (let i = 0; i < stage.tickets; i++) {
+        svgEl(svg, "rect", {x: 54, y: 292 + i * 13, width: 68, height: 8, rx: 3, fill: i === 0 ? "#edf1f5" : "rgba(237,241,245,.32)"});
+      }
+      const meters = [
+        ["prep load", stage.prep, 206, 78],
+        ["KV table", stage.table, 580, 78],
+        ["stream pressure", stage.server, 700, 294]
+      ];
+      meters.forEach(([label, value, x, y]) => {
+        svgEl(svg, "text", {x, y: y - 10, fill: "#8f98a3", "font-size": 11}).textContent = label;
+        svgEl(svg, "rect", {x, y, width: 150, height: 10, rx: 5, fill: "rgba(237,241,245,.08)"});
+        svgEl(svg, "rect", {x, y, width: 150 * value / 100, height: 10, rx: 5, fill: "#edf1f5", opacity: .82});
+      });
+      for (let i = 0; i < Math.max(1, stage.plates); i++) {
+        svgEl(svg, "circle", {cx: 430 + i * 20, cy: 318 + (i % 2) * 12, r: 6, fill: i === 0 ? "#edf1f5" : "#8f98a3", opacity: .9});
+      }
+      svgEl(svg, "text", {x: 72, y: 388, fill: "#dbe5ef", "font-size": 13}).textContent = stage.note;
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = stage.note;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.kitchen !== undefined) button.classList.toggle("active", Number(button.dataset.kitchen) === index);
+      });
+    }
+
+    function renderKitchenControls() {
+      const root = document.getElementById("kitchen-controls");
+      kitchenStages.forEach((stage, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = stage.label;
+        button.dataset.kitchen = String(i);
+        button.onclick = () => renderKitchen(i);
+        root.appendChild(button);
+      });
+      renderKitchen(0);
+    }
+
+    const trafficStages = [
+      {label:"Shared signal", active:"long", short:4, long:7, batch:3, slow:2, budget:"one global token budget", note:"One traffic light for every lane lets a long prefill hold the intersection while short chats queue behind it."},
+      {label:"Short chat green", active:"short", short:1, long:6, batch:3, slow:2, budget:"small interactive lane", note:"An interactive lane gives short requests a protected turn, which is the scheduler version of reducing first-token wait."},
+      {label:"Chunk long prefill", active:"long", short:2, long:3, batch:3, slow:2, budget:"partial prefill limit", note:"Long prompts still move, but in chunks. That keeps the long lane productive without blocking every decode step."},
+      {label:"Batch window", active:"batch", short:2, long:4, batch:1, slow:2, budget:"large batch lane", note:"Batch traffic belongs on a wider road. It can use a bigger token budget without forcing chat traffic to share the same light."},
+      {label:"Slow-client bypass", active:"slow", short:2, long:4, batch:2, slow:1, budget:"edge/proxy isolation", note:"Slow streaming clients are routed around the main intersection so socket backpressure does not look like engine jitter."}
+    ];
+    let currentTrafficStage = 0;
+
+    function renderTraffic(index, targetId = "traffic-viz", captionId = "traffic-caption", controlsSelector = "#traffic-controls button", prefix = "traffic") {
+      currentTrafficStage = index;
+      const stage = trafficStages[index];
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "request classes compete for scheduler admission like lanes at a traffic light";
+
+      svgEl(svg, "rect", {x: 68, y: 174, width: 784, height: 86, rx: 28, fill: "rgba(237,241,245,.055)"});
+      svgEl(svg, "rect", {x: 417, y: 62, width: 86, height: 310, rx: 28, fill: "rgba(237,241,245,.055)"});
+      svgEl(svg, "line", {x1: 86, y1: 217, x2: 834, y2: 217, stroke: "rgba(237,241,245,.12)", "stroke-width": 1.2, "stroke-dasharray": "9 12"});
+      svgEl(svg, "line", {x1: 460, y1: 82, x2: 460, y2: 352, stroke: "rgba(237,241,245,.12)", "stroke-width": 1.2, "stroke-dasharray": "9 12"});
+      svgEl(svg, "rect", {x: 640, y: 62, width: 212, height: 92, rx: 22, fill: "rgba(5,5,5,.62)", stroke: "rgba(237,241,245,.12)", "stroke-width": 1});
+      svgEl(svg, "text", {x: 662, y: 94, fill: "#edf1f5", "font-size": 15, "font-weight": 720}).textContent = "scheduler signal";
+      svgEl(svg, "text", {x: 662, y: 116, fill: "#8f98a3", "font-size": 11}).textContent = stage.budget;
+      ["short", "long", "batch", "slow"].forEach((lane, i) => {
+        const cx = 672 + i * 30;
+        svgEl(svg, "circle", {cx, cy: 136, r: 8, fill: lane === stage.active ? "#edf1f5" : "rgba(237,241,245,.16)", opacity: lane === stage.active ? .95 : .7});
+      });
+
+      const laneMeta = {
+        short: {label:"short chat", count: stage.short, x: 108, y: 194, dx: 32, dy: 0, textX: 96, textY: 156},
+        long: {label:"long prefill", count: stage.long, x: 434, y: 94, dx: 0, dy: 28, textX: 538, textY: 96},
+        batch: {label:"batch", count: stage.batch, x: 474, y: 328, dx: 0, dy: -28, textX: 538, textY: 352},
+        slow: {label:"slow stream", count: stage.slow, x: 786, y: 230, dx: -32, dy: 0, textX: 684, textY: 292}
+      };
+      Object.entries(laneMeta).forEach(([lane, meta]) => {
+        const active = lane === stage.active;
+        svgEl(svg, "text", {x: meta.textX, y: meta.textY, fill: active ? "#edf1f5" : "#8f98a3", "font-size": 12, "font-weight": active ? 700 : 500}).textContent = meta.label;
+        for (let i = 0; i < meta.count; i++) {
+          const x = meta.x + meta.dx * i;
+          const y = meta.y + meta.dy * i;
+          svgEl(svg, "rect", {x, y, width: lane === "long" || lane === "batch" ? 20 : 46, height: lane === "long" || lane === "batch" ? 36 : 20, rx: 8, fill: active && i === 0 ? defs.active : active ? "rgba(237,241,245,.64)" : "rgba(237,241,245,.22)", stroke: "rgba(255,255,255,.12)", "stroke-width": .8});
+        }
+      });
+      const activeMeta = laneMeta[stage.active];
+      const arrowEnd = stage.active === "short" ? {x: 374, y: 204} : stage.active === "slow" ? {x: 546, y: 240} : stage.active === "long" ? {x: 460, y: 132} : {x: 460, y: 304};
+      svgEl(svg, "path", {d: `M${activeMeta.x + 20} ${activeMeta.y + 10} C${(activeMeta.x + arrowEnd.x) / 2} ${activeMeta.y - 48} ${(activeMeta.x + arrowEnd.x) / 2} ${arrowEnd.y + 48} ${arrowEnd.x} ${arrowEnd.y}`, fill: "none", stroke: defs.route, "stroke-width": 2.4, "stroke-linecap": "round"});
+      svgEl(svg, "text", {x: 70, y: 384, fill: "#dbe5ef", "font-size": 13}).textContent = stage.note;
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = stage.note;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.traffic !== undefined) button.classList.toggle("active", Number(button.dataset.traffic) === index);
+      });
+    }
+
+    function renderTrafficControls() {
+      const root = document.getElementById("traffic-controls");
+      trafficStages.forEach((stage, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = stage.label;
+        button.dataset.traffic = String(i);
+        button.onclick = () => renderTraffic(i);
+        root.appendChild(button);
+      });
+      renderTraffic(0);
+    }
+
+    const hotelStages = [
+      {label:"Check in", shared:2, privateA:3, privateB:0, cow:false, virtual:false, note:"A request checks into KV memory by taking rooms: fixed-size blocks that hold prompt and generated-token state."},
+      {label:"Shared hallway", shared:6, privateA:2, privateB:2, cow:false, virtual:false, note:"Two requests with the same prefix can share the hallway. The shared rooms carry a refcount instead of duplicating the prefix."},
+      {label:"Private suffix", shared:6, privateA:4, privateB:4, cow:false, virtual:false, note:"After the shared prefix, each request gets private rooms for its own suffix and generated tokens."},
+      {label:"Copy-on-write", shared:5, privateA:5, privateB:5, cow:true, virtual:false, note:"When a shared guest writes to a room, copy-on-write gives that request a private room while the original shared prefix stays intact."},
+      {label:"Virtual map", shared:6, privateA:4, privateB:4, cow:false, virtual:true, note:"The kernel-facing map can show logical contiguous spans even when the hotel rooms underneath are scattered physical blocks."}
+    ];
+    let currentHotelStage = 0;
+
+    function renderHotel(index, targetId = "hotel-viz", captionId = "hotel-caption", controlsSelector = "#hotel-controls button", prefix = "hotel") {
+      currentHotelStage = index;
+      const stage = hotelStages[index];
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      svgEl(svg, "text", {x: 28, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "KV cache as a hotel: rooms are blocks, hallways are shared prefixes, private rooms are divergent suffixes";
+
+      const startX = 118, startY = 88, roomW = 62, roomH = 42, gap = 9;
+      const sharedLimit = stage.shared;
+      const privateALimit = stage.privateA;
+      const privateBLimit = stage.privateB;
+      const roomFill = room => {
+        if (room < sharedLimit) return "rgba(237,241,245,.78)";
+        if (room >= 8 && room < 8 + privateALimit) return "rgba(184,189,196,.56)";
+        if (room >= 16 && room < 16 + privateBLimit) return "rgba(143,152,163,.64)";
+        return "rgba(237,241,245,.10)";
+      };
+      for (let floor = 0; floor < 3; floor++) {
+        svgEl(svg, "text", {x: 62, y: startY + floor * (roomH + gap) + 27, fill: "#8f98a3", "font-size": 11}).textContent = floor === 0 ? "prefix" : floor === 1 ? "request A" : "request B";
+        for (let col = 0; col < 8; col++) {
+          const room = floor * 8 + col;
+          const x = startX + col * (roomW + gap);
+          const y = startY + floor * (roomH + gap);
+          const isCow = stage.cow && room === 13;
+          svgEl(svg, "rect", {x, y, width: roomW, height: roomH, rx: 8, fill: isCow ? defs.active : roomFill(room), stroke: isCow ? "rgba(255,255,255,.72)" : "rgba(237,241,245,.11)", "stroke-width": isCow ? 1.2 : .8});
+          if (room < sharedLimit || isCow || roomFill(room) !== "rgba(237,241,245,.10)") {
+            const label = room < sharedLimit ? "A+B" : floor === 1 ? "A" : "B";
+            svgEl(svg, "text", {x: x + roomW / 2, y: y + 25, fill: isCow ? "#050505" : "#050505", "font-size": 12, "font-weight": 750, "text-anchor": "middle", opacity: room < sharedLimit || isCow ? .85 : .72}).textContent = label;
+          }
+        }
+      }
+      svgEl(svg, "rect", {x: 110, y: 252, width: 580, height: 18, rx: 9, fill: "rgba(237,241,245,.07)"});
+      svgEl(svg, "rect", {x: 110, y: 252, width: 72 * sharedLimit, height: 18, rx: 9, fill: "rgba(237,241,245,.58)"});
+      svgEl(svg, "text", {x: 112, y: 292, fill: "#8f98a3", "font-size": 11}).textContent = stage.virtual ? "logical span table exposed to attention kernels" : "physical block ownership stays inside the KV manager";
+      if (stage.virtual) {
+        const spans = [
+          {x: 120, w: 190, label:"shared prefix span"},
+          {x: 322, w: 132, label:"A suffix span"},
+          {x: 466, w: 132, label:"B suffix span"}
+        ];
+        spans.forEach(span => {
+          svgEl(svg, "rect", {x: span.x, y: 314, width: span.w, height: 34, rx: 17, fill: "rgba(237,241,245,.13)", stroke: "rgba(237,241,245,.18)", "stroke-width": .8});
+          svgEl(svg, "text", {x: span.x + span.w / 2, y: 336, fill: "#edf1f5", "font-size": 11, "text-anchor": "middle"}).textContent = span.label;
+          svgEl(svg, "path", {d: `M${span.x + span.w / 2} 314 C${span.x + span.w / 2} 292 ${span.x + span.w / 2} 286 ${span.x + span.w / 2} 270`, fill: "none", stroke: defs.route, "stroke-width": 1.5, "stroke-linecap": "round"});
+        });
+      } else {
+        svgEl(svg, "text", {x: 720, y: 122, fill: "#edf1f5", "font-size": 16, "font-weight": 720}).textContent = stage.cow ? "copy-on-write" : "refcounts";
+        svgEl(svg, "text", {x: 720, y: 148, fill: "#8f98a3", "font-size": 12}).textContent = stage.cow ? "private room created" : `shared prefix rooms: ${sharedLimit}`;
+        svgEl(svg, "text", {x: 720, y: 176, fill: "#8f98a3", "font-size": 12}).textContent = stage.cow ? "shared rooms protected" : "prefix reuse avoids duplicate prep";
+      }
+      svgEl(svg, "text", {x: 70, y: 386, fill: "#dbe5ef", "font-size": 13}).textContent = stage.note;
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = stage.note;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.hotel !== undefined) button.classList.toggle("active", Number(button.dataset.hotel) === index);
+      });
+    }
+
+    function renderHotelControls() {
+      const root = document.getElementById("hotel-controls");
+      hotelStages.forEach((stage, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = stage.label;
+        button.dataset.hotel = String(i);
+        button.onclick = () => renderHotel(i);
+        root.appendChild(button);
+      });
+      renderHotel(0);
+    }
+
+    let currentMechanicsStep = 0;
+    function renderMechanics(stepIndex, targetId = "mechanics", options = {}) {
+      const {
+        captionId = "mechanics-caption",
+        controlsSelector = "#mechanics-controls button",
+        updateDetails = true,
+        prefix = "mechanics"
+      } = options;
+      currentMechanicsStep = stepIndex;
+      const svg = document.getElementById(targetId);
+      if (!svg) return;
+      clear(svg);
+      const defs = diagramDefs(svg, prefix);
+      const nodes = [
+        {id:"api", x:84, y:215, label:"API", sub:"admission"},
+        {id:"scheduler", x:248, y:215, label:"scheduler", sub:"token budget"},
+        {id:"prefill", x:438, y:126, label:"chunked prefill", sub:"prompt work"},
+        {id:"decode", x:438, y:304, label:"decode", sub:"next token"},
+        {id:"kv", x:642, y:215, label:"KV cache", sub:"paged blocks"},
+        {id:"stream", x:828, y:215, label:"SSE stream", sub:"client-visible"}
+      ];
+      const edges = [["api","scheduler"],["scheduler","prefill"],["scheduler","decode"],["prefill","kv"],["decode","kv"],["kv","stream"],["kv","scheduler"]];
+      const step = mechanicsSteps[stepIndex];
+      svgEl(svg, "text", {x: 24, y: 34, fill: "#8f98a3", "font-size": 12}).textContent = "one request moves through engine steps; continuous batching lets other requests join between steps";
+      const rail = svgEl(svg, "g", {});
+      mechanicsSteps.forEach((item, i) => {
+        const x = 288 + i * 32;
+        svgEl(rail, "circle", {cx: x, cy: 398, r: 5, fill: i === stepIndex ? "#edf1f5" : "rgba(237,241,245,.18)"});
+        if (i < mechanicsSteps.length - 1) svgEl(rail, "line", {x1: x + 8, y1: 398, x2: x + 24, y2: 398, stroke: "rgba(237,241,245,.12)", "stroke-width": 1.2});
+      });
+      edges.forEach(([a,b]) => {
+        const A = nodes.find(n => n.id === a), B = nodes.find(n => n.id === b);
+        const d = a === "kv" && b === "scheduler"
+          ? `M${A.x - 72} ${A.y + 36} C${A.x - 168} ${A.y + 96} ${B.x + 168} ${B.y + 96} ${B.x + 72} ${B.y + 36}`
+          : curveBetween(A, B, 142);
+        const activeEdge = a === step.active || b === step.active;
+        svgEl(svg, "path", {d, fill: "none", stroke: activeEdge ? "rgba(237,241,245,.22)" : "rgba(237,241,245,.10)", "stroke-width": activeEdge ? 7 : 5, "stroke-linecap": "round"});
+        svgEl(svg, "path", {d, fill: "none", stroke: activeEdge ? defs.route : "rgba(237,241,245,.12)", "stroke-width": activeEdge ? 1.6 : 1, "stroke-linecap": "round"});
+      });
+      nodes.forEach(node => drawNode(svg, node, defs, {active: node.id === step.active}));
+      const pulse = nodes.find(n => n.id === step.active);
+      svgEl(svg, "circle", {cx:pulse.x + 55, cy:pulse.y - 24, r:15, fill:"rgba(237,241,245,.10)", filter: defs.glow});
+      svgEl(svg, "circle", {cx:pulse.x + 55, cy:pulse.y - 24, r:4.5, fill:"#050505", opacity:.82});
+      svgEl(svg, "text", {x: 58, y: 396, fill: "#6f7882", "font-size": 11}).textContent = "engine loop";
+      const budgetX = 585, budgetY = 368;
+      svgEl(svg, "rect", {x: budgetX, y: budgetY, width: 250, height: 12, rx: 6, fill: "rgba(237,241,245,.08)"});
+      const budgetWidth = step.active === "prefill" ? 176 : step.active === "decode" ? 92 : step.active === "kv" ? 136 : 56;
+      svgEl(svg, "rect", {x: budgetX, y: budgetY, width: budgetWidth, height: 12, rx: 6, fill: "#edf1f5", opacity: .88});
+      svgEl(svg, "text", {x: budgetX, y: budgetY - 8, fill: "#8f98a3", "font-size": 11}).textContent = "token budget pressure";
+      const blocks = [0,1,2,3,4,5,6,7];
+      blocks.forEach((_, i) => {
+        svgEl(svg, "rect", {x: 594 + i * 16, y: 250, width: 11, height: 24, rx: 3, fill: i < 5 ? "rgba(237,241,245,.72)" : "rgba(237,241,245,.16)"});
+      });
+      if (updateDetails) {
+        document.getElementById("mechanics-title").textContent = step.title;
+        document.getElementById("mechanics-copy").textContent = step.copy;
+        document.getElementById("mechanics-ttft").textContent = step.ttft;
+        document.getElementById("mechanics-itl").textContent = step.itl;
+        document.getElementById("mechanics-tuning").textContent = step.tuning;
+      }
+      const caption = document.getElementById(captionId);
+      if (caption) caption.textContent = "Step " + (stepIndex + 1) + " of " + mechanicsSteps.length + ": " + step.title;
+      [...document.querySelectorAll(controlsSelector)].forEach(button => {
+        if (button.dataset.step !== undefined) {
+          button.classList.toggle("active", Number(button.dataset.step) === stepIndex);
+        }
+      });
+    }
+
+    function renderMechanicsControls() {
+      const root = document.getElementById("mechanics-controls");
+      mechanicsSteps.forEach((step, i) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = String(i + 1);
+        button.dataset.step = String(i);
+        button.onclick = () => renderMechanics(i);
+        root.appendChild(button);
+      });
+      const play = document.createElement("button");
+      play.type = "button";
+      play.textContent = "Play";
+      play.onclick = () => {
+        mechanicsSteps.forEach((_, i) => window.setTimeout(() => renderMechanics(i), i * 900));
+      };
+      root.appendChild(play);
+      renderMechanics(0);
+    }
+
+    function renderFindings() {
+      document.getElementById("findings").innerHTML = report.findings.map(finding => `
+        <article class="finding">
+          <h3>${finding.title}</h3>
+          <p>${finding.impact}</p>
+          <ul class="advice">${finding.advice.map(item => `<li>${item}</li>`).join("")}</ul>
+        </article>
+      `).join("");
+    }
+
+    function setupDiagramModal() {
+      const modal = document.getElementById("diagram-modal");
+      const closeButton = document.getElementById("diagram-modal-close");
+      const title = document.getElementById("diagram-modal-title");
+      const links = document.getElementById("diagram-modal-links");
+      const controls = document.getElementById("diagram-modal-controls");
+      const caption = document.getElementById("diagram-modal-caption");
+      const body = document.getElementById("diagram-modal-body");
+      let lastFocus = null;
+
+      function modalSvg(id, label) {
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("id", id);
+        svg.setAttribute("class", "topology");
+        svg.setAttribute("viewBox", "0 0 920 430");
+        svg.setAttribute("role", "img");
+        svg.setAttribute("aria-label", label);
+        body.appendChild(svg);
+        return svg;
+      }
+
+      function addModalButton(label, onClick, stepIndex) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        if (stepIndex !== undefined) button.dataset.step = String(stepIndex);
+        button.onclick = onClick;
+        controls.appendChild(button);
+        return button;
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        body.innerHTML = "";
+        links.innerHTML = "";
+        controls.innerHTML = "";
+        caption.textContent = "";
+        document.body.classList.remove("modal-open");
+        if (lastFocus) lastFocus.focus();
+      }
+
+      document.querySelectorAll(".expand-diagram").forEach(button => {
+        button.addEventListener("click", () => {
+          const sourceLinks = [...document.querySelectorAll(".source-links")]
+            .find(node => node.getAttribute("aria-label") === button.dataset.expandLinks);
+          lastFocus = button;
+          title.textContent = button.dataset.expandTitle || "Diagram";
+          links.innerHTML = "";
+          controls.innerHTML = "";
+          caption.textContent = "";
+          if (sourceLinks) {
+            sourceLinks.querySelectorAll("a").forEach(anchor => links.appendChild(anchor.cloneNode(true)));
+          }
+          body.innerHTML = "";
+          if (button.dataset.expandTarget === "topology") {
+            modalSvg("modal-topology", "Expanded request flow through vLLM router lanes");
+            addModalButton("Replay Flow", () => drawTopology("modal-topology", "diagram-modal-caption", "router-modal"));
+            drawTopology("modal-topology", "diagram-modal-caption", "router-modal");
+          } else if (button.dataset.expandTarget === "kitchen-viz") {
+            modalSvg("modal-kitchen", "Expanded restaurant kitchen analogy for vLLM");
+            kitchenStages.forEach((stage, i) => {
+              const control = addModalButton(stage.label, () => renderKitchen(i, "modal-kitchen", "diagram-modal-caption", "#diagram-modal-controls button[data-kitchen]", "kitchen-modal"));
+              control.dataset.kitchen = String(i);
+            });
+            renderKitchen(currentKitchenStage, "modal-kitchen", "diagram-modal-caption", "#diagram-modal-controls button[data-kitchen]", "kitchen-modal");
+          } else if (button.dataset.expandTarget === "traffic-viz") {
+            modalSvg("modal-traffic", "Expanded vLLM scheduler traffic intersection view");
+            trafficStages.forEach((stage, i) => {
+              const control = addModalButton(stage.label, () => renderTraffic(i, "modal-traffic", "diagram-modal-caption", "#diagram-modal-controls button[data-traffic]", "traffic-modal"));
+              control.dataset.traffic = String(i);
+            });
+            renderTraffic(currentTrafficStage, "modal-traffic", "diagram-modal-caption", "#diagram-modal-controls button[data-traffic]", "traffic-modal");
+          } else if (button.dataset.expandTarget === "hotel-viz") {
+            modalSvg("modal-hotel", "Expanded vLLM KV cache memory hotel map");
+            hotelStages.forEach((stage, i) => {
+              const control = addModalButton(stage.label, () => renderHotel(i, "modal-hotel", "diagram-modal-caption", "#diagram-modal-controls button[data-hotel]", "hotel-modal"));
+              control.dataset.hotel = String(i);
+            });
+            renderHotel(currentHotelStage, "modal-hotel", "diagram-modal-caption", "#diagram-modal-controls button[data-hotel]", "hotel-modal");
+          } else if (button.dataset.expandTarget === "timeline-viz") {
+            modalSvg("modal-timeline", "Expanded vLLM token timeline scrubber");
+            const range = document.createElement("input");
+            range.type = "range";
+            range.min = "0";
+            range.max = "100";
+            range.value = String(currentTimelinePct);
+            range.id = "modal-timeline-range";
+            range.setAttribute("aria-label", "Scrub expanded request timeline");
+            controls.appendChild(range);
+            addModalButton("Play", () => playTimeline("modal-timeline", "diagram-modal-caption", "modal-timeline-range", "timeline-modal"));
+            range.addEventListener("input", () => renderTimeline(Number(range.value), "modal-timeline", "diagram-modal-caption", "modal-timeline-range", "timeline-modal"));
+            renderTimeline(currentTimelinePct, "modal-timeline", "diagram-modal-caption", "modal-timeline-range", "timeline-modal");
+          } else if (button.dataset.expandTarget === "kv-allocator-viz") {
+            modalSvg("modal-kv-allocator", "Expanded KV block allocator animation");
+            kvAllocatorStages.forEach((stage, i) => {
+              const control = addModalButton(stage.label, () => renderKVAllocator(i, "modal-kv-allocator", "diagram-modal-caption", "#diagram-modal-controls button[data-kvstage]", "kvalloc-modal"));
+              control.dataset.kvstage = String(i);
+            });
+            renderKVAllocator(currentKVAllocatorStage, "modal-kv-allocator", "diagram-modal-caption", "#diagram-modal-controls button[data-kvstage]", "kvalloc-modal");
+          } else if (button.dataset.expandTarget === "budget-viz") {
+            modalSvg("modal-budget", "Expanded vLLM scheduler budget explorer");
+            budgetScenarios.forEach((scenario, i) => {
+              const control = addModalButton(scenario.label, () => renderBudgetExplorer(i, "modal-budget", "diagram-modal-caption", "#diagram-modal-controls button[data-budget]", "budget-modal"));
+              control.dataset.budget = String(i);
+            });
+            renderBudgetExplorer(currentBudgetScenario, "modal-budget", "diagram-modal-caption", "#diagram-modal-controls button[data-budget]", "budget-modal");
+          } else if (button.dataset.expandTarget === "mechanics") {
+            modalSvg("modal-mechanics", "Expanded vLLM request lifecycle mechanics");
+            const renderModalStep = index => renderMechanics(index, "modal-mechanics", {
+              captionId: "diagram-modal-caption",
+              controlsSelector: "#diagram-modal-controls button[data-step]",
+              updateDetails: false,
+              prefix: "mechanics-modal"
+            });
+            mechanicsSteps.forEach((_, i) => addModalButton(String(i + 1), () => renderModalStep(i), i));
+            addModalButton("Play", () => {
+              mechanicsSteps.forEach((_, i) => window.setTimeout(() => renderModalStep(i), i * 900));
+            });
+            renderModalStep(currentMechanicsStep);
+          }
+          modal.hidden = false;
+          document.body.classList.add("modal-open");
+          closeButton.focus();
+        });
+      });
+
+      closeButton.addEventListener("click", closeModal);
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeModal();
+      });
+      document.addEventListener("keydown", event => {
+        if (!modal.hidden && event.key === "Escape") closeModal();
+      });
+    }
+
+    renderControls();
+    renderTable();
+    renderFindings();
+    renderWorkloads();
+    renderProfileScale();
+    renderBuilds();
+    renderHybridKV();
+    drawTopology();
+    renderKVAllocatorControls();
+    renderMechanicsControls();
+    renderKitchenControls();
+    renderTrafficControls();
+    renderHotelControls();
+    setupTimelineControls();
+    renderBudgetControls();
+    setupDiagramModal();
+    document.getElementById("replay-flow").onclick = () => drawTopology();
+  </script>
+</body>
+</html>
