@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The IDE Should Become an Operating System for AI</title>
+    <meta
+      name="description"
+      content="Modern IDEs are useful, but they are not flexible enough for AI. The next IDE should treat buffers, commands, sessions, evidence, and tools as addressable objects."
+    />
+    <link rel="canonical" href="https://avkcode.github.io/blog/ide-operating-system-ai.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="The IDE Should Become an Operating System for AI" />
+    <meta
+      property="og:description"
+      content="Modern IDEs are useful, but they are not flexible enough for AI. The next IDE should be closer to an operating system for software work."
+    />
+    <meta property="og:url" content="https://avkcode.github.io/blog/ide-operating-system-ai.html" />
+    <meta property="og:site_name" content="Anton Krylov" />
+    <link rel="stylesheet" href="/assets/blog-post-minimal.css" />
+  </head>
+  <body class="article-page">
+    <main class="frame">
+      <article class="article">
+        <header class="hero">
+          <a class="back" href="./index.html">Back to Blog</a>
+          <h1>The IDE Should Become an Operating System for AI</h1>
+          <p class="deck">
+            Modern IDEs are useful, but they are not flexible enough for AI. The next step is not a smarter sidebar. It
+            is a programmable operating surface where every useful thing can be addressed, inspected, changed, and
+            replayed.
+          </p>
+        </header>
+
+        <section class="content">
+          <p>
+            Most IDEs are still organized around files, tabs, projects, and panels. That works for a human editing one
+            thing at a time. It starts to break when the work includes terminals, logs, browser state, tests, diffs,
+            agents, approvals, notes, and long-running sessions. The pieces exist, but they do not compose cleanly.
+          </p>
+
+          <p>
+            The weakness is flexibility. A terminal has its own history. A chat transcript has its own memory. A test
+            runner owns its output. A browser preview owns its errors. A debugger owns its watches. The user has to
+            stitch those surfaces together. An AI agent has to infer the same state from text, screenshots, or hidden UI
+            conventions.
+          </p>
+
+          <p>
+            Older environments had a better instinct. Smalltalk treated the running system as an inspectable object
+            space. Lisp machines made the programming environment part of the runtime. Emacs made buffers a universal
+            substrate: a file, shell, help page, process, or mail view could be opened and acted on through one model.
+            Those systems are old, but this idea is more modern than many current IDEs.
+          </p>
+
+          <figure class="media-shot">
+            <img
+              src="../assets/ide-operating-system-ai.gif"
+              alt="A browser workspace extending itself by adding features from inside the same operating surface."
+              loading="lazy"
+            />
+            <figcaption>
+              A browser workspace extending itself from within the same surface. The recording is sped up 3x.
+            </figcaption>
+          </figure>
+
+          <p>
+            For AI, every surface should be addressable. A file line, terminal byte range, command invocation, diff hunk,
+            screenshot, network request, approval, setting, branch, table row, and note should each have identity. If the
+            system can act on something, it should have an address. If it has an address, it should be inspectable,
+            searchable, linkable, replayable, and explainable.
+          </p>
+
+          <p>
+            A buffer should not mean only a text tab. It should mean a durable work item with a type, URI, capabilities,
+            position, history, and links. A terminal pane, failed test, browser replay, queue item, database row, and
+            agent run can all be buffers. They render differently, but the same commands should still apply: open, split,
+            search, mark, copy, annotate, diff, replay, and export.
+          </p>
+
+          <p>
+            The demo shows the important part: features are added from inside the tool itself. The browser workspace is
+            not only displaying code. It is acting as an operating system in a browser, with terminal state, file state,
+            history, evidence, and command surfaces living together. That is the shape AI work needs.
+          </p>
+
+          <p>
+            Modern IDEs are not good enough because they remain app-shaped. AI needs an OS-shaped workspace: a scheduler
+            for tasks, memory for sessions, an object model for work, permissions for actions, an event log for evidence,
+            and a command language for humans and agents. The UI can stay calm and simple. The underlying state needs to
+            be typed and durable.
+          </p>
+
+          <p>
+            This also changes safety. Today an agent often scrapes terminal output, reads the DOM, or asks the user to
+            paste context back into chat. A better system lets the agent query the object graph: what commands exist,
+            what buffer is focused, what changed, what evidence failed, and what actions are allowed. The same commands
+            that power the menu and command palette should power the agent. No private UI powers.
+          </p>
+
+          <p>
+            The future IDE should not hide files, Git, terminals, or browsers. It should make them coherent. Git refs,
+            worktrees, tests, logs, browser sessions, notes, and deployments become objects in one space. The user and
+            AI navigate the same system. The IDE stops being a place where code is typed and becomes the runtime for
+            software work.
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
